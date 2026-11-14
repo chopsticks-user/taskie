@@ -138,12 +138,16 @@ stale when a step is done by hand.
 | ready | open, labelled `ready`, no linked branch |
 | in progress | has a linked branch (created with `gh issue develop`), no open PR |
 | in review | has an open PR without a current review marker |
-| awaiting approval | open PR whose `<!-- taskie:review -->` comment is newer than the PR's last non-merge commit |
+| awaiting approval | open PR whose latest `<!-- taskie:review sha=... -->` comment records the PR's current head commit |
 | done | closed |
 
-Merging the base branch into a PR does not invalidate a review, which is why
-the rule counts only non-merge commits. A parent issue that has been split into
-sub-issues is a tracker. It never gets `ready` and is never worked on directly.
+The marker records the head commit it reviewed instead of comparing
+timestamps, because PR commit data from `gh` does not say which commits are
+merges. Any new commit makes the review stale. `/taskie:ship` checks the
+marker before it merges the base branch in, so its own merge commit does not
+interfere. A parent issue that has been split into sub-issues is a tracker. It
+never gets `ready` and is never worked on directly. The full rules, in
+evaluation order, are in `conventions.md`.
 
 ### Definition of ready
 
@@ -295,7 +299,7 @@ the minimum Claude Code version.
 In-scope findings are fixed in the issue's worktree in small commits, verified
 and pushed, with no second review pass. Findings it disagrees with are left
 with a reason. Out-of-scope findings go to intake's review-findings source. It
-then posts one summary comment carrying the `<!-- taskie:review -->` marker and
+then posts one summary comment carrying the `<!-- taskie:review sha=... -->` marker and
 listing each finding as fixed (commit), left (reason) or filed (new issue).
 
 Rejected: a bundled reviewer agent, a fixed review level, proposing fixes
