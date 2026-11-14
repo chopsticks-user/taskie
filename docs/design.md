@@ -1,6 +1,7 @@
 # taskie design
 
-Status: v1 design, agreed 2026-11-14. Nothing is implemented yet.
+Status: v1 design, agreed 2026-11-14. All stages are written as skills; none
+has been run end-to-end against a real repository yet.
 
 This is the reference for the current design. When a decision changes, update
 this document in the same pull request as the change.
@@ -266,8 +267,9 @@ size labels, task lists in the parent body, a separate milestone skill.
 
 Manual-only. Steps:
 
-1. Refuse issues that are not `ready`, are parent trackers, or are already in
-   progress.
+1. Refuse issues that are not `ready` or are parent trackers. An issue that
+   already has a linked branch but no PR is most likely an interrupted run,
+   so offer to resume it instead of refusing.
 2. Find `verify` and `setup`: read `.taskie.md`, else detect (`just verify`,
    `npm test`, `make check`, `cargo test`, ...) and confirm with you, then offer
    to save them to `.taskie.md`.
@@ -312,9 +314,12 @@ Manual-only, and typing it is the merge approval (GitHub does not let an author
 approve their own PR). Steps:
 
 1. Refuse unless checks are green and the review marker is current (see
-   derived status).
-2. Merge the base into the branch, run verify, push, and print a one-screen
-   summary.
+   derived status). A marker whose sha is an ancestor of the head with only
+   merge commits after it also counts, checked with local git, so re-running
+   ship after its own base merge works.
+2. Merge the base into the branch and run verify. If verify fails, undo the
+   merge commit and stop. Otherwise push, wait for checks on the new head,
+   and print a one-screen summary.
 3. Remove the worktree (everything is pushed by now, and `gh pr merge
    --delete-branch` cannot delete a branch a worktree has checked out).
 4. Merge with `gh pr merge --merge --delete-branch --match-head-commit <sha>`,
@@ -322,7 +327,9 @@ approve their own PR). Steps:
    verified, so GitHub refuses the merge if anything landed after it.
 5. Close issues GitHub did not close (it only does so for merges into the
    default branch), and close a parent issue when its last sub-issue closes.
-6. Switch to the base branch and `git pull --ff-only`.
+6. Pull the base branch with `--ff-only` in the main checkout, but only if it is
+   on the base branch with no uncommitted changes; otherwise only fetch and
+   say why.
 7. If the merge closed the last open issue of a milestone, offer a release:
    tag from the milestone title when it is semver (for example `v0.2`), else
    ask; notes built from the milestone's issues grouped by type. Creating the
@@ -373,7 +380,7 @@ is updated with the result.
 | `validate --strict` passes on a plugin with no skills yet | 0 | confirmed |
 | `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | `gh issue develop --worktree` exists (gh 2.103); not yet run against a real repo. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
-| a skill can invoke `/code-review` through the Skill tool | 6 | review asks you to run `/code-review` and reads its output |
+| a skill can invoke `/code-review` through the Skill tool | 6 | `/code-review` is model-invocable in Claude Code 2.1.318 (listed for the Skill tool); not yet run from taskie. Fallback written into the skill: ask the user to run it and continue from its findings |
 
 ## Out of scope for v1
 
