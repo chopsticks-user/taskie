@@ -43,3 +43,30 @@ Input: $ARGUMENTS (a PR number, or empty for the current branch's PR)
    - left: findings you disagree with after checking the code; note why
 7. Fix the in-scope findings in small commits, each passing `verify`, then
    push. Review runs once: do not run `/code-review` again on the fixes.
+
+## Report
+
+1. Hand the out-of-scope findings to `/taskie:intake` as review findings of
+   this PR. Intake shows the drafts and asks the user to confirm; record the
+   issue numbers it creates.
+2. Post one summary comment on the PR. Its first line is the review marker
+   from the conventions, with the PR's head commit after your fixes were
+   pushed (that state, fixes included, is what the user approves at ship):
+
+   ```
+   <!-- taskie:review sha=<full head sha> -->
+   ## taskie review
+
+   Reviewed with `/code-review` at <level>.
+
+   | # | Finding | Result |
+   |---|---|---|
+   | 1 | <one-line summary> (`path:line`) | fixed in <short sha> |
+   | 2 | <one-line summary> (`path:line`) | left: <reason> |
+   | 3 | <one-line summary> (`path:line`) | filed as #<n> |
+   ```
+
+   With no findings, replace the table with `No findings.` A finding the user
+   declined to file is listed as `left: not filed`.
+3. Print the same table in chat and suggest `/taskie:ship <pr>`, reminding
+   the user that running it is their approval to merge.
