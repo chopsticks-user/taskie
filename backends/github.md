@@ -135,7 +135,10 @@ branch name.
 
 Checks are green when every entry in `statusCheckRollup` has a `conclusion` of
 `SUCCESS`, `NEUTRAL` or `SKIPPED`. Treat an empty `statusCheckRollup` as green,
-but tell the user the repo has no checks.
+but tell the user the repo has no checks. To wait for checks on the current
+head, run `gh pr checks <n> --watch --fail-fast`; it exits non-zero if a
+check fails. If its output says no checks were reported, the repo has no
+checks: treat that as green, whatever the exit code.
 
 The latest review marker is the last entry in `comments` whose `body` starts
 with `<!-- taskie:review sha=`; compare its sha with `headRefOid`.
