@@ -49,18 +49,24 @@ them.
 
 ## Install
 
-Not published yet. To try it from a local checkout:
-
-```
-claude --plugin-dir /path/to/taskie
-```
-
-Once published, the repo will be its own marketplace:
+The repo is its own marketplace:
 
 ```
 /plugin marketplace add chopsticks-user/taskie
 /plugin install taskie@taskie
 ```
+
+To try a local checkout for one session instead:
+
+```
+claude --plugin-dir /path/to/taskie
+```
+
+## Development
+
+taskie is developed with taskie: issues and pull requests in this repo go
+through its own stages. See [.claude/CLAUDE.md](.claude/CLAUDE.md) for how to
+work on it.
 
 ## Configuring a repo: `.taskie.md`
 
