@@ -40,3 +40,25 @@ Input: $ARGUMENTS (an issue number, with or without `#`)
 6. Run `setup` (unless it is `none`), then `verify`. If verify fails before
    any change, stop: report the failure as pre-existing, offer to file it
    with `/taskie:intake`, and leave the worktree in place.
+
+## Implement
+
+1. Read the code the issue touches. When resuming, read the branch's commits
+   and any uncommitted changes first, and carry on from there.
+2. State a short plan in chat: the changes, in order, and how each acceptance
+   criterion will be checked. Then proceed without waiting.
+3. Make the change in small commits. Each commit is one logical step, passes
+   `verify`, and follows the commit rules in the conventions. Add or update
+   tests for new behavior; keep changes within the issue's scope.
+4. Stop and ask the user before going on when:
+   - the work turns out larger than the issue describes, or needs a decision
+     the issue does not settle
+   - the change would touch stored data or migrations, authentication or
+     authorization, secrets, or a public API or interface other code depends
+     on, and the issue did not say so
+   - an acceptance criterion looks wrong or impossible
+5. A problem found along the way that is outside the issue's scope: do not
+   fix it here. Hand it to `/taskie:intake` (it will ask the user to
+   confirm), note the new issue for the PR's Notes, and continue.
+6. When every acceptance criterion is met, run `verify` once more on the
+   final state.
