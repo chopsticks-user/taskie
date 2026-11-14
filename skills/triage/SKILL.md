@@ -67,3 +67,33 @@ Ready: the issue already meets the definition of ready in the conventions
 (for example a small bug with clear acceptance criteria). Do everything
 Accept does and also add `ready`. Propose this only when every point of the
 definition holds; otherwise Accept and leave it for `/taskie:plan`.
+
+Duplicate: another issue, open or closed, describes the same problem. Search
+for it the way intake does and name it in the Reason column. If the duplicate
+has details the original lacks, add them to the original as a comment. Then
+close the duplicate as a duplicate of the original.
+
+Needs info: the issue cannot be classified or acted on without answers from
+the reporter. Add `needs-info`, remove `needs-triage`, and comment with
+specific, numbered questions (for example "Which browser and version?",
+"Does it happen with an empty table too?"), never a generic "please add more
+details":
+
+```
+<!-- taskie:triage -->
+Thanks for the report. To triage this we need:
+
+1. ...
+2. ...
+```
+
+The issue comes back to triage once someone comments after this.
+
+Won't fix: the request is out of the project's scope (judged from the README
+and `.taskie.md`), or the behavior is intended. Propose it only with a
+concrete reason. Comment with the reason, starting with the triage marker,
+then close the issue as not planned.
+
+Closing is visible to the reporter, so put every Duplicate and Won't fix in
+the table like any other outcome; the user's approval of the table covers
+them.
