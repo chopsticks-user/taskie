@@ -5,9 +5,9 @@ GitHub. A chat request, bug report or review finding becomes an issue, which
 gets triaged and planned, then implemented on a branch, reviewed, and merged,
 the way most tech companies move tickets through a team.
 
-> **Status: under development.** Nothing is implemented yet. This README
-> describes the planned v1 interface. See [docs/design.md](docs/design.md) for
-> the full design.
+> **Status: under development.** Implemented so far: `/taskie`. The rest of
+> this README describes the planned v1 interface. See
+> [docs/design.md](docs/design.md) for the full design.
 
 ## Commands
 
