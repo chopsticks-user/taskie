@@ -36,6 +36,8 @@ directory's submission checks and fails until the plugin has a listing icon.
   `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then the target repo's
   `.taskie.md` if present. The repo file wins on conflicts.
 - Skills describe actions in backend-neutral verbs. Only `backends/github.md`
-  names `gh` commands.
+  names `gh` commands. The one exception is `allowed-tools` frontmatter, which
+  may pre-approve read-only `gh` commands (never `gh api graphql`, which can
+  also mutate).
 - `work`, `review` and `ship` set `disable-model-invocation: true`.
 - Keep each `SKILL.md` under 500 lines.
