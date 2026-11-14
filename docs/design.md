@@ -322,8 +322,9 @@ rebasing, squash merges (they discard the small verified commits).
 
 ## Build plan
 
-Each stage is one issue and one pull request. Every commit passes `just
-verify`, and each stage's last commit updates the README.
+Each stage is one reviewable group of commits, made locally on `main` until the
+repo has a GitHub remote (then one issue and one pull request per stage). Every
+commit passes `just verify`, and each stage's last commit updates the README.
 
 | Stage | Commit | Content |
 |---|---|---|
