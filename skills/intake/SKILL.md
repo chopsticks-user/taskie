@@ -76,3 +76,25 @@ user, a support ticket). Always `type:bug`.
   block under Actual; never paste a whole log.
 - Remove secrets, tokens, passwords, email addresses and other personal data
   from anything copied into the issue, replacing them with `<redacted>`.
+
+## Source: review findings
+
+A list of code-review findings, usually the out-of-scope ones that
+`/taskie:review` hands over, or `/code-review` output the user pastes. Each
+finding normally becomes one issue; merge two findings only when one change
+would fix both.
+
+- Type: `type:bug` for a correctness or security problem, `type:chore` for
+  simplification, reuse or efficiency, `type:docs` for documentation.
+- Problem: the finding in one or two sentences.
+- For a bug, Actual is the failure scenario the reviewer gave (concrete input
+  or state, and the wrong result); Steps to reproduce are "Unknown" unless the
+  finding gives them.
+- Context (or Actual, for a bug): the location as `path:line`, and the
+  reviewer's severity or confidence if given, so triage can use it.
+- Acceptance criteria: at least "the failure scenario no longer happens" for a
+  bug, or the concrete cleanup for a chore.
+- Source: `Review of PR #<n>` with the PR's URL when known.
+
+When another stage hands over findings, it has already told the user about
+them; still show the drafts and wait for confirmation.
