@@ -5,9 +5,8 @@ GitHub. A chat request, bug report or review finding becomes an issue, which
 gets triaged and planned, then implemented on a branch, reviewed, and merged,
 the way most tech companies move tickets through a team.
 
-> **Status: under development.** Implemented so far: `/taskie`, `/taskie:intake`, `/taskie:triage`,
-> `/taskie:plan`, `/taskie:work`, `/taskie:review`. The rest of
-> this README describes the planned v1 interface. See
+> **Status: early.** Every command is written, but none has been run
+> end-to-end against a real repository yet. See
 > [docs/design.md](docs/design.md) for the full design.
 
 ## Commands

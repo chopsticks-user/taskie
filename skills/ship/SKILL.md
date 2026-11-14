@@ -67,3 +67,20 @@ second confirmation before merging; do stop at every gate below.
    changes, or is on another branch, only fetch, and tell the user why their
    checkout was left as it is.
 5. Print what was merged and closed.
+
+## Offer a release
+
+For each milestone of the issues just closed, check whether it now has no
+open issues. If so, offer a release; the merge approval does not cover it, so
+ask before creating anything.
+
+1. Tag: the milestone title if it looks like a version (`v1.2`, `1.2.0`,
+   `v0.3.1`); otherwise ask for one. Check the tag is not already used.
+2. Notes: the milestone's closed issues, grouped under `Features`,
+   `Bug fixes`, `Chores` and `Documentation` by their `type:*` label (skip
+   empty groups, put unlabelled ones under `Other`), one line each as
+   `- <title> (#<n>)`. Skip issues closed as not planned or duplicate.
+3. Show the tag, the target (the base branch) and the notes, and ask whether
+   to create the release.
+4. If the user agrees, create the release, then close the milestone. If they
+   decline, ask whether to close the milestone anyway.
