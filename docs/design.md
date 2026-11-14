@@ -314,12 +314,15 @@ approve their own PR). Steps:
    derived status).
 2. Merge the base into the branch, run verify, push, and print a one-screen
    summary.
-3. Merge with `gh pr merge --merge --delete-branch`, or the method `.taskie.md`
-   names.
-4. Close issues GitHub did not close (it only does so for merges into the
+3. Remove the worktree (everything is pushed by now, and `gh pr merge
+   --delete-branch` cannot delete a branch a worktree has checked out).
+4. Merge with `gh pr merge --merge --delete-branch --match-head-commit <sha>`,
+   or the method `.taskie.md` names. The sha is the commit that was just
+   verified, so GitHub refuses the merge if anything landed after it.
+5. Close issues GitHub did not close (it only does so for merges into the
    default branch), and close a parent issue when its last sub-issue closes.
-5. Remove the worktree, switch to the base branch and `git pull --ff-only`.
-6. If the merge closed the last open issue of a milestone, offer a release:
+6. Switch to the base branch and `git pull --ff-only`.
+7. If the merge closed the last open issue of a milestone, offer a release:
    tag from the milestone title when it is semver (for example `v0.2`), else
    ask; notes built from the milestone's issues grouped by type. Creating the
    release needs its own confirmation. Then close the milestone.
@@ -367,8 +370,8 @@ is updated with the result.
 | Assumption | Stage | Fallback if false |
 |---|---|---|
 | `validate --strict` passes on a plugin with no skills yet | 0 | confirmed |
-| `gh api` can create and list native sub-issues | 4 | task list in the parent body |
-| a branch from `gh issue develop` can be checked out in a worktree | 5 | create the worktree branch locally and push it, then link it |
+| `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
+| a branch from `gh issue develop` can be checked out in a worktree | 5 | `gh issue develop --worktree` exists (gh 2.103); not yet run against a real repo. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
 | a skill can invoke `/code-review` through the Skill tool | 6 | review asks you to run `/code-review` and reads its output |
 
 ## Out of scope for v1
