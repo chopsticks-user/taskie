@@ -45,3 +45,25 @@ second confirmation before merging; do stop at every gate below.
 8. Note the head sha that was just verified, and print a short summary: the
    PR, its title, the issues it closes, the checks, the review result and the
    merge method.
+
+## Merge and clean up
+
+1. Go back to the main checkout and remove the worktree with
+   `git worktree remove .worktrees/issue-<n>`. Everything is pushed, and the
+   backend cannot delete a branch a worktree still has checked out. If git
+   refuses because the worktree has changes, stop and show them.
+2. Merge the PR as the backend describes, passing the verified head sha, with
+   the merge method from `.taskie.md` or a merge commit by default. If the
+   merge is refused (the head moved, or branch protection blocks it), report
+   the reason and stop.
+3. Close what the merge did not:
+   - each issue the PR resolves that is still open: close it as done with
+     the comment `Fixed by #<pr>.` (the backend closes issues automatically
+     only for merges into the default branch)
+   - each parent of those issues whose sub-issues are now all closed: close
+     it as done with the comment `All sub-issues are done.`
+4. Update the main checkout: if it is on the base branch with no uncommitted
+   changes, pull with fast-forward only. If it is on the base branch but has
+   changes, or is on another branch, only fetch, and tell the user why their
+   checkout was left as it is.
+5. Print what was merged and closed.
