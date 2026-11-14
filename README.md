@@ -6,7 +6,7 @@ gets triaged and planned, then implemented on a branch, reviewed, and merged,
 the way most tech companies move tickets through a team.
 
 > **Status: under development.** Implemented so far: `/taskie`, `/taskie:intake`, `/taskie:triage`,
-> `/taskie:plan`. The rest of
+> `/taskie:plan`, `/taskie:work`. The rest of
 > this README describes the planned v1 interface. See
 > [docs/design.md](docs/design.md) for the full design.
 
@@ -27,6 +27,10 @@ Claude can run `/taskie`, `intake`, `triage` and `plan` on its own when the
 conversation calls for it (for example "file a bug for this"). `work`,
 `review` and `ship` push, comment and merge, so they only run when you type
 them.
+
+`/taskie:work` never touches your checkout. Each issue gets a git worktree at
+`.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your
+`.gitignore` is left alone), and `/taskie:ship` removes it after merging.
 
 ## A typical flow
 

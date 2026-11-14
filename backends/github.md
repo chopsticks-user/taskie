@@ -114,11 +114,19 @@ query($owner: String!, $name: String!) {
 | Action | Command |
 |---|---|
 | list open PRs | `gh pr list --state open --limit 200 --json number,title,headRefName,headRefOid,baseRefName,isDraft,closingIssuesReferences,comments` |
-| read one PR | `gh pr view <n> --json number,title,body,state,isDraft,baseRefName,headRefName,headRefOid,closingIssuesReferences,comments,statusCheckRollup,mergeable,mergeStateStatus,url` |
+| read one PR | `gh pr view <n> --json number,title,body,state,isDraft,baseRefName,headRefName,headRefOid,closingIssuesReferences,comments,reviews,statusCheckRollup,mergeable,mergeStateStatus,url` |
+| comments on the PR's diff | see below |
+| replace a PR body | `gh pr edit <n> --body-file -` |
 | PR of the current branch | the same `gh pr view` without `<n>` |
 | open a PR | `gh pr create --base <base> --head <branch> --title '<title>' --body-file -` |
 | comment | `gh pr comment <n> --body-file -` |
 | merge | `gh pr merge <n> --merge --delete-branch --match-head-commit <sha>` (`--squash` or `--rebase` instead of `--merge` if `.taskie.md` says so) |
+
+Comments on the PR's diff:
+
+```bash
+gh api 'repos/{owner}/{repo}/pulls/<n>/comments?per_page=100' --jq '.[] | {path, line, body, user: .user.login}'
+```
 
 The issues a PR resolves are its `closingIssuesReferences`. GitHub fills that
 field only for PRs into the default branch, so for any other base also read

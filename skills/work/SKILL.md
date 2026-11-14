@@ -62,3 +62,29 @@ Input: $ARGUMENTS (an issue number, with or without `#`)
    confirm), note the new issue for the PR's Notes, and continue.
 6. When every acceptance criterion is met, run `verify` once more on the
    final state.
+
+## Open the pull request
+
+1. Push the branch. Never force-push.
+2. Open a PR into the base branch with the title and body from the
+   conventions. Under Verification, list every acceptance criterion with how
+   it was checked; under Notes, list issues filed along the way and anything
+   left out.
+3. Print the PR's URL and suggest `/taskie:review <pr>`. Leave the worktree
+   in place; review and rework use it.
+
+## Address review feedback
+
+The issue already has an open PR.
+
+1. Use `.worktrees/issue-<n>` if it exists, otherwise add a worktree for the
+   PR's branch. Bring it up to date with the remote branch (fast-forward
+   only), since review may have pushed commits. Follow step 5 of "Start".
+2. Collect the feedback: comments and reviews on the PR, comments on its
+   diff, and anything the user said when running this command. Skip findings
+   the latest `<!-- taskie:review` comment already marks as fixed or filed.
+3. List the points you will address, then proceed. Ask first about any point
+   you disagree with or that would grow the scope.
+4. Fix them as in "Implement": small commits, each passing `verify`. Push.
+5. Update the PR body if Verification or Notes changed.
+6. Any new commit makes the review stale, so suggest `/taskie:review <pr>`.
