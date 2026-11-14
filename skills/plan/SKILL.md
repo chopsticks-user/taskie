@@ -1,7 +1,7 @@
 ---
 name: plan
-description: Refine an issue in the current repo until it is ready to implement, with final acceptance criteria, clear scope and known dependencies. Use when the user asks to plan, refine, scope or flesh out an issue.
-argument-hint: "#n"
+description: Refine an issue in the current repo until it is ready to implement (final acceptance criteria, clear scope, split into sub-issues when too big), or turn a goal into a milestone with planned issues. Use when the user asks to plan, refine, scope, break down or split an issue, or to plan a milestone, release or larger goal.
+argument-hint: "#n | <goal>"
 allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh label list *)
 ---
 
@@ -12,6 +12,9 @@ Read `${CLAUDE_PLUGIN_ROOT}/conventions.md`, then
 if it exists.
 
 Input: $ARGUMENTS
+
+An issue number (with or without `#`) means refine that issue. Anything else
+is a goal to plan as a milestone.
 
 ## Refine an issue
 
@@ -67,3 +70,31 @@ tracker and the work moves to sub-issues.
    tracker is never ready.
 6. Print the children as `#<n> <title>` with their status, and suggest
    `/taskie:work` for the first ready one.
+
+## Plan a milestone
+
+Input is a goal such as `v0.2: offline mode`.
+
+1. Run the "before any stage" check from the conventions.
+2. Name the milestone: the text before the first colon is its title and the
+   rest its description. Without a colon, propose a short title and confirm
+   it. If a milestone with that title exists, plan into it.
+3. Read the README, `.taskie.md` and the code the goal touches, and list
+   open issues that already belong to the goal.
+4. Ask the user, in one message, about anything ambiguous whose answer would
+   change the scope. Skip this step when nothing is ambiguous.
+5. Draft the work:
+   - new issues in intake's format, each with a type and a priority (the goal
+     was triaged by planning it, so no `needs-triage`), final acceptance
+     criteria, and `Depends on #<n>` for any order between them
+   - an issue that would not fit in one reviewable pull request becomes a
+     tracker with sub-issues, drafted as in "Split an issue"
+   - existing open issues to add to the milestone
+6. Show the milestone, every draft and the existing issues to add in one
+   message, saying which drafts meet the definition of ready, and wait for
+   approval.
+7. Apply what the user approved: create the milestone if needed, create the
+   issues and sub-issues in it (`ready` only where the definition holds),
+   and add the existing issues to it.
+8. Print the milestone's issues in dependency order with their statuses, and
+   suggest `/taskie:work` for the first ready one.
