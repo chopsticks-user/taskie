@@ -57,3 +57,22 @@ requirements they did not ask for. Pick the type from what is asked: broken
 behavior is a bug, new behavior a feature, maintenance a chore,
 documentation-only work docs. For a bug described in chat, fill the bug
 template's sections only from what the user said.
+
+## Source: bug report or stack trace
+
+Pasted error output, a log excerpt, or a report written by someone else (a
+user, a support ticket). Always `type:bug`.
+
+- Problem: what fails and who is affected, in one or two sentences.
+- Steps to reproduce: only steps the report gives or that follow directly
+  from it. If there are none, write "Unknown".
+- Expected and Actual: the report's words; for a stack trace, Actual is the
+  exception type and message.
+- Environment: versions, OS, browser, configuration if stated.
+- Failing location: for a stack trace, find the innermost frame that is in
+  this repo's code (skip library and runtime frames) and check that the file
+  exists. Add it under Actual as `path:line`. Put a trimmed excerpt of the
+  trace (the exception line and the frames from this repo) in a fenced code
+  block under Actual; never paste a whole log.
+- Remove secrets, tokens, passwords, email addresses and other personal data
+  from anything copied into the issue, replacing them with `<redacted>`.
