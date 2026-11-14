@@ -1,0 +1,14 @@
+{
+  "name": "taskie",
+  "description": "The taskie plugin",
+  "owner": {
+    "name": "chopsticks-user"
+  },
+  "plugins": [
+    {
+      "name": "taskie",
+      "source": "./",
+      "description": "Run a ticket-to-code lifecycle on GitHub: intake, triage, plan, work, review and ship, one skill per stage"
+    }
+  ]
+}

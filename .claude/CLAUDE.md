@@ -11,7 +11,7 @@ conventions and a backend mapping. The design is in
 |---|---|---|
 | `README.md` | users | what taskie does, install, commands, `.taskie.md`, labels |
 | `docs/design.md` | contributors | the current design and the reasons behind it, build plan, assumptions to verify |
-| `CLAUDE.md` | contributors and Claude | how to work in this repo |
+| `.claude/CLAUDE.md` | contributors and Claude | how to work in this repo (not at the root: a root CLAUDE.md fails `validate --strict`) |
 | `conventions.md` | the skills | default rules every stage follows (planned) |
 | `backends/github.md` | the skills | the only file that maps actions to `gh` commands (planned) |
 
@@ -26,9 +26,9 @@ change each, and follow the build plan in `docs/design.md`.
 
 ## Verify
 
-`just verify` will run `claude plugin validate --strict --profile directory .`.
-It arrives with the plugin manifest in Stage 0, so until then there is no
-verify command.
+Run `just verify` (`claude plugin validate --strict .`) before and after every
+change; each commit must pass it. `just submit-check` adds the plugin
+directory's submission checks and fails until the plugin has a listing icon.
 
 ## Rules for skill files
 

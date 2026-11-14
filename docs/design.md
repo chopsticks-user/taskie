@@ -40,8 +40,8 @@ taskie/
 │   ├── work/SKILL.md          /taskie:work
 │   ├── review/SKILL.md        /taskie:review
 │   └── ship/SKILL.md          /taskie:ship
+├── .claude/CLAUDE.md          repo instructions (a root CLAUDE.md fails validate --strict)
 ├── docs/design.md
-├── CLAUDE.md
 ├── README.md
 ├── LICENSE                    MIT
 └── justfile
@@ -182,11 +182,14 @@ a skill shows it needs them:
 
 ### Verifying this repo
 
-`just verify` runs `claude plugin validate --strict --profile directory .`,
-which checks the manifests and skill frontmatter and fails on anything the
-plugin directory would refuse at submission. Behavioral evals (`claude plugin
-eval`) are not part of verify because they are slow and cost model usage; a
-separate `just eval` can be added later.
+`just verify` runs `claude plugin validate --strict .`, which checks the
+manifests and skill frontmatter and fails on any warning. `just submit-check`
+adds `--profile directory`, the checks the plugin directory runs at
+submission. It is kept out of verify because it requires a listing icon, and
+the first icon submitted can become the permanent listing icon, so no
+placeholder is committed. Behavioral evals (`claude plugin eval`) are not part
+of verify because they are slow and cost model usage; a separate `just eval`
+can be added later.
 
 ## Stages
 
@@ -359,7 +362,7 @@ is updated with the result.
 
 | Assumption | Stage | Fallback if false |
 |---|---|---|
-| `validate --strict` passes on a plugin with no skills yet | 0 | land c1 together with a first skill |
+| `validate --strict` passes on a plugin with no skills yet | 0 | confirmed |
 | `gh api` can create and list native sub-issues | 4 | task list in the parent body |
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | create the worktree branch locally and push it, then link it |
 | a skill can invoke `/code-review` through the Skill tool | 6 | review asks you to run `/code-review` and reads its output |
