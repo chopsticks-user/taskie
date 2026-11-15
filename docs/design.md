@@ -112,9 +112,9 @@ CLAUDE.md was rejected because it would load in every session.
 v1 supports GitHub only, through `gh`. `shared/conventions.md` and the skills
 describe actions as backend-neutral verbs (find issue, create issue, set label,
 open PR, merge, derive status, add sub-issue, and so on). `backends/github.md`
-is the only file that maps verbs to `gh` commands. A future backend (GitLab, Jira)
-would add one mapping file. The seam is kept to that single file because its
-shape is a guess until a second backend exists.
+is the only file that maps verbs to `gh` commands. A future backend (GitLab,
+Jira) would add one mapping file. The seam is kept to that single file because
+its shape is a guess until a second backend exists.
 
 ### Labels
 
