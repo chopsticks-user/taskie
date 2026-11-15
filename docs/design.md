@@ -31,7 +31,7 @@ taskie/
 ├── .claude-plugin/
 │   ├── plugin.json
 │   └── marketplace.json       this repo is its own marketplace
-├── conventions.md             default rules, in backend-neutral verbs
+├── shared/conventions.md      default rules, in backend-neutral verbs
 ├── backends/github.md         maps each verb to gh commands
 ├── skills/
 │   ├── taskie/SKILL.md        /taskie          board and help
@@ -48,8 +48,9 @@ taskie/
 └── justfile
 ```
 
-Every stage skill starts by reading `${CLAUDE_PLUGIN_ROOT}/conventions.md`,
-then `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` in the target
+Every stage skill starts by reading
+`${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
+`${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` in the target
 repo if it exists. Where they conflict, `.taskie.md` wins.
 
 ## Cross-cutting decisions
@@ -87,8 +88,8 @@ Manual-only skills set `disable-model-invocation: true`.
 
 A repo may add an optional free-form markdown file named `.taskie.md` at its
 root. Skills read it after the defaults and follow it where it differs. It needs
-no schema, and anything in `conventions.md` can be overridden. Keys taskie
-itself writes or reads there:
+no schema, and anything in `shared/conventions.md` can be overridden. Keys
+taskie itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
@@ -103,9 +104,9 @@ CLAUDE.md was rejected because it would load in every session.
 
 ### Backend seam
 
-v1 supports GitHub only, through `gh`. `conventions.md` and the skills describe
-actions as backend-neutral verbs (find issue, create issue, set label, open PR,
-merge, derive status, add sub-issue, and so on). `backends/github.md` is the
+v1 supports GitHub only, through `gh`. `shared/conventions.md` and the skills
+describe actions as backend-neutral verbs (find issue, create issue, set label,
+open PR, merge, derive status, add sub-issue, and so on). `backends/github.md` is the
 only file that maps verbs to `gh` commands. A future backend (GitLab, Jira)
 would add one mapping file. The seam is kept to that single file because its
 shape is a guess until a second backend exists.
@@ -148,13 +149,14 @@ merges. Any new commit makes the review stale. `/taskie:ship` checks the
 marker before it merges the base branch in, so its own merge commit does not
 interfere. A parent issue that has been split into sub-issues is a tracker. It
 never gets `ready` and is never worked on directly. The full rules, in
-evaluation order, are in `conventions.md`.
+evaluation order, are in `shared/conventions.md`.
 
 ### Definition of ready
 
 An issue is ready when it has an acceptance-criteria checklist, a clear scope,
 known dependencies, and fits in one reviewable pull request. The definition
-lives in `conventions.md` because both triage (fast-track) and plan check it.
+lives in `shared/conventions.md` because both triage (fast-track) and plan
+check it.
 
 ### Where taskie stops for you
 
@@ -347,7 +349,7 @@ commit passes `just verify`, and each stage's last commit updates the README.
 | Stage | Commit | Content |
 |---|---|---|
 | 0 Foundation | c1 | `plugin.json`, `marketplace.json`, LICENSE, README stub, `justfile` |
-| | c2 | `conventions.md`: labels, priorities, derived status, definition of ready, branch/commit/PR format, approval points |
+| | c2 | `shared/conventions.md`: labels, priorities, derived status, definition of ready, branch/commit/PR format, approval points |
 | | c3 | `backends/github.md`: verb to `gh` mapping, idempotent label creation |
 | | c4 | `.taskie.md` override rule and README example, repo CLAUDE.md |
 | 1 `/taskie` | c1 | board grouped by derived status |

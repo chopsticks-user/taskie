@@ -8,7 +8,7 @@ allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue view *) 
 
 # taskie review
 
-Read `${CLAUDE_PLUGIN_ROOT}/conventions.md`, then
+Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
 `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` at the repo root
 if it exists.
 
