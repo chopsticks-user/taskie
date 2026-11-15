@@ -32,7 +32,7 @@ commands; stages describe actions, and this file maps them.
 | current user | `gh api user --jq .login` |
 
 A repo whose `origin` is not on GitHub, or a `gh` that is not authenticated,
-fails the "before any stage" check in `conventions.md`.
+fails the "before any stage" check in `shared/conventions.md`.
 
 ## Labels
 

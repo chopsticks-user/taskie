@@ -8,7 +8,7 @@ backend-neutral terms; `backends/github.md` says how to carry out each action.
 Read, in order:
 
 1. this file
-2. `backends/github.md`
+2. `${CLAUDE_PLUGIN_ROOT}/backends/github.md`
 3. `.taskie.md` at the root of the target repo, if it exists
 
 `.taskie.md` is free-form markdown written by the repo's maintainers. Where it

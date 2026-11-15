@@ -12,7 +12,7 @@ conventions and a backend mapping. The design is in
 | `README.md` | users | what taskie does, install, commands, `.taskie.md`, labels |
 | `docs/design.md` | contributors | the current design and the reasons behind it, build plan, assumptions to verify |
 | `.claude/CLAUDE.md` | contributors and Claude | how to work in this repo (not at the root: a root CLAUDE.md fails `validate --strict`) |
-| `conventions.md` | the skills | default rules every stage follows |
+| `shared/conventions.md` | the skills | default rules every stage follows |
 | `backends/github.md` | the skills | the only file that maps actions to `gh` commands |
 | `.taskie.md` | taskie, working on this repo | this repo's verify command and its version-bump rule |
 | `.claude/settings.json` | Claude Code | loads taskie in this repo from its GitHub marketplace |
@@ -36,7 +36,7 @@ auto-updates, or run `claude plugin update taskie@taskie`, then
 `claude --plugin-dir .worktrees/issue-<n>`, which takes precedence over the
 installed copy.
 
-Labels in use: taskie's set (see `conventions.md`), plus GitHub's
+Labels in use: taskie's set (see `shared/conventions.md`), plus GitHub's
 `good first issue` and `help wanted`.
 
 ## Verify
@@ -47,7 +47,7 @@ directory's submission checks and fails until the plugin has a listing icon.
 
 ## Rules for skill files
 
-- Every stage skill reads `${CLAUDE_PLUGIN_ROOT}/conventions.md`, then
+- Every stage skill reads `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
   `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then the target repo's
   `.taskie.md` if present. The repo file wins on conflicts.
 - Skills describe actions in backend-neutral verbs. Only `backends/github.md`
