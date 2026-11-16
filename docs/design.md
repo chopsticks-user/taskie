@@ -1,8 +1,8 @@
 # taskie design
 
-Status: v1 design, agreed 2026-11-14. All stages are written as skills. The
-first end-to-end run (issue #1, PR #2) went through every stage to merge on
-2026-11-15.
+Status: v1 design, agreed 2026-11-14. All stages are written as skills, and
+taskie has taken its own issues from request to merge on GitHub.
+`/taskie:plan` has not run on a real issue yet.
 
 This is the reference for the current design. When a decision changes, update
 this document in the same pull request as the change.
@@ -145,10 +145,10 @@ labels in v1.
 Status is derived from GitHub state, not tracked in labels, so it cannot go
 stale when a step is done by hand.
 
-The statuses are needs triage, needs info, backlog, ready, in progress, in
-review, awaiting approval and done. The rules that assign them, in evaluation
-order, live only in `shared/conventions.md`, so this document cannot drift
-from what the skills follow.
+In lifecycle order, the statuses are needs triage, needs info, backlog, ready,
+in progress, in review, awaiting approval and done. The rules that assign
+them, in their own evaluation order, live only in `shared/conventions.md`, so
+this document cannot drift from what the skills follow.
 
 The review marker (`<!-- taskie:review sha=... -->`, which moves a PR to
 awaiting approval) records the head commit it reviewed instead of comparing
@@ -351,9 +351,9 @@ rebasing, squash merges (they discard the small verified commits).
 
 ## Build plan
 
-Each stage is one reviewable group of commits, made locally on `main` until the
-repo has a GitHub remote (then one issue and one pull request per stage). Every
-commit passes `just verify`, and each stage's last commit updates the README.
+The v1 stages below were built as groups of commits made locally on `main`,
+before the repo had a GitHub remote. Since then every change goes through an
+issue and a pull request, and every commit passes `just verify`.
 
 | Stage | Commit | Content |
 |---|---|---|
@@ -391,7 +391,7 @@ is updated with the result.
 | `validate --strict` passes on a plugin with no skills yet | 0 | confirmed |
 | `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
-| a skill can invoke `/code-review` through the Skill tool | 6 | `/code-review` is model-invocable in Claude Code 2.1.318 (listed for the Skill tool); not yet run from taskie. Fallback written into the skill: ask the user to run it and continue from its findings |
+| a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: `/taskie:review` ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
 
 ## Out of scope for v1
 
