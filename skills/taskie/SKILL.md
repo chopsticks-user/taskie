@@ -18,8 +18,7 @@ If the argument is `help`, print this table and stop:
 | `/taskie` | this board, plus the suggested next action |
 | `/taskie:new [text or #n]` | file issues already triaged, or triage untriaged ones |
 | `/taskie:plan #n` or `<goal>` | refine an issue, split it, or plan a milestone |
-| `/taskie:work <n>` | implement a ready issue and open a PR |
-| `/taskie:review [pr]` | review the PR, fix findings, post a summary |
+| `/taskie:do [n]` | implement an issue, open a PR, review it and fix findings |
 | `/taskie:ship [pr]` | merge an approved PR and clean up |
 
 ## Gather
@@ -72,9 +71,10 @@ first rule that applies:
 
 1. a PR is awaiting approval: `PR #31 is reviewed: /taskie:ship 31`
 2. an issue needs triage: `2 issues need triage: /taskie:new`
-3. an issue is ready: `#12 is ready (P1): /taskie:work 12`, choosing the
+3. an issue is ready: `#12 is ready (P1): /taskie:do 12`, choosing the
    highest priority, then the oldest
-4. a PR is in review without a marker: `PR #31 needs review: /taskie:review 31`
+4. a PR is in review without a current marker: `PR #31 needs review:
+   /taskie:do 31`
 5. an issue is in the backlog: `#9 needs planning: /taskie:plan #9`
 
 If no rule applies, say so in one line.

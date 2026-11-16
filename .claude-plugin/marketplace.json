@@ -8,7 +8,7 @@
     {
       "name": "taskie",
       "source": "./",
-      "description": "Run a ticket-to-code lifecycle on GitHub: file and triage, plan, work, review and ship"
+      "description": "Run a ticket-to-code lifecycle on GitHub: file and triage, plan, implement and review, ship"
     }
   ]
 }

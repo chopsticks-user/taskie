@@ -19,8 +19,7 @@ tickets through a team, scaled down so one person and Claude can run it.
 |---|---|
 | Sources, intake and triage | `/taskie:new` |
 | Backlog refinement, milestones | `/taskie:plan` |
-| Execution (branch, code, PR) | `/taskie:work` |
-| Code review | `/taskie:review` |
+| Execution and code review | `/taskie:do` |
 | Release and close the loop | `/taskie:ship` |
 | Board view | `/taskie` |
 
@@ -37,8 +36,7 @@ taskie/
 │   ├── taskie/SKILL.md        /taskie          board and help
 │   ├── new/SKILL.md           /taskie:new
 │   ├── plan/SKILL.md          /taskie:plan
-│   ├── work/SKILL.md          /taskie:work
-│   ├── review/SKILL.md        /taskie:review
+│   ├── do/SKILL.md            /taskie:do
 │   └── ship/SKILL.md          /taskie:ship
 ├── .claude/CLAUDE.md          repo instructions (a root CLAUDE.md fails validate --strict)
 ├── docs/design.md
@@ -67,22 +65,29 @@ taskie is published for others under the MIT license. The repo carries its own
 that a repo can override, and taskie must not assume anything only the author's
 setup has.
 
-### One skill per stage
+### One skill per command
 
-Each stage is its own skill, invoked as `/taskie:<stage>`. The bare `/taskie`
-works because the plugin and its board skill share the name. We chose this over
-a single `/taskie <subcommand>` router because separate skills get real
-autocomplete and per-stage invocation settings. `/taskie <stage>` with a space
-is not supported, so there is one way to run each stage and the manual-only
-gates cannot be bypassed.
+There are five commands, each its own skill, invoked as `/taskie:<command>`.
+The bare `/taskie` works because the plugin and its board skill share the
+name. Commands follow what the user wants done (file, plan, implement, ship),
+not the industry stages one by one: intake and triage are one command, and so
+are implementation and review, because for one person working with Claude
+each split added an approval round trip without adding a decision. Review
+inside `do` stays independent because `/code-review` runs as a separate
+reviewer. With no argument, `do` and `ship` pick the current issue or PR, or
+the single obvious candidate, and ask when there are several.
+
+We chose separate skills over a single `/taskie <subcommand>` router because
+separate skills get real autocomplete and per-command invocation settings.
+`/taskie <command>` with a space is not supported, so there is one way to run
+each command and the manual-only gates cannot be bypassed.
 
 | Skill | Claude may run it on its own | Why |
 |---|---|---|
 | `/taskie` | yes | read-only |
 | `/taskie:new` | yes | so "file a bug for this" in chat works; it confirms before creating or changing anything |
 | `/taskie:plan` | yes | edits go through approval |
-| `/taskie:work` | no | creates branches, pushes, opens PRs |
-| `/taskie:review` | no | pushes commits, posts PR comments |
+| `/taskie:do` | no | creates branches, pushes, opens PRs, posts review comments |
 | `/taskie:ship` | no | merges and closes issues |
 
 Manual-only skills set `disable-model-invocation: true`.
@@ -96,9 +101,9 @@ taskie itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
-| `verify:` | work, review, ship | command that runs formatting, linting and all tests |
-| `setup:` | work | command that prepares a fresh worktree (install dependencies) |
-| review level | review | overrides the priority-based `/code-review` level |
+| `verify:` | do, ship | command that runs formatting, linting and all tests |
+| `setup:` | do | command that prepares a fresh worktree (install dependencies) |
+| review level | do | overrides the priority-based `/code-review` level |
 | merge method | ship | overrides the merge-commit default |
 
 A structured YAML config was rejected because only the model reads it, so a
@@ -164,11 +169,11 @@ check it.
 
 ### Where taskie stops for you
 
-| Stage | Approval point |
+| Command | Approval point |
 |---|---|
 | new | shows the full triaged draft issue(s) before creating, or one triage table for existing issues |
 | plan | proposed body edits, sub-issues, milestone drafts |
-| work | stops only if scope grows or it reaches data, auth or a public API |
+| do | stops only if scope grows or it reaches data, auth or a public API; asks once about filing out-of-scope findings before posting the review |
 | ship | typing `/taskie:ship` is the merge approval; a release needs its own confirmation |
 
 ### Branches, commits and pull requests
@@ -275,50 +280,54 @@ one approval.
 Size is judged against "one reviewable pull request", not estimated. Rejected:
 size labels, task lists in the parent body, a separate milestone skill.
 
-### `/taskie:work`
+### `/taskie:do`
 
-Manual-only. Steps:
+Manual-only. It replaced separate work and review commands: one run takes an
+issue from branch to a reviewed PR. Steps:
 
-1. Refuse issues that are not `ready` or are parent trackers. An issue that
+1. Pick the issue: the number given (an issue, or a PR, taken with the issue
+   it resolves or reviewed alone if it has none); otherwise the issue of the
+   current branch or worktree; otherwise issues in review without a current
+   marker, then in progress (interrupted runs), then ready, by priority and
+   age. One candidate is used, several are offered as a choice.
+2. Refuse issues that are not `ready` or are parent trackers. An issue that
    already has a linked branch but no PR is most likely an interrupted run,
    so offer to resume it instead of refusing.
-2. Find `verify` and `setup`: read `.taskie.md`, else detect (`just verify`,
+3. Find `verify` and `setup`: read `.taskie.md`, else detect (`just verify`,
    `npm test`, `make check`, `cargo test`, ...) and confirm with you, then offer
    to save them to `.taskie.md`.
-3. Create the linked branch with `gh issue develop`, then a worktree at
+4. Create the linked branch with `gh issue develop`, then a worktree at
    `.worktrees/issue-<n>`, hidden through `.git/info/exclude` so the target
    repo's `.gitignore` is untouched. It lives inside the repo because Claude
    Code prompts for paths outside the working directory.
-4. Run `setup`, then `verify`. If verify fails before any change, stop and
+5. Run `setup`, then `verify`. If verify fails before any change, stop and
    report so a pre-existing failure is never mixed into the diff.
-5. State a short plan and proceed. Stop and ask if the scope grows beyond the
+6. State a short plan and proceed. Stop and ask if the scope grows beyond the
    issue or the change reaches data, auth or a public API.
-6. Implement in small commits, each passing verify. Unrelated problems found
-   along the way go to `/taskie:new`.
-7. Push and open the PR in the standard format.
+7. Implement in small commits, each passing verify. Push and open the PR in
+   the standard format.
+8. Review: invoke Claude Code's built-in `/code-review` once, at a level set
+   by the issue's priority (P0 and P1 at high, P2 and P3 at medium,
+   overridable in `.taskie.md`). If it is unavailable, stop with a message
+   naming the minimum Claude Code version; the PR stays open. In-scope
+   findings are fixed in small commits, verified and pushed, with no second
+   review pass. Findings it disagrees with are left with a reason.
+9. Report: out-of-scope findings, and unrelated problems noted while
+   implementing, go to `/taskie:new`'s review-findings source in one batch,
+   and the run waits for that answer, so the summary is never blocked by a
+   question left for later. It then posts one summary comment carrying the
+   `<!-- taskie:review sha=... -->` marker and listing each finding as fixed
+   (commit), left (reason) or filed (new issue).
 
-Running `/taskie:work n` again on an issue that already has a PR resumes in the
-same worktree and branch. That is how review feedback is addressed.
+Running `/taskie:do n` again on an issue that already has a PR resumes in the
+same worktree, addresses the PR's feedback, and reviews again.
 
 Rejected: waiting for plan approval before coding, draft PRs as the progress
-signal, assignee-only tracking, working on a branch in the main checkout.
-
-### `/taskie:review`
-
-Manual-only. Takes a PR number, or the PR of the current issue branch. It
-invokes Claude Code's built-in `/code-review` once, at a level set by the
-linked issue's priority (P0 and P1 at high, P2 and P3 at medium, overridable in
-`.taskie.md`). If `/code-review` is unavailable it stops with a message naming
-the minimum Claude Code version.
-
-In-scope findings are fixed in the issue's worktree in small commits, verified
-and pushed, with no second review pass. Findings it disagrees with are left
-with a reason. Out-of-scope findings go to `/taskie:new`'s review-findings source. It
-then posts one summary comment carrying the `<!-- taskie:review sha=... -->` marker and
-listing each finding as fixed (commit), left (reason) or filed (new issue).
-
-Rejected: a bundled reviewer agent, a fixed review level, proposing fixes
-before applying them, inline PR comments.
+signal, assignee-only tracking, working on a branch in the main checkout, a
+bundled reviewer agent, a fixed review level, proposing fixes before applying
+them, inline PR comments, and a separate review command (one more approval
+for the same person, and its summary could wait on an unanswered question,
+which blocked ship).
 
 ### `/taskie:ship`
 
@@ -358,7 +367,7 @@ The v1 stages below were built as groups of commits made locally on `main`,
 before the repo had a GitHub remote. Since then every change goes through an
 issue and a pull request, and every commit passes `just verify`. The stage
 names below are the v1 ones; intake and triage have since become
-`/taskie:new`.
+`/taskie:new`, and work and review `/taskie:do`.
 
 | Stage | Commit | Content |
 |---|---|---|
@@ -396,7 +405,7 @@ is updated with the result.
 | `validate --strict` passes on a plugin with no skills yet | 0 | confirmed |
 | `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
-| a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: `/taskie:review` ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
+| a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: taskie's review step ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
 
 ## Out of scope for v1
 
