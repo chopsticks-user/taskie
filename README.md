@@ -5,9 +5,9 @@ GitHub. A chat request, bug report or review finding becomes an issue, which
 gets triaged and planned, then implemented on a branch, reviewed, and merged,
 the way most tech companies move tickets through a team.
 
-> **Status: early.** Every command is written, but none has been run
-> end-to-end against a real repository yet. See
-> [docs/design.md](docs/design.md) for the full design.
+> **Status: early.** Every command is written, and taskie has taken its own
+> issues from request to merge, but it has not been used on other
+> repositories yet. See [docs/design.md](docs/design.md) for the full design.
 
 ## Commands
 
@@ -95,7 +95,7 @@ taskie creates these labels in your repo when it needs them:
 | Label | Meaning |
 |---|---|
 | `type:bug`, `type:feature`, `type:chore`, `type:docs` | Kind of work |
-| `P0` | Outage or data loss |
+| `P0` | Outage, data loss or security hole |
 | `P1` | Major feature broken, no workaround |
 | `P2` | Degraded, workaround exists |
 | `P3` | Minor or cosmetic |
