@@ -7,9 +7,9 @@ allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) 
 
 # taskie board
 
-Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
-`${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` at the repo root
-if it exists. This skill only reads; it never changes anything on the backend.
+Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md` first and follow its
+Precedence section, which says what else to read. This skill only reads; it
+never changes anything on the backend.
 
 If the argument is `help`, print this table and stop:
 
