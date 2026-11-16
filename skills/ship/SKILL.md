@@ -31,6 +31,10 @@ second confirmation before merging; do stop at every gate below.
      head, or the marker's sha is an ancestor of the head and every commit
      after it is a merge (`git rev-list --no-merges <marker sha>..HEAD`
      prints nothing). Otherwise suggest `/taskie:review <pr>`.
+   - the worktree's branch has no commits its remote branch lacks
+     (`git rev-list @{u}..HEAD` prints nothing). Otherwise list them and
+     suggest `/taskie:work <n>` to push them, so they get reviewed; the
+     cleanup below would delete them.
    - its checks are green, as the backend defines. If checks are still
      running, say so and stop; do not wait at this step.
 5. Merge the base branch into the PR's branch in the worktree (fetch first).
