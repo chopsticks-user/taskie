@@ -386,7 +386,7 @@ is updated with the result.
 |---|---|---|
 | `validate --strict` passes on a plugin with no skills yet | 0 | confirmed |
 | `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
-| a branch from `gh issue develop` can be checked out in a worktree | 5 | `gh issue develop --worktree` exists (gh 2.103); not yet run against a real repo. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
+| a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
 | a skill can invoke `/code-review` through the Skill tool | 6 | `/code-review` is model-invocable in Claude Code 2.1.318 (listed for the Skill tool); not yet run from taskie. Fallback written into the skill: ask the user to run it and continue from its findings |
 
 ## Out of scope for v1
