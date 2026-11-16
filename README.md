@@ -85,6 +85,9 @@ Run reviews at high level for every priority.
 If `verify` or `setup` is missing, `/taskie:work` detects a likely command,
 confirms it with you, and offers to save it here.
 
+taskie finds the git remote that points at the GitHub repo. If it cannot tell
+(no remote or several match), it asks and offers to save a `remote:` line.
+
 ## Labels
 
 taskie creates these labels in your repo when it needs them:

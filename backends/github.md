@@ -30,10 +30,17 @@ commands; stages describe actions, and this file maps them.
 | check authentication | `gh auth status` |
 | repo name and default branch | `gh repo view --json nameWithOwner,defaultBranchRef --jq '{repo: .nameWithOwner, base: .defaultBranchRef.name}'` |
 | current user | `gh api user --jq .login` |
-| git remote of the repo | the remote in `git remote -v` whose URL contains the repo's `nameWithOwner` (often, but not always, `origin`); written `<remote>` below |
+| git remote of the repo | `git remote -v` (see below) |
 
 A repo with no remote on GitHub, or a `gh` that is not authenticated,
 fails the "before any stage" check in `shared/conventions.md`.
+
+The git remote of the repo, written `<remote>` below, is often but not always
+`origin`. Use a `remote:` line in `.taskie.md` if there is one. Otherwise take
+the remote whose fetch URL ends in `<nameWithOwner>` or `<nameWithOwner>.git`,
+right after `/` or `:`, compared case-insensitively. If no remote or more than
+one matches, ask the user which to use and offer to save it as `remote:` in
+`.taskie.md`. Only git commands need it; `gh` resolves the repo itself.
 
 ## Labels
 
@@ -98,8 +105,8 @@ created it), then add the worktree with git:
 
 ```bash
 gh issue develop <n> --name issue-<n>-<slug> --base <base>   # only if not linked yet
-git fetch <remote> issue-<n>-<slug>
-git worktree add .worktrees/issue-<n> issue-<n>-<slug>
+git fetch <remote> issue-<n>-<slug>:refs/remotes/<remote>/issue-<n>-<slug>
+git worktree add --track -b issue-<n>-<slug> .worktrees/issue-<n> <remote>/issue-<n>-<slug>
 ```
 
 Linked branches of all open issues in one call (for the board):
@@ -173,5 +180,12 @@ gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {num
 
 | Action | Command |
 |---|---|
-| check a tag is free | `gh release view '<tag>'` fails and `git ls-remote --tags <remote> '<tag>'` prints nothing |
+| check a tag is free | see below |
 | create a release | `gh release create '<tag>' --target <base> --title '<tag>' --notes-file -` |
+
+A tag is free when `gh release view '<tag>'` fails and this prints `0`
+(`matching-refs` matches by prefix, so the exact ref is selected):
+
+```bash
+gh api 'repos/{owner}/{repo}/git/matching-refs/tags/<tag>' --jq 'map(select(.ref == "refs/tags/<tag>")) | length'
+```

@@ -3,7 +3,7 @@ name: work
 description: Implement a ready issue in its own worktree and open a pull request, or address review feedback on an issue that already has one.
 argument-hint: "<issue number>"
 disable-model-invocation: true
-allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(git status*) Bash(git diff*) Bash(git log*)
+allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git remote -v*)
 ---
 
 # taskie work
