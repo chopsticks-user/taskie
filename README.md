@@ -25,6 +25,9 @@ Claude can run `/taskie`, `new` and `plan` on its own when the conversation
 calls for it (for example "file a bug for this"). `do` and `ship` push,
 comment and merge, so they only run when you type them.
 
+Whenever taskie needs a decision it asks a multiple-choice question, with the
+recommended option first; you can always pick "Other" and type instead.
+
 `/taskie:do` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your
 `.gitignore` is left alone), and `/taskie:ship` removes it after merging.
