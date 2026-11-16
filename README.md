@@ -18,15 +18,14 @@ the way most tech companies move tickets through a team.
 | `/taskie:new [#n]` | With no text, triages issues filed outside taskie (or issue `#n`) in one table, and applies it after you approve. |
 | `/taskie:plan #n` | Adds acceptance criteria, splits large issues into sub-issues, and marks issues ready. |
 | `/taskie:plan <goal>` | Turns a goal such as `v0.2: offline mode` into a milestone with issues. |
-| `/taskie:work <n>` | Implements a ready issue in its own worktree and opens a pull request. Run it again to address review feedback. |
-| `/taskie:review [pr]` | Reviews the PR with `/code-review`, fixes in-scope findings, and posts a summary comment. |
-| `/taskie:ship [pr]` | Updates the PR with the base branch, verifies, merges, cleans up, and offers a release when a milestone completes. |
+| `/taskie:do [n]` | Implements an issue in its own worktree, opens a pull request, reviews it with `/code-review`, fixes in-scope findings and posts a summary comment. Run it again to address feedback. With no argument it takes the current issue, or the most urgent in-progress or ready one, and asks when several qualify. |
+| `/taskie:ship [pr]` | Updates the PR with the base branch, verifies, merges, cleans up, and offers a release when a milestone completes. With no argument it takes the current PR or the one awaiting approval, and asks when several do. |
 
 Claude can run `/taskie`, `new` and `plan` on its own when the conversation
-calls for it (for example "file a bug for this"). `work`, `review` and `ship`
-push, comment and merge, so they only run when you type them.
+calls for it (for example "file a bug for this"). `do` and `ship` push,
+comment and merge, so they only run when you type them.
 
-`/taskie:work` never touches your checkout. Each issue gets a git worktree at
+`/taskie:do` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your
 `.gitignore` is left alone), and `/taskie:ship` removes it after merging.
 
@@ -34,8 +33,7 @@ push, comment and merge, so they only run when you type them.
 
 ```
 /taskie:new the export button does nothing on Safari
-/taskie:work 12
-/taskie:review
+/taskie:do 12
 /taskie:ship
 ```
 
@@ -80,7 +78,7 @@ Merge with squash.
 Run reviews at high level for every priority.
 ```
 
-If `verify` or `setup` is missing, `/taskie:work` detects a likely command,
+If `verify` or `setup` is missing, `/taskie:do` detects a likely command,
 confirms it with you, and offers to save it here.
 
 taskie finds the git remote that points at the GitHub repo. If it cannot tell

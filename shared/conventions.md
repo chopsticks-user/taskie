@@ -65,7 +65,8 @@ worked on directly; its sub-issues are.
 
 ## Review marker
 
-`/taskie:review` ends with one summary comment on the PR. Its first line is
+`/taskie:do` ends its review with one summary comment on the PR. Its first
+line is
 
 ```
 <!-- taskie:review sha=<full head commit sha that was reviewed> -->

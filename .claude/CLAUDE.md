@@ -1,8 +1,8 @@
 # taskie
 
-A Claude Code plugin that runs a ticket-to-code lifecycle on GitHub through one
-skill per stage. It is written almost entirely in markdown: skills, shared
-conventions and a backend mapping. The design is in
+A Claude Code plugin that runs a ticket-to-code lifecycle on GitHub through
+five commands, one skill each. It is written almost entirely in markdown:
+skills, shared conventions and a backend mapping. The design is in
 [docs/design.md](docs/design.md).
 
 ## Docs and what each is for
@@ -24,9 +24,8 @@ and, if user-visible, `README.md` in the same commit.
 
 This repo uses taskie on itself. Every change goes through it, in order:
 `/taskie:new`, `/taskie:plan #<n>` when an issue is not ready,
-`/taskie:work <n>`, `/taskie:review <pr>`, and `/taskie:ship <pr>` only after
-the maintainer approves. Never commit on `main` directly. The base branch is
-`main`.
+`/taskie:do <n>`, and `/taskie:ship <pr>` only after the maintainer approves.
+Never commit on `main` directly. The base branch is `main`.
 
 The plugin that sessions here load is the released copy from GitHub, declared
 in `.claude/settings.json`. A change reaches your sessions once its PR is
@@ -54,5 +53,5 @@ directory's submission checks and fails until the plugin has a listing icon.
   names `gh` commands. The one exception is `allowed-tools` frontmatter, which
   may pre-approve read-only `gh` commands (never `gh api graphql`, which can
   also mutate).
-- `work`, `review` and `ship` set `disable-model-invocation: true`.
+- `do` and `ship` set `disable-model-invocation: true`.
 - Keep each `SKILL.md` under 500 lines.

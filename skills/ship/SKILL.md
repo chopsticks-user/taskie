@@ -12,7 +12,7 @@ Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
 `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` at the repo root
 if it exists.
 
-Input: $ARGUMENTS (a PR number, or empty for the current branch's PR)
+Input: $ARGUMENTS (a PR number, or empty to pick the current or only reviewed PR)
 
 The user typing `/taskie:ship` is their approval to merge. Do not ask for a
 second confirmation before merging; do stop at every gate below.
@@ -20,7 +20,11 @@ second confirmation before merging; do stop at every gate below.
 ## Gate and update
 
 1. Run the "before any stage" check from the conventions.
-2. Find the PR: the given number, or the PR of the current branch. Find the
+2. Find the PR: the given number; with no argument, the PR of the current
+   branch or of the `.worktrees/issue-<n>` the session is in, otherwise the
+   open PRs awaiting approval (derive status as the conventions describe).
+   One is used (say which); several: ask which to ship, offering at most
+   four, oldest first; none: say so and suggest `/taskie:do`. Find the
    issues it resolves, as the backend describes.
 3. Use `.worktrees/issue-<n>` if it exists, otherwise add a worktree there
    for the PR's branch. Bring it up to date with the remote branch
@@ -30,20 +34,20 @@ second confirmation before merging; do stop at every gate below.
    - its latest review marker is current: the marker's sha equals the PR's
      head, or the marker's sha is an ancestor of the head and every commit
      after it is a merge (`git rev-list --no-merges <marker sha>..HEAD`
-     prints nothing). Otherwise suggest `/taskie:review <pr>`.
+     prints nothing). Otherwise suggest `/taskie:do <n>`.
    - the worktree has no unpushed commits of its own: after fetching the
      base branch from `<remote>` (the repo's git remote, as the backend
      finds it), `git rev-list --no-merges HEAD ^<PR head sha> ^<remote>/<base>`
      prints nothing. Merge commits, and base commits brought in by ship's own
      earlier merge, do not count. Otherwise list them and suggest pushing
-     them, then `/taskie:review <pr>`, since they were never reviewed. The
+     them, then `/taskie:do <n>`, since they were never reviewed. The
      merge below deletes the local branch, so they would be lost.
    - its checks are green, as the backend defines. If checks are still
      running, say so and stop; do not wait at this step.
 5. Fetch the base branch from `<remote>` and merge `<remote>/<base>` into the
    PR's branch in the worktree.
    - Already up to date: continue.
-   - Conflicts: abort the merge, stop, and suggest `/taskie:work <n>` to
+   - Conflicts: abort the merge, stop, and suggest `/taskie:do <n>` to
      resolve them (that adds commits, so the PR needs a new review).
 6. Run `verify` in the worktree. If it fails and step 5 made a merge commit,
    undo that merge commit (`git reset --hard ORIG_HEAD`, only after checking

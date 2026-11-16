@@ -43,7 +43,7 @@ Input is an issue number, with or without `#`.
    `needs-triage` and `needs-info`, if the issue has no priority yet). If the
    definition does not hold, say which point fails.
 8. Apply what the user approved: replace the body, then change the labels.
-   Suggest `/taskie:work <n>` if the issue is now ready.
+   Suggest `/taskie:do <n>` if the issue is now ready.
 
 ## Split an issue
 
@@ -69,7 +69,7 @@ tracker and the work moves to sub-issues.
    Then replace the parent's body and remove `ready` from it if present; a
    tracker is never ready.
 6. Print the children as `#<n> <title>` with their status, and suggest
-   `/taskie:work` for the first ready one.
+   `/taskie:do` for the first ready one.
 
 ## Plan a milestone
 
@@ -97,4 +97,4 @@ Input is a goal such as `v0.2: offline mode`.
    issues and sub-issues in it (`ready` only where the definition holds),
    and add the existing issues to it.
 8. Print the milestone's issues in dependency order with their statuses, and
-   suggest `/taskie:work` for the first ready one.
+   suggest `/taskie:do` for the first ready one.

@@ -80,7 +80,7 @@ First run the "before any stage" check from the conventions. Then:
    issue.
 
 9. Print each result as `#<n> <title> <url>` with its status, and suggest
-   `/taskie:work <n>` for a ready issue or `/taskie:plan #<n>` for one in the
+   `/taskie:do <n>` for a ready issue or `/taskie:plan #<n>` for one in the
    backlog.
 
 ## Triage
@@ -107,7 +107,7 @@ For issues that already exist, usually filed by someone outside taskie.
 3. Apply each approved row as its outcome describes. Make sure every label
    exists before adding it.
 4. Print one line per issue with what was done, then suggest the next
-   command: `/taskie:work <n>` for a ready issue, `/taskie:plan #<n>` for one
+   command: `/taskie:do <n>` for a ready issue, `/taskie:plan #<n>` for one
    in the backlog.
 
 ### Outcomes
