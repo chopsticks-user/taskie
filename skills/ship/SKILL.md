@@ -8,9 +8,8 @@ allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue view *) 
 
 # taskie ship
 
-Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
-`${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` at the repo root
-if it exists.
+Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md` first and follow its
+Precedence section, which says what else to read.
 
 Input: $ARGUMENTS (a PR number, or empty to pick the current PR or one awaiting approval)
 

@@ -46,9 +46,9 @@ directory's submission checks and fails until the plugin has a listing icon.
 
 ## Rules for skill files
 
-- Every stage skill reads `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
-  `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then the target repo's
-  `.taskie.md` if present. The repo file wins on conflicts.
+- Every skill reads `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md` first and
+  follows its Precedence section, the one place the read order is written
+  down. Do not repeat the order in a skill.
 - Skills describe actions in backend-neutral verbs. Only `backends/github.md`
   names `gh` commands. The one exception is `allowed-tools` frontmatter, which
   may pre-approve read-only `gh` commands (never `gh api graphql`, which can
