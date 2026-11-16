@@ -30,8 +30,9 @@ commands; stages describe actions, and this file maps them.
 | check authentication | `gh auth status` |
 | repo name and default branch | `gh repo view --json nameWithOwner,defaultBranchRef --jq '{repo: .nameWithOwner, base: .defaultBranchRef.name}'` |
 | current user | `gh api user --jq .login` |
+| git remote of the repo | the remote in `git remote -v` whose URL contains the repo's `nameWithOwner` (often, but not always, `origin`); written `<remote>` below |
 
-A repo whose `origin` is not on GitHub, or a `gh` that is not authenticated,
+A repo with no remote on GitHub, or a `gh` that is not authenticated,
 fails the "before any stage" check in `shared/conventions.md`.
 
 ## Labels
@@ -97,7 +98,7 @@ created it), then add the worktree with git:
 
 ```bash
 gh issue develop <n> --name issue-<n>-<slug> --base <base>   # only if not linked yet
-git fetch origin issue-<n>-<slug>
+git fetch <remote> issue-<n>-<slug>
 git worktree add .worktrees/issue-<n> issue-<n>-<slug>
 ```
 
@@ -172,5 +173,5 @@ gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {num
 
 | Action | Command |
 |---|---|
-| check a tag is free | `gh release view '<tag>'` fails and `git ls-remote --tags origin '<tag>'` prints nothing |
+| check a tag is free | `gh release view '<tag>'` fails and `git ls-remote --tags <remote> '<tag>'` prints nothing |
 | create a release | `gh release create '<tag>' --target <base> --title '<tag>' --notes-file -` |

@@ -32,9 +32,10 @@ second confirmation before merging; do stop at every gate below.
      after it is a merge (`git rev-list --no-merges <marker sha>..HEAD`
      prints nothing). Otherwise suggest `/taskie:review <pr>`.
    - the worktree has no unpushed commits of its own: after fetching,
-     `git rev-list --no-merges HEAD ^<PR head sha> ^origin/<base>` prints
-     nothing (merge commits and base commits that ship's own earlier merge
-     brought in do not count). Otherwise list them and suggest pushing them,
+     `git rev-list --no-merges HEAD ^<PR head sha> ^<remote>/<base>` prints
+     nothing, with `<remote>` the repo's git remote from the backend (merge
+     commits, and base commits brought in by ship's own earlier merge, do not
+     count). Otherwise list them and suggest pushing them,
      then `/taskie:review <pr>`, since they were never reviewed. The merge
      below deletes the local branch, so they would be lost.
    - its checks are green, as the backend defines. If checks are still
