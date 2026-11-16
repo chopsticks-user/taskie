@@ -356,7 +356,9 @@ rebasing, squash merges (they discard the small verified commits).
 
 The v1 stages below were built as groups of commits made locally on `main`,
 before the repo had a GitHub remote. Since then every change goes through an
-issue and a pull request, and every commit passes `just verify`.
+issue and a pull request, and every commit passes `just verify`. The stage
+names below are the v1 ones; intake and triage have since become
+`/taskie:new`.
 
 | Stage | Commit | Content |
 |---|---|---|

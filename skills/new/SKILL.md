@@ -13,21 +13,24 @@ if it exists.
 
 Input: $ARGUMENTS
 
-Every comment this skill posts on an issue starts with the line
-`<!-- taskie:triage -->`.
+Every triage comment this skill posts (the comment on a created issue, and
+each triage outcome's comment) starts with the line `<!-- taskie:triage -->`.
+Other comments, such as new details added to an existing issue, never carry
+it: the marker is how triage tells that a `needs-info` reporter answered.
 
 ## Pick the mode
 
-- Input is `#<n>` or a bare number: triage that issue ("Triage" below),
-  whatever its labels.
-- Input is empty: if the conversation was just about a problem to record (for
-  example "file that as a bug"), file it ("File" below). Otherwise triage
-  every open `needs-triage` issue, plus every open `needs-info` issue that
-  has a comment newer than its latest `<!-- taskie:triage -->` comment (the
-  reporter answered). If nothing is selected, say so and stop.
-- Anything else: file it ("File" below).
+First run the "before any stage" check from the conventions. Then:
 
-Run the "before any stage" check from the conventions first.
+- Input is exactly `#<n>`: triage that issue ("Triage" below), whatever its
+  labels.
+- Input is empty: triage every open `needs-triage` issue, plus every open
+  `needs-info` issue that has a comment newer than its latest
+  `<!-- taskie:triage -->` comment (the reporter answered). If nothing is
+  selected, say so and stop.
+- Anything else, including text that starts with a number or `#<n>`: file it
+  ("File" below). When Claude starts this skill from a conversation (for
+  example "file that as a bug"), it passes the problem as text.
 
 ## File
 
@@ -73,17 +76,11 @@ Run the "before any stage" check from the conventions first.
 8. For the confirmed drafts: make sure the labels exist, create each issue
    with its type and priority labels (plus `ready` when that is the outcome;
    never `needs-triage`), post any agreed comments on existing issues, and
-   comment on each new issue:
-
-   ```
-   <!-- taskie:triage -->
-   Triaged: <type>, <priority>. <one-line reason>
-
-   Likely files: <files, or "none found">
-   ```
+   post the Accept outcome's triage comment (under "Outcomes") on each new
+   issue.
 
 9. Print each result as `#<n> <title> <url>` with its status, and suggest
-   `/taskie:do <n>` for a ready issue or `/taskie:plan #<n>` for one in the
+   `/taskie:work <n>` for a ready issue or `/taskie:plan #<n>` for one in the
    backlog.
 
 ## Triage
@@ -110,7 +107,7 @@ For issues that already exist, usually filed by someone outside taskie.
 3. Apply each approved row as its outcome describes. Make sure every label
    exists before adding it.
 4. Print one line per issue with what was done, then suggest the next
-   command: `/taskie:do <n>` for a ready issue, `/taskie:plan #<n>` for one
+   command: `/taskie:work <n>` for a ready issue, `/taskie:plan #<n>` for one
    in the backlog.
 
 ### Outcomes
