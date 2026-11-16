@@ -12,34 +12,42 @@ Read `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md`, then
 `${CLAUDE_PLUGIN_ROOT}/backends/github.md`, then `.taskie.md` at the repo root
 if it exists.
 
-Input: $ARGUMENTS (an issue number, with or without `#`, or empty)
+Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
 
 ## Pick the issue
 
-1. Run the "before any stage" check from the conventions.
-2. With a number, use that issue. With no argument:
+1. Run the "before any stage" check from the conventions, and find the
+   repo's `verify` and `setup` commands as the conventions describe. Every
+   path below needs them.
+2. With a number: GitHub numbers issues and PRs in one sequence, so it names
+   one or the other. An issue is used as is. A PR is taken with the issue it
+   resolves (as the backend describes); if it resolves several, use the one
+   whose number is in the branch name, else the highest-priority one; if it
+   resolves none, go to "Address feedback" with the PR alone, using the
+   worktree `.worktrees/pr-<pr>`, a review level of `medium`, and skipping
+   anything that needs an issue.
+3. With no argument:
    - the issue of the current branch (its `issue-<n>-` prefix) or of the
-     `.worktrees/issue-<n>` the session is in, if any
+     `.worktrees/issue-<n>` the session is in, if that issue is open
    - otherwise derive the status of every open issue as the conventions
-     describe and collect the candidates: issues in progress (an interrupted
-     run), then ready issues, each group ordered by priority (P0 first), then
-     oldest first
+     describe and collect the candidates: issues in review (an open PR with
+     no current review marker), then in progress (an interrupted run), then
+     ready, each group ordered by priority (P0 first), then oldest first
    - one candidate: use it and say which. Several: ask which to take,
      offering at most four, in that order. None: say so and suggest
      `/taskie:new` or `/taskie:plan #<n>`
-3. Read the issue. Decide how to continue:
+4. Read the issue. Decide how to continue:
    - it has an open PR: go to "Address feedback"
    - it has a linked branch but no PR: it is in progress, probably an
      interrupted run. Unless the user just picked it, ask whether to resume
-     it; if yes, continue from step 2 of "Start", reusing that branch
+     it; if yes, continue with "Start", reusing that branch
    - it is a tracker: stop and list its ready sub-issues
    - it is closed, or not labelled `ready`: stop, and suggest
      `/taskie:plan #<n>`
 
 ## Start
 
-1. Find the repo's `verify` and `setup` commands as the conventions describe.
-2. Prepare the worktree:
+1. Prepare the worktree:
    - make sure `.worktrees/` is listed in the repository's `info/exclude`
      file (`$(git rev-parse --git-common-dir)/info/exclude`), adding it if
      missing
@@ -47,10 +55,10 @@ Input: $ARGUMENTS (an issue number, with or without `#`, or empty)
    - otherwise create the linked branch and its worktree from the base
      branch, as the backend describes (or, when resuming, add a worktree for
      the existing branch)
-3. From here on, work only inside `.worktrees/issue-<n>`: run every command
+2. From here on, work only inside `.worktrees/issue-<n>`: run every command
    there and read and edit files only under that path. Never change the main
    checkout.
-4. Run `setup` (unless it is `none`), then `verify`. If verify fails before
+3. Run `setup` (unless it is `none`), then `verify`. If verify fails before
    any change, stop: report the failure as pre-existing, offer to file it
    with `/taskie:new`, and leave the worktree in place.
 
@@ -72,7 +80,9 @@ Input: $ARGUMENTS (an issue number, with or without `#`, or empty)
    - an acceptance criterion looks wrong or impossible
 5. A problem found along the way that is outside the issue's scope: do not
    fix it here. Note it, and file it with the review's out-of-scope findings
-   in "Report" step 1, so the run asks the user once.
+   in "Report" step 1, so the run asks the user once. If the run stops before
+   "Report" for any reason, file the noted problems with `/taskie:new` before
+   stopping, so none is lost.
 6. When every acceptance criterion is met, run `verify` once more on the
    final state.
 7. Push the branch (never force-push) and open a PR into the base branch with
@@ -82,11 +92,12 @@ Input: $ARGUMENTS (an issue number, with or without `#`, or empty)
 
 ## Address feedback
 
-The issue already has an open PR.
+The issue already has an open PR, or the input was a PR that resolves no
+issue.
 
-1. Use `.worktrees/issue-<n>` if it exists, otherwise add a worktree for the
-   PR's branch. Bring it up to date with the remote branch (fast-forward
-   only). Follow step 3 of "Start".
+1. Prepare the worktree as in "Start" step 1, reusing it or adding one for
+   the PR's branch, and bring it up to date with the remote branch
+   (fast-forward only). Then follow "Start" step 2.
 2. Collect the feedback: comments and reviews on the PR, comments on its
    diff, and anything the user said when running this command. Skip findings
    the latest `<!-- taskie:review` comment already marks as fixed or filed.

@@ -74,7 +74,7 @@ first rule that applies:
 3. an issue is ready: `#12 is ready (P1): /taskie:do 12`, choosing the
    highest priority, then the oldest
 4. a PR is in review without a current marker: `PR #31 needs review:
-   /taskie:do 10`, naming the issue the PR resolves
+   /taskie:do 31`
 5. an issue is in the backlog: `#9 needs planning: /taskie:plan #9`
 
 If no rule applies, say so in one line.

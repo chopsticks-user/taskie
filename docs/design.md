@@ -285,10 +285,11 @@ size labels, task lists in the parent body, a separate milestone skill.
 Manual-only. It replaced separate work and review commands: one run takes an
 issue from branch to a reviewed PR. Steps:
 
-1. Pick the issue: the number given; otherwise the issue of the current branch
-   or worktree; otherwise in-progress issues (interrupted runs), then ready
-   ones, by priority and age. One candidate is used, several are offered as a
-   choice.
+1. Pick the issue: the number given (an issue, or a PR, taken with the issue
+   it resolves or reviewed alone if it has none); otherwise the issue of the
+   current branch or worktree; otherwise issues in review without a current
+   marker, then in progress (interrupted runs), then ready, by priority and
+   age. One candidate is used, several are offered as a choice.
 2. Refuse issues that are not `ready` or are parent trackers. An issue that
    already has a linked branch but no PR is most likely an interrupted run,
    so offer to resume it instead of refusing.

@@ -170,8 +170,9 @@ five lowercase words from the title joined by hyphens, at most 40 characters,
 for example `issue-12-export-button-safari`.
 
 Each issue is worked on in its own worktree at `.worktrees/issue-<n>` inside
-the repo. Hide `.worktrees/` from git through the repository's `info/exclude`
-file, never by editing the repo's `.gitignore`.
+the repo; a PR that resolves no issue uses `.worktrees/pr-<pr>`. Hide
+`.worktrees/` from git through the repository's `info/exclude` file, never by
+editing the repo's `.gitignore`.
 
 Never commit on the base branch. Never force-push.
 
