@@ -216,31 +216,42 @@ is visible to other people. Each stage defines where it stops for the user's
 approval; do not act on the backend outside those points. When the user
 declines or edits a proposal, follow their version.
 
+## Asking the user
+
+Every question a stage asks, and every approval it waits for ("ask",
+"confirm", "wait for approval" in any skill, including the approval points
+above), is a multiple-choice prompt: in Claude Code, the AskUserQuestion
+tool. The user picks an option instead of typing, and the run waits for the
+answer, so it never moves on with a question left open. Telling the user to
+do something themselves, such as running a command, is not a question and
+stays plain text.
+
+- Show long content first, in the message: drafts, tables, diffs and
+  summaries. A prompt holds only short labels and descriptions.
+- Give each option a one-line description of what happens if it is picked.
+  Put the recommended option first and end its label with "(Recommended)",
+  but only when there is a reason to prefer it. A question about what a
+  reporter meant gets no recommendation; offer the plausible readings.
+- For an open value (a tag, a title, a name), offer concrete proposals; the
+  user types their own through "Other".
+- The prompt adds an "Other" choice for free text by itself; do not add one.
+  Every question needs at least two options.
+- A batch (drafts, table rows, findings to file): number the items in the
+  message. With one item, ask a single-choice question (apply it, or drop
+  it). With more than four, first ask "Apply all (Recommended)", "Choose
+  items" or "Drop all", and continue only on "Choose items". To choose, use
+  multiSelect questions with one option per item, labelled with its number,
+  at most 4 options per question and 4 questions per prompt, in rounds past
+  16 items. A ticked item is applied; to change one, tick it and describe the
+  change in "Other", naming the item's number; an unticked item is dropped.
+- Ask everything one decision needs in one prompt, as separate questions; past
+  four questions, ask in rounds, most important first.
+- If no multiple-choice tool is available, ask the same question as a
+  numbered list in text and wait for the user's reply before acting. In a
+  non-interactive run, where nobody can reply, change nothing that needs the
+  answer: stop and report the open question.
+
 ## Unrelated problems
 
 A problem found along the way that is outside the current issue's scope is not
 fixed in place. Hand it to `/taskie:new` as a new issue, then continue.
-
-## Asking the user
-
-Every question a stage asks, and every approval it waits for ("ask",
-"confirm", "wait for approval" in any skill), is a multiple-choice prompt: in
-Claude Code, the AskUserQuestion tool. The user picks an option instead of
-typing an answer, and a run never stalls on a free-text question left for
-later.
-
-- Show long content first, in the message: drafts, tables, diffs and
-  summaries. A prompt holds only short labels and descriptions.
-- Put the recommended option first and end its label with "(Recommended)".
-  Give each option a one-line description of what happens if it is picked.
-- The prompt adds an "Other" choice for free text by itself; edits to a
-  proposal come back through it. Do not add an "Other" option yourself.
-- Approve a batch (drafts, table rows, findings to file) with a multiSelect
-  question that has one option per item, so the user ticks what to apply.
-  A prompt holds at most 4 questions with at most 4 options each; split a
-  larger batch across questions in the same prompt, and past 16 items, ask
-  in rounds.
-- Ask everything one decision needs in one prompt, as separate questions.
-- If no multiple-choice tool is available (for example in a headless run),
-  ask the same question as a numbered list in text and accept the numbers as
-  the answer.

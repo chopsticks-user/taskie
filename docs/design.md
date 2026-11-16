@@ -178,10 +178,12 @@ check it.
 
 Every question and approval is a multiple-choice prompt (AskUserQuestion in
 Claude Code): the user picks options instead of typing, batches are ticked in
-one multiSelect question, and the recommended option comes first. The details,
-including the plain-text fallback for headless runs, are in
+multiSelect questions (with an "apply all" shortcut for large ones), and a
+recommended option comes first when there is a reason for one. Without the
+tool, taskie asks in text and waits; in a non-interactive run it stops and
+reports the question rather than act. The details are in
 `shared/conventions.md`. Free-text questions were dropped because a run could
-stall on one the user moved past, as happened before ship on PR #2.
+move on past one the user had not answered, as happened before ship on PR #2.
 
 ### Branches, commits and pull requests
 
