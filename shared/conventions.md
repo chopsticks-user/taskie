@@ -1,15 +1,17 @@
 # taskie conventions
 
 Default rules every taskie stage follows. They are written in
-backend-neutral terms; `${CLAUDE_PLUGIN_ROOT}/backends/github.md` says how to
+backend-neutral terms; the backend file named under Precedence says how to
 carry out each action.
+
+`${CLAUDE_PLUGIN_ROOT}` below is the plugin root: the parent of the `shared/`
+directory this file is in. It is not expanded inside this file, so replace it
+with that directory's real path yourself; never pass it to a shell as is.
 
 ## Precedence
 
 Every taskie skill reads this file first. This section is the only place the
-read order is written down. Before doing anything else, also read, in order
-(`${CLAUDE_PLUGIN_ROOT}` is the plugin root: the parent of the `shared/`
-directory this file is in; it is not expanded inside this file):
+read order is written down. Before doing anything else, also read, in order:
 
 1. `${CLAUDE_PLUGIN_ROOT}/backends/github.md`
 2. `.taskie.md` at the root of the target repo, if it exists

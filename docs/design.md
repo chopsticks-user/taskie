@@ -45,11 +45,10 @@ taskie/
 └── justfile
 ```
 
-Every skill reads `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md` first. Its
-Precedence section, the only place the read order is written down, sends the
-reader on to `backends/github.md` and then the target repo's `.taskie.md`;
-where they conflict, `.taskie.md` wins. Keeping the order in one file means a
-rename or reorder touches one place instead of every skill.
+Every skill reads `${CLAUDE_PLUGIN_ROOT}/shared/conventions.md` first and
+follows its Precedence section, the only place the read order is written down.
+Keeping the order in one file means a rename or reorder touches one place
+instead of every skill.
 
 `shared/` holds the conventions every stage shares. The name avoids `rules/`,
 which reads like Claude Code's `.claude/rules/`, `docs/`, which holds
