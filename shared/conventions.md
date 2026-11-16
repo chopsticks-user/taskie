@@ -138,7 +138,8 @@ Everything else (feature, chore, docs):
 
 Acceptance criteria are a markdown checklist. Each item states one observable
 outcome, for example "Exporting with an empty table shows 'Nothing to export'
-instead of an error". Intake writes a draft; plan finalizes it.
+instead of an error". `/taskie:new` writes them final when it files an issue;
+`/taskie:plan` finalizes them for issues that are not ready yet.
 
 ## Repo commands
 
@@ -211,4 +212,4 @@ declines or edits a proposal, follow their version.
 ## Unrelated problems
 
 A problem found along the way that is outside the current issue's scope is not
-fixed in place. Hand it to `/taskie:intake` as a new issue, then continue.
+fixed in place. Hand it to `/taskie:new` as a new issue, then continue.

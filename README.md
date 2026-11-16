@@ -14,18 +14,17 @@ the way most tech companies move tickets through a team.
 | Command | What it does |
 |---|---|
 | `/taskie` | Board: open issues and PRs grouped by status, plus a suggested next action. `/taskie help` lists the stages. |
-| `/taskie:intake <text>` | Turns a chat request, bug report or review findings into issues. Shows the draft and creates only after you confirm. |
-| `/taskie:triage [#n]` | Proposes type, priority and outcome for untriaged issues in one table, and applies it after you approve. |
+| `/taskie:new <text>` | Turns a chat request, bug report or review findings into issues that are already triaged: type, priority, acceptance criteria, and `ready` when they qualify. Shows the drafts and creates only after you confirm. |
+| `/taskie:new [#n]` | With no text, triages issues filed outside taskie (or issue `#n`) in one table, and applies it after you approve. |
 | `/taskie:plan #n` | Adds acceptance criteria, splits large issues into sub-issues, and marks issues ready. |
 | `/taskie:plan <goal>` | Turns a goal such as `v0.2: offline mode` into a milestone with issues. |
 | `/taskie:work <n>` | Implements a ready issue in its own worktree and opens a pull request. Run it again to address review feedback. |
 | `/taskie:review [pr]` | Reviews the PR with `/code-review`, fixes in-scope findings, and posts a summary comment. |
 | `/taskie:ship [pr]` | Updates the PR with the base branch, verifies, merges, cleans up, and offers a release when a milestone completes. |
 
-Claude can run `/taskie`, `intake`, `triage` and `plan` on its own when the
-conversation calls for it (for example "file a bug for this"). `work`,
-`review` and `ship` push, comment and merge, so they only run when you type
-them.
+Claude can run `/taskie`, `new` and `plan` on its own when the conversation
+calls for it (for example "file a bug for this"). `work`, `review` and `ship`
+push, comment and merge, so they only run when you type them.
 
 `/taskie:work` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your
@@ -34,8 +33,7 @@ them.
 ## A typical flow
 
 ```
-/taskie:intake the export button does nothing on Safari
-/taskie:triage
+/taskie:new the export button does nothing on Safari
 /taskie:work 12
 /taskie:review
 /taskie:ship

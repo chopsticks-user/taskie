@@ -17,8 +17,7 @@ tickets through a team, scaled down so one person and Claude can run it.
 
 | Industry stage | taskie |
 |---|---|
-| Sources (support, PM, alerts, engineers) | `/taskie:intake` |
-| Intake and triage | `/taskie:triage` |
+| Sources, intake and triage | `/taskie:new` |
 | Backlog refinement, milestones | `/taskie:plan` |
 | Execution (branch, code, PR) | `/taskie:work` |
 | Code review | `/taskie:review` |
@@ -36,8 +35,7 @@ taskie/
 ├── backends/github.md         maps each verb to gh commands
 ├── skills/
 │   ├── taskie/SKILL.md        /taskie          board and help
-│   ├── intake/SKILL.md        /taskie:intake
-│   ├── triage/SKILL.md        /taskie:triage
+│   ├── new/SKILL.md           /taskie:new
 │   ├── plan/SKILL.md          /taskie:plan
 │   ├── work/SKILL.md          /taskie:work
 │   ├── review/SKILL.md        /taskie:review
@@ -81,8 +79,7 @@ gates cannot be bypassed.
 | Skill | Claude may run it on its own | Why |
 |---|---|---|
 | `/taskie` | yes | read-only |
-| `/taskie:intake` | yes | so "file a bug for this" in chat works; it confirms before creating |
-| `/taskie:triage` | yes | changes go through one approval table |
+| `/taskie:new` | yes | so "file a bug for this" in chat works; it confirms before creating or changing anything |
 | `/taskie:plan` | yes | edits go through approval |
 | `/taskie:work` | no | creates branches, pushes, opens PRs |
 | `/taskie:review` | no | pushes commits, posts PR comments |
@@ -128,14 +125,14 @@ instead, so they need no remote.
 
 | Label | Set by | Meaning |
 |---|---|---|
-| `type:bug`, `type:feature`, `type:chore`, `type:docs` | intake, confirmed by triage | kind of work |
-| `P0` | triage | outage, data loss or security hole; drop everything |
-| `P1` | triage | major feature broken, no workaround |
-| `P2` | triage | degraded, workaround exists |
-| `P3` | triage | minor or cosmetic |
-| `needs-triage` | intake | not yet triaged |
-| `needs-info` | triage | waiting on answers from the reporter |
-| `ready` | triage or plan | meets the definition of ready |
+| `type:bug`, `type:feature`, `type:chore`, `type:docs` | new | kind of work |
+| `P0` | new | outage, data loss or security hole; drop everything |
+| `P1` | new | major feature broken, no workaround |
+| `P2` | new | degraded, workaround exists |
+| `P3` | new | minor or cosmetic |
+| `needs-triage` | people filing outside taskie (new never sets it) | not yet triaged |
+| `needs-info` | new | waiting on answers from the reporter |
+| `ready` | new or plan | meets the definition of ready |
 
 taskie creates missing labels idempotently. There are no area or component
 labels in v1.
@@ -162,15 +159,14 @@ never gets `ready` and is never worked on directly.
 
 An issue is ready when it has an acceptance-criteria checklist, a clear scope,
 known dependencies, and fits in one reviewable pull request. The definition
-lives in `shared/conventions.md` because both triage (fast-track) and plan
+lives in `shared/conventions.md` because both new and plan
 check it.
 
 ### Where taskie stops for you
 
 | Stage | Approval point |
 |---|---|
-| intake | shows the full draft issue(s) before creating |
-| triage | one table of proposed labels, comments and closes |
+| new | shows the full triaged draft issue(s) before creating, or one triage table for existing issues |
 | plan | proposed body edits, sub-issues, milestone drafts |
 | work | stops only if scope grows or it reaches data, auth or a public API |
 | ship | typing `/taskie:ship` is the merge approval; a release needs its own confirmation |
@@ -219,38 +215,45 @@ a PR that still needs review, then a backlog issue that needs planning.
 Rejected: milestone progress lines (not needed until plan is used), counts
 only, cross-repo `--all`.
 
-### `/taskie:intake`
+### `/taskie:new`
 
-Turns input into issues. Understood sources in v1:
+Files issues already triaged, or triages issues filed elsewhere. It replaced
+separate intake and triage commands because, for one person working with
+Claude, the person filing is the person triaging, and two approvals for one
+issue added a round trip without adding a decision.
+
+With text, it files. Understood sources in v1:
 
 | Source | Extracts |
 |---|---|
-| chat request | problem, context, draft acceptance criteria |
+| chat request | problem, context, acceptance criteria |
 | bug report or stack trace | repro steps, expected vs actual, failing location, environment; missing parts are marked unknown, never invented |
 | review findings | one issue per finding, linking the source PR and file:line |
 
 Rules: one issue per unrelated item (splitting one large item into subtasks is
 plan's job). Before drafting, search open and closed issues; if one looks like
-a duplicate, show it and ask. Two body templates: bug, and everything else.
-Labels are `type:*` plus `needs-triage`; priority is left to triage. The full
-draft is shown and nothing is created until you confirm.
+a duplicate, show it and ask. It greps the repo for the likely files and asks
+about anything ambiguous before drafting. Each draft carries its type,
+priority, final acceptance criteria and an outcome: `ready` when it meets the
+definition of ready, otherwise backlog for `/taskie:plan`. Two body templates:
+bug, and everything else. The full drafts are shown and nothing is created
+until you confirm; issues are created with their labels and a triage comment,
+never `needs-triage`.
 
-Not in v1: CI failure intake (would be one more source section).
+With no text it triages every `needs-triage` issue plus `needs-info` issues
+with new comments; with `#n` it triages that one. For each issue it reads the
+text, greps the repo for the likely files, and proposes type, priority,
+outcome and reason in one table. Nothing changes until you approve the table,
+optionally editing rows. A scope question you answer while approving is
+written into the issue body.
 
-### `/taskie:triage`
+Triage outcomes: accept (set priority, remove `needs-triage`, post a comment
+naming the likely files), fast-track to `ready` when the issue already meets
+the definition of ready, duplicate (close with a link), won't fix (close as
+not planned with the reason), needs info (label and post specific questions).
 
-With no argument it takes every `needs-triage` issue plus `needs-info` issues
-with new comments; with `#n` it takes that one. For each issue it reads the text,
-greps the repo for the likely files, and proposes type, priority, outcome and
-reason in one table. Nothing changes until you approve the table, optionally
-editing rows.
-
-Outcomes: accept (set priority, remove `needs-triage`, post a comment naming
-the likely files), fast-track to `ready` when the issue already meets the
-definition of ready, duplicate (close with a link), won't fix (close as not
-planned with the reason), needs info (label and post specific questions).
-
-Rejected: reproducing bugs (slow, needs per-project setup), text-only triage,
+Not in v1: CI failure intake (would be one more source section). Rejected:
+reproducing bugs (slow, needs per-project setup), text-only triage,
 one-issue-at-a-time approval, asking the questions in chat instead of on the
 issue.
 
@@ -266,7 +269,7 @@ criteria, and creates them as native GitHub sub-issues. The parent becomes a
 tracker.
 
 `/taskie:plan <goal>` (for example `v0.2: offline mode`) drafts a milestone and
-its issues in intake's format, split where needed, and creates them all after
+its issues in `/taskie:new`'s format, split where needed, and creates them all after
 one approval.
 
 Size is judged against "one reviewable pull request", not estimated. Rejected:
@@ -291,7 +294,7 @@ Manual-only. Steps:
 5. State a short plan and proceed. Stop and ask if the scope grows beyond the
    issue or the change reaches data, auth or a public API.
 6. Implement in small commits, each passing verify. Unrelated problems found
-   along the way go to intake.
+   along the way go to `/taskie:new`.
 7. Push and open the PR in the standard format.
 
 Running `/taskie:work n` again on an issue that already has a PR resumes in the
@@ -310,7 +313,7 @@ the minimum Claude Code version.
 
 In-scope findings are fixed in the issue's worktree in small commits, verified
 and pushed, with no second review pass. Findings it disagrees with are left
-with a reason. Out-of-scope findings go to intake's review-findings source. It
+with a reason. Out-of-scope findings go to `/taskie:new`'s review-findings source. It
 then posts one summary comment carrying the `<!-- taskie:review sha=... -->` marker and
 listing each finding as fixed (commit), left (reason) or filed (new issue).
 
@@ -353,7 +356,9 @@ rebasing, squash merges (they discard the small verified commits).
 
 The v1 stages below were built as groups of commits made locally on `main`,
 before the repo had a GitHub remote. Since then every change goes through an
-issue and a pull request, and every commit passes `just verify`.
+issue and a pull request, and every commit passes `just verify`. The stage
+names below are the v1 ones; intake and triage have since become
+`/taskie:new`.
 
 | Stage | Commit | Content |
 |---|---|---|

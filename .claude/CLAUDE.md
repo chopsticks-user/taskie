@@ -23,10 +23,10 @@ and, if user-visible, `README.md` in the same commit.
 ## Workflow
 
 This repo uses taskie on itself. Every change goes through it, in order:
-`/taskie:intake`, `/taskie:triage`, `/taskie:plan #<n>` when an issue is not
-ready, `/taskie:work <n>`, `/taskie:review <pr>`, and `/taskie:ship <pr>` only
-after the maintainer approves. Never commit on `main` directly. The base
-branch is `main`.
+`/taskie:new`, `/taskie:plan #<n>` when an issue is not ready,
+`/taskie:work <n>`, `/taskie:review <pr>`, and `/taskie:ship <pr>` only after
+the maintainer approves. Never commit on `main` directly. The base branch is
+`main`.
 
 The plugin that sessions here load is the released copy from GitHub, declared
 in `.claude/settings.json`. A change reaches your sessions once its PR is

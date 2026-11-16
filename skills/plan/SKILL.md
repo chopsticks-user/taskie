@@ -53,7 +53,7 @@ tracker and the work moves to sub-issues.
 1. Divide the work into the fewest children that each fit in one reviewable
    pull request and leave the code working when merged on their own. Prefer
    splitting by behavior a user could notice over splitting by layer.
-2. Draft each child like an intake draft: a title, the parent's type and
+2. Draft each child like a `/taskie:new` draft: a title, the parent's type and
    priority (or its own if clearly different), a body from the matching
    template with the share of the acceptance criteria it delivers, and
    `Depends on #<n>` for any order between children. Source is `Split from
@@ -84,7 +84,7 @@ Input is a goal such as `v0.2: offline mode`.
 4. Ask the user, in one message, about anything ambiguous whose answer would
    change the scope. Skip this step when nothing is ambiguous.
 5. Draft the work:
-   - new issues in intake's format, each with a type and a priority (the goal
+   - new issues in `/taskie:new`'s format, each with a type and a priority (the goal
      was triaged by planning it, so no `needs-triage`), final acceptance
      criteria, and `Depends on #<n>` for any order between them
    - an issue that would not fit in one reviewable pull request becomes a

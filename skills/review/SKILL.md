@@ -46,8 +46,8 @@ Input: $ARGUMENTS (a PR number, or empty for the current branch's PR)
 
 ## Report
 
-1. Hand the out-of-scope findings to `/taskie:intake` as review findings of
-   this PR. Intake shows the drafts and asks the user to confirm; record the
+1. Hand the out-of-scope findings to `/taskie:new` as review findings of
+   this PR. `new` shows the drafts and asks the user to confirm; record the
    issue numbers it creates.
 2. Post one summary comment on the PR. Its first line is the review marker
    from the conventions, with the PR's head commit after your fixes were
