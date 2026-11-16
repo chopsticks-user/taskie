@@ -85,10 +85,10 @@ An issue is a tracker when `subIssuesSummary.total` is greater than 0.
 | Action | Command |
 |---|---|
 | linked branches of one issue | `gh issue develop --list <n>` |
-| create the linked branch and its worktree | `gh issue develop <n> --name issue-<n>-<slug> --base <base> --worktree .worktrees/issue-<n>` |
+| create the linked branch and its worktree | `gh issue develop <n> --name issue-<n>-<slug> --base <base> --checkout --worktree .worktrees/issue-<n>` |
 
-If `--worktree` fails, create the linked branch without it, then add the
-worktree with git:
+If that fails (for example with a `gh` that has no `--worktree`), create the
+linked branch without it, then add the worktree with git:
 
 ```bash
 gh issue develop <n> --name issue-<n>-<slug> --base <base>
