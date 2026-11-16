@@ -1,6 +1,6 @@
 ---
 name: taskie
-description: Show the taskie board for the current repo, its open issues and pull requests grouped by lifecycle status (needs triage, backlog, ready, in progress, in review, awaiting approval). Use when the user asks what is open, where things stand, or what to work on next.
+description: Show the taskie board for the current repo, its open issues and pull requests grouped by lifecycle status (needs triage, needs info, backlog, ready, in progress, in review, awaiting approval). Use when the user asks what is open, where things stand, or what to work on next.
 argument-hint: "[help]"
 allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh pr list *)
 ---
@@ -40,12 +40,15 @@ appears, under "in review" or "awaiting approval", as `PR #<n> (no issue)`.
 
 ## Show
 
-Print the groups in lifecycle order, skipping empty ones:
+Print the groups in this order, skipping empty ones: Needs triage, Needs info,
+Backlog, Ready, In progress, In review, Awaiting approval. For example:
 
 ```
 Needs triage (2)
   #14       Export fails on empty table
   #15       Add CSV import
+Needs info (1)
+  #13  P3   Dark mode flickers on start
 Backlog (1)
   #9   P2   Slow search on large repos
 Ready (1)
@@ -54,13 +57,11 @@ In progress (1)
   #11  P2   Rate-limit login attempts            issue-11-login-rate-limit
 In review (1)
   #10  P1   Fix token refresh race               PR #31
-Awaiting approval (0)
 ```
 
 Within a group, order by priority (P0 first, unprioritized last), then oldest
 first. Mark trackers with their progress, for example `#8 P1 Offline mode
-(tracker, 2/5 done)`. Show a needs-info issue under "Needs info" in the same
-format.
+(tracker, 2/5 done)`.
 
 If nothing is open, print `Board is empty.` and suggest `/taskie:new`.
 
@@ -71,10 +72,13 @@ first rule that applies:
 
 1. a PR is awaiting approval: `PR #31 is reviewed: /taskie:ship 31`
 2. an issue needs triage: `2 issues need triage: /taskie:new`
-3. an issue is ready: `#12 is ready (P1): /taskie:do 12`, choosing the
+3. an issue is in progress with no PR (an interrupted run): `#11 was
+   interrupted: /taskie:do 11` to resume it, choosing the highest priority,
+   then the oldest
+4. an issue is ready: `#12 is ready (P1): /taskie:do 12`, choosing the
    highest priority, then the oldest
-4. a PR is in review without a current marker: `PR #31 needs review:
+5. a PR is in review without a current marker: `PR #31 needs review:
    /taskie:do 31`
-5. an issue is in the backlog: `#9 needs planning: /taskie:plan #9`
+6. an issue is in the backlog: `#9 needs planning: /taskie:plan #9`
 
 If no rule applies, say so in one line.

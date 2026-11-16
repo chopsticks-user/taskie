@@ -1,6 +1,6 @@
 {
   "name": "taskie",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Run a ticket-to-code lifecycle on GitHub: file and triage, plan, implement and review, ship",
   "author": {
     "name": "chopsticks-user"

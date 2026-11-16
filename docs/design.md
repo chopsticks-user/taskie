@@ -222,8 +222,10 @@ can be added later.
 Lists the current repo's open issues and PRs grouped by derived status, one
 line each with number, title and priority. It ends with one suggested next
 action, chosen in this order: a PR awaiting approval, then a needs-triage
-issue, then the highest-priority ready issue (oldest first among equals), then
-a PR that still needs review, then a backlog issue that needs planning.
+issue, then an in-progress issue with no PR (an interrupted run, to resume),
+then the highest-priority ready issue (oldest first among equals), then a PR
+that still needs review, then a backlog issue that needs planning. Groups are
+shown in lifecycle order, with needs info after needs triage.
 `/taskie help` lists the stages. With no GitHub remote it says so and stops.
 
 Rejected: milestone progress lines (not needed until plan is used), counts
