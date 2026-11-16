@@ -1,7 +1,8 @@
 # taskie design
 
-Status: v1 design, agreed 2026-11-14. All stages are written as skills; none
-has been run end-to-end against a real repository yet.
+Status: v1 design, agreed 2026-11-14. All stages are written as skills. The
+first end-to-end run (issue #1, PR #2) went through every stage to merge on
+2026-11-15.
 
 This is the reference for the current design. When a decision changes, update
 this document in the same pull request as the change.
@@ -128,7 +129,7 @@ instead, so they need no remote.
 | Label | Set by | Meaning |
 |---|---|---|
 | `type:bug`, `type:feature`, `type:chore`, `type:docs` | intake, confirmed by triage | kind of work |
-| `P0` | triage | outage or data loss, drop everything |
+| `P0` | triage | outage, data loss or security hole; drop everything |
 | `P1` | triage | major feature broken, no workaround |
 | `P2` | triage | degraded, workaround exists |
 | `P3` | triage | minor or cosmetic |
@@ -144,24 +145,18 @@ labels in v1.
 Status is derived from GitHub state, not tracked in labels, so it cannot go
 stale when a step is done by hand.
 
-| Status | Rule |
-|---|---|
-| needs triage | open, labelled `needs-triage` |
-| needs info | open, labelled `needs-info` |
-| backlog | open, has a priority, not `ready` |
-| ready | open, labelled `ready`, no linked branch |
-| in progress | has a linked branch (created with `gh issue develop`), no open PR |
-| in review | has an open PR without a current review marker |
-| awaiting approval | open PR whose latest `<!-- taskie:review sha=... -->` comment records the PR's current head commit |
-| done | closed |
+The statuses are needs triage, needs info, backlog, ready, in progress, in
+review, awaiting approval and done. The rules that assign them, in evaluation
+order, live only in `shared/conventions.md`, so this document cannot drift
+from what the skills follow.
 
-The marker records the head commit it reviewed instead of comparing
+The review marker (`<!-- taskie:review sha=... -->`, which moves a PR to
+awaiting approval) records the head commit it reviewed instead of comparing
 timestamps, because PR commit data from `gh` does not say which commits are
 merges. Any new commit makes the review stale. `/taskie:ship` checks the
 marker before it merges the base branch in, so its own merge commit does not
 interfere. A parent issue that has been split into sub-issues is a tracker. It
-never gets `ready` and is never worked on directly. The full rules, in
-evaluation order, are in `shared/conventions.md`.
+never gets `ready` and is never worked on directly.
 
 ### Definition of ready
 
