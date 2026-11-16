@@ -61,7 +61,9 @@ tracker and the work moves to sub-issues.
    criteria with one item per child ("<child title> is done"), and add a
    short plan under Context explaining the order.
 4. Show the parent's new body and all child drafts in one message, saying
-   which children meet the definition of ready, and wait for approval.
+   which children meet the definition of ready. Ask which children to
+   create, one option per child in a multiSelect question (see "Asking the
+   user" in the conventions), and wait for the answer.
 5. Apply what the user approved: create each child as a sub-issue of the
    parent, with the parent's milestone, `ready` only if it meets the
    definition, and no `needs-triage` (it was triaged as part of the parent).
@@ -90,8 +92,10 @@ Input is a goal such as `v0.2: offline mode`.
      tracker with sub-issues, drafted as in "Split an issue"
    - existing open issues to add to the milestone
 6. Show the milestone, every draft and the existing issues to add in one
-   message, saying which drafts meet the definition of ready, and wait for
-   approval.
+   message, saying which drafts meet the definition of ready. Ask which
+   drafts to create and which existing issues to add, one option per item in
+   multiSelect questions (see "Asking the user" in the conventions), and
+   wait for the answer.
 7. Apply what the user approved: create the milestone if needed, create the
    issues and sub-issues in it (`ready` only where the definition holds),
    and add the existing issues to it.

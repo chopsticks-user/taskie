@@ -176,6 +176,13 @@ check it.
 | do | stops only if scope grows or it reaches data, auth or a public API; asks once about filing out-of-scope findings before posting the review |
 | ship | typing `/taskie:ship` is the merge approval; a release needs its own confirmation |
 
+Every question and approval is a multiple-choice prompt (AskUserQuestion in
+Claude Code): the user picks options instead of typing, batches are ticked in
+one multiSelect question, and the recommended option comes first. The details,
+including the plain-text fallback for headless runs, are in
+`shared/conventions.md`. Free-text questions were dropped because a run could
+stall on one the user moved past, as happened before ship on PR #2.
+
 ### Branches, commits and pull requests
 
 Branches are named `issue-<n>-<slug>`. Commits are small and each one passes

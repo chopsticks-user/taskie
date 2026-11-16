@@ -69,7 +69,9 @@ First run the "before any stage" check from the conventions. Then:
      the point that fails (an item too big for one pull request is filed
      as backlog for `/taskie:plan #<n>` to split)
 7. Show every draft in one message, numbered, each with its title, labels,
-   outcome and full body. Ask the user to confirm, edit or drop each one.
+   outcome and full body. Then ask which drafts to create, with one option
+   per draft in a multiSelect question (see "Asking the user" in the
+   conventions); a draft the user wants changed comes back through "Other".
    Create nothing until they answer. This holds even when another stage or
    Claude itself started this skill.
 8. For the confirmed drafts: make sure the labels exist, create each issue
@@ -92,13 +94,14 @@ For issues that already exist, usually filed by someone outside taskie.
    - Priority: pick `P0` to `P3` as in "File" step 6.
    - Likely files: as in "File" step 4.
    - Outcome: one of the outcomes below.
-2. Show one table and wait for the user's answer:
+2. Show one table, then ask which rows to apply, with one option per row in a
+   multiSelect question (see "Asking the user" in the conventions):
 
    ```
    | # | Issue | Type | Priority | Outcome | Reason | Likely files |
    ```
 
-   The user may approve all rows, or change or drop rows by number. Change
+   Unticked rows are dropped; a changed row comes back through "Other". Change
    nothing on the backend before they answer, and apply their edits. If the
    user's answer settles a question of scope or acceptance criteria, write it
    into the issue's body (keeping the template) when applying the row, and
