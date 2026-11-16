@@ -116,6 +116,13 @@ is the only file that maps verbs to `gh` commands. A future backend (GitLab,
 Jira) would add one mapping file. The seam is kept to that single file because
 its shape is a guess until a second backend exists.
 
+`gh` resolves the repo on its own, but a few git steps (fetching the base or a
+branch, the worktree fallback) need the git remote. taskie never assumes
+`origin`: it uses `remote:` from `.taskie.md`, else the one remote whose URL
+ends in the repo's `owner/name`, and asks when none or several match. Checks
+that `gh` can answer, such as whether a tag exists, go through `gh api`
+instead, so they need no remote.
+
 ### Labels
 
 | Label | Set by | Meaning |
