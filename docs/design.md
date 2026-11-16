@@ -323,7 +323,9 @@ approve their own PR). Steps:
 1. Refuse unless checks are green and the review marker is current (see
    derived status). A marker whose sha is an ancestor of the head with only
    merge commits after it also counts, checked with local git, so re-running
-   ship after its own base merge works.
+   ship after its own base merge works. Also refuse while the worktree holds
+   non-merge commits that are in neither the PR head nor the base: merging
+   deletes the local branch, so they would be lost.
 2. Merge the base into the branch and run verify. If verify fails, undo the
    merge commit and stop. Otherwise push, wait for checks on the new head,
    and print a one-screen summary.
