@@ -211,4 +211,4 @@ declines or edits a proposal, follow their version.
 ## Unrelated problems
 
 A problem found along the way that is outside the current issue's scope is not
-fixed in place. Hand it to `/taskie:intake` as a new issue, then continue.
+fixed in place. Hand it to `/taskie:new` as a new issue, then continue.

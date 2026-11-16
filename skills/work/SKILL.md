@@ -39,7 +39,7 @@ Input: $ARGUMENTS (an issue number, with or without `#`)
    checkout.
 6. Run `setup` (unless it is `none`), then `verify`. If verify fails before
    any change, stop: report the failure as pre-existing, offer to file it
-   with `/taskie:intake`, and leave the worktree in place.
+   with `/taskie:new`, and leave the worktree in place.
 
 ## Implement
 
@@ -58,7 +58,7 @@ Input: $ARGUMENTS (an issue number, with or without `#`)
      on, and the issue did not say so
    - an acceptance criterion looks wrong or impossible
 5. A problem found along the way that is outside the issue's scope: do not
-   fix it here. Hand it to `/taskie:intake` (it will ask the user to
+   fix it here. Hand it to `/taskie:new` (it will ask the user to
    confirm), note the new issue for the PR's Notes, and continue.
 6. When every acceptance criterion is met, run `verify` once more on the
    final state.
