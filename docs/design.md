@@ -187,8 +187,9 @@ merges. Any new commit makes the review stale. `/taskie:ship` checks the
 marker before it merges the base branch in, so its own merge commit does not
 interfere; on a re-run it also accepts commits after the marker that are
 already on the base or are clean merges, recreated with `git merge-tree` to
-show nothing was changed by hand. A parent issue that has been split into sub-issues is a tracker. It
-never gets `ready` and is never worked on directly.
+show nothing was changed by hand. A parent issue that has been split into
+sub-issues is a tracker. It never gets `ready` and is never worked on
+directly.
 
 ### Definition of ready
 
