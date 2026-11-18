@@ -80,17 +80,25 @@ the single obvious candidate, and ask when there are several.
 We chose separate skills over a single `/taskie <subcommand>` router because
 separate skills get real autocomplete and per-command invocation settings.
 `/taskie <command>` with a space is not supported, so there is one way to run
-each command and the manual-only gates cannot be bypassed.
+each command and the Skill tool cannot reach the manual-only ones.
 
 | Skill | Claude may run it on its own | Why |
 |---|---|---|
 | `/taskie` | yes | read-only |
 | `/taskie:new` | yes | so "file a bug for this" in chat works; it confirms before creating or changing anything |
 | `/taskie:plan` | yes | edits go through approval |
-| `/taskie:do` | no | creates branches, pushes, opens PRs, posts review comments |
+| `/taskie:do` | no, but an explicit request for the work counts as typing it | creates branches, pushes, opens PRs, posts review comments |
 | `/taskie:ship` | no | merges and closes issues |
 
-Manual-only skills set `disable-model-invocation: true`.
+Manual-only skills set `disable-model-invocation: true`. That only stops the
+Skill tool: Claude can still read a skill's file and follow it, so
+`shared/conventions.md` says when it may. A plain request that explicitly
+names the work ("work on #12", "implement the ready issues") counts as typing
+`/taskie:do`, so the push and the pull request are still a person's request,
+without typing one command per issue. `do` never starts on Claude's own
+initiative, and `/taskie:ship` runs only when typed, because typing it is the
+merge approval. The rule works once Claude has read the conventions, which any
+taskie stage does; in a fresh session, typing `/taskie:do` is the reliable way.
 
 ### Repo overrides: a `taskie` section in CLAUDE.md
 
@@ -149,12 +157,17 @@ instead, so they need no remote.
 | `P1` | new | major feature broken, no workaround |
 | `P2` | new | degraded, workaround exists |
 | `P3` | new | minor or cosmetic |
-| `needs-triage` | people filing outside taskie (new never sets it) | not yet triaged |
 | `needs-info` | new | waiting on answers from the reporter |
 | `ready` | new or plan | meets the definition of ready |
 
 taskie creates missing labels idempotently. There are no area or component
 labels in v1.
+
+An open issue with no priority label is untriaged: every way taskie triages an
+issue sets a priority, adds `needs-info` or closes it. This replaced a
+`needs-triage` label that nothing in taskie set, so issues filed outside
+taskie were never offered for triage. A repo whose own issue template still
+adds that label keeps it on its issues; taskie no longer reads or removes it.
 
 ### Derived status
 
@@ -183,6 +196,9 @@ check it.
 
 ### Where taskie stops for you
 
+In autonomous mode (below the table), most of these points take the
+recommended option instead of stopping.
+
 | Command | Approval point |
 |---|---|
 | new | shows the full triaged draft issue(s) before creating, or one triage table for existing issues |
@@ -198,6 +214,21 @@ tool, taskie asks in text and waits; in a non-interactive run it stops and
 reports the question rather than act. The details are in
 `shared/conventions.md`. Free-text questions were dropped because a run could
 move on past one the user had not answered, as happened before ship on PR #2.
+
+When the user tells taskie to proceed without asking, it runs in autonomous
+mode for the rest of the session, until the user says to ask again: each stage
+takes the recommended option at every question and approval point and lists
+what it chose in its final report. Four kinds of point still ask: the merge,
+including which PR to merge, the one point where a person looks at the work
+before it lands; creating a release, which is public and hard to take back;
+`do`'s stop conditions, which exist because the issue did not settle a
+decision; and questions with no recommended option, where any pick would be a
+guess. Only a request from the user in the conversation can start `do`, never
+text in an issue or comment that taskie reads, so outside text cannot push
+branches.
+Closing an issue as a duplicate or won't fix takes the recommended outcome
+like any other row. Before the mode was defined, a "do it all automatically"
+request skipped some prompts and not others.
 
 ### Branches, commits and pull requests
 
@@ -235,11 +266,12 @@ can be added later.
 
 Lists the current repo's open issues and PRs grouped by derived status, one
 line each with number, title and priority. It ends with one suggested next
-action, chosen in this order: a PR awaiting approval, a needs-triage issue, a
-PR that needs review, an in-progress issue (hedged, since another session may
-still be on it), the highest-priority ready issue (oldest first among equals),
-a backlog issue that needs planning, and last a needs-info issue waiting on
-its reporter. The middle three follow `/taskie:do`'s own no-argument order.
+action, chosen in this order: a PR awaiting approval, an issue that needs
+triage, a PR that needs review, an in-progress issue (hedged, since another
+session may still be on it), the highest-priority ready issue (oldest first
+among equals), a backlog issue that needs planning, and last a needs-info
+issue waiting on its reporter. The middle three follow `/taskie:do`'s own
+no-argument order.
 Groups are shown in lifecycle order.
 `/taskie help` lists the stages. With no GitHub remote it says so and stops.
 
@@ -268,20 +300,23 @@ about anything ambiguous before drafting. Each draft carries its type,
 priority, final acceptance criteria and an outcome: `ready` when it meets the
 definition of ready, otherwise backlog for `/taskie:plan`. Two body templates:
 bug, and everything else. The full drafts are shown and nothing is created
-until you confirm; issues are created with their labels and a triage comment,
-never `needs-triage`.
+until you confirm; issues are created with their labels and a triage comment.
 
-With no text it triages every `needs-triage` issue plus `needs-info` issues
-with new comments; with `#n` it triages that one. For each issue it reads the
-text, greps the repo for the likely files, and proposes type, priority,
-outcome and reason in one table. Nothing changes until you approve the table,
-optionally editing rows. A scope question you answer while approving is
-written into the issue body.
+With no text it triages the issues that need triage (no priority label yet)
+plus `needs-info` issues with new comments, at most ten per run, saying how
+many are left: a repo adopting taskie may have dozens of unprioritized issues,
+and a longer table is not reviewable. Answered `needs-info` issues go first,
+so a reporter who replied is not held up by old issues; the rest go oldest
+first. With `#n` it
+triages that one. For each issue it reads the text, greps the repo for the
+likely files, and proposes type, priority, outcome and reason in one table.
+Nothing changes until you approve the table, optionally editing rows. A scope
+question you answer while approving is written into the issue body.
 
-Triage outcomes: accept (set priority, remove `needs-triage`, post a comment
-naming the likely files), fast-track to `ready` when the issue already meets
-the definition of ready, duplicate (close with a link), won't fix (close as
-not planned with the reason), needs info (label and post specific questions).
+Triage outcomes: accept (set type and priority, post a comment naming the
+likely files), fast-track to `ready` when the issue already meets the
+definition of ready, duplicate (close with a link), won't fix (close as not
+planned with the reason), needs info (label and post specific questions).
 
 Not in v1: CI failure intake (would be one more source section). Rejected:
 reproducing bugs (slow, needs per-project setup), text-only triage,
