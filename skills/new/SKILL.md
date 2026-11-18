@@ -49,19 +49,29 @@ First run the "before any stage" check from the conventions. Then:
      (or Problem, for a bug) as a possible regression.
 4. Read the code each item touches: search the repo with two or three terms
    from it (names, error messages, routes, UI text) and note up to three
-   files that most likely need to change, or "none found". Read code only; do
-   not run anything (a find-work request may read a commit log, see below).
+   files that most likely need to change, or "none found". Note how the
+   change fits there: what calls or depends on that code and must keep
+   working. Read code only; do not run anything (a find-work request may
+   read a commit log, see below).
 5. Ask the user, in one message, about anything ambiguous whose answer would
-   change the scope or the acceptance criteria. Skip this when nothing is
-   ambiguous, and never ask for details the source cannot have (for a report
-   written by someone else, write "Unknown" instead).
+   change the scope or the acceptance criteria, including what done looks
+   like when the source does not say. Skip this when nothing is ambiguous,
+   and never ask for details the source cannot have (for a report written by
+   someone else, write "Unknown" instead). Every other guess goes under the
+   draft's Assumptions; in autonomous mode, so do these questions' answers
+   (see the conventions).
 6. Draft each issue:
    - title: the problem or the outcome, specific, under 70 characters, no
      prefix such as "Bug:" (the label says that)
    - body: the bug template for `type:bug`, the general template otherwise,
-     from the conventions. Fill only what the source and the user's answers
-     say; write "Unknown" for the rest. State what is out of scope when that
-     is not obvious, and list dependencies as `Depends on #<n>`.
+     from the conventions. Fill the problem's sections only from what the
+     source and the user's answers say; write "Unknown" for the rest. List
+     dependencies as `Depends on #<n>`, and, in Context (or Problem, for a
+     bug), how the change fits the code from step 4.
+   - Out of scope, Edge cases and Assumptions: drafted from the request and
+     the code read in step 4, as the conventions describe. An expected
+     outcome for an edge case that the source does not give is a guess, so
+     it is also listed under Assumptions.
    - acceptance criteria: final, each item one observable outcome that can be
      checked by reading the code or running something
    - Source section: where the item came from
@@ -104,7 +114,8 @@ For issues that already exist, usually filed by someone outside taskie.
    Change nothing on the backend before they answer, and apply their edits.
    If the user's answer settles a question of scope or acceptance criteria,
    write it into the issue's body (keeping the template) when applying the
-   row, and re-check the definition of ready with it.
+   row, and re-check the definition of ready with it. Below the table, show
+   the body sections any Ready row would add (see "Outcomes").
 3. Apply each approved row as its outcome describes. Make sure every label
    exists before adding it.
 4. Print one line per issue with what was done, then suggest the next
@@ -126,7 +137,12 @@ Likely files: <files, or "none found">
 Ready: the issue already meets the definition of ready in the conventions
 (for example a small bug with clear acceptance criteria). Do everything
 Accept does and also add `ready`. Propose this only when every point of the
-definition holds; otherwise Accept and leave it for `/taskie:plan`.
+definition holds; otherwise Accept and leave it for `/taskie:plan`. An
+issue filed outside taskie usually lacks the Out of scope, Edge cases and
+Assumptions sections; it can still be Ready when the rest holds and those
+sections can be drafted from the issue and the code as in "File" step 6.
+Show them below the table, and on approval add them to the body (keeping
+the existing text and the template's section order).
 
 Duplicate: another issue, open or closed, describes the same problem. Search
 for it as in "File" step 3 and name it in the Reason column. If the duplicate

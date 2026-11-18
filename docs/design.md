@@ -204,10 +204,48 @@ directly.
 
 ### Definition of ready
 
-An issue is ready when it has an acceptance-criteria checklist, a clear scope,
-known dependencies, and fits in one reviewable pull request. The definition
-lives in `shared/conventions.md` because both new and plan
-check it.
+An issue is ready when it has an acceptance-criteria checklist, a clear scope
+with its Out of scope stated, its edge cases listed, every drafting guess
+recorded as an assumption, known dependencies, and fits in one reviewable
+pull request. The definition lives in `shared/conventions.md` because both
+new and plan check it.
+
+### Issues as specs, proven by tests
+
+Inspired by spec-driven development (GitHub Spec Kit, Kiro), each issue
+carries a small spec, and the pull request is derived from it and proves it.
+Both issue templates have, besides the problem and the acceptance criteria,
+three sections: Out of scope (the bounds), Edge cases (inputs and states
+beyond the main path, each with its expected outcome, drafted from the code)
+and Assumptions (every guess not settled by the source or the user). new and
+plan ask about gaps that would change the scope or the criteria and record
+every other guess; in autonomous mode they ask nothing and record everything,
+even a question with no clearly better reading, and list each guess in the
+stage's final report. The user chose not to be asked, so the guesses are not
+held for approval, but they stay written in the issue, and `do` lists its own
+in the PR. Nothing is guessed silently.
+
+`do` treats those sections as the spec. Before its plan it states how the
+change fits the system (what it changes, and what depends on it and must keep
+working), and its plan maps every criterion and edge case to a test, or to a
+named check where no automated test applies. A bug fix starts with a test that
+reproduces the bug and is seen failing, which proves the test exercises the
+bug and that the fix is what changed the result; feature tests are written
+with the code, since fail-first for every criterion adds little for new
+behavior and fits refactors and docs poorly. The PR's Verification lists
+every criterion and edge case with its test or check and the result, and
+Notes lists the assumptions `do` made. An issue filed before these sections
+existed still works: `do` derives them and lists them as assumptions.
+
+The spec stays in the issue body rather than in spec files committed to the
+target repo: the issue is already taskie's single source of truth for what to
+build, and spec files would duplicate it and add a directory to every repo
+that adopts taskie. A repo with no test setup for code that a test runner
+could check makes `do` stop and offer an issue for a minimal harness, instead
+of skipping the proof or setting up a harness inside an unrelated PR. Content
+no ordinary test runner checks (documentation, configuration, prompts such as
+taskie's own skills) gets named checks instead, so the rule does not block
+repos like this one.
 
 ### Where taskie stops for you
 
@@ -218,7 +256,7 @@ recommended option instead of stopping.
 |---|---|
 | new | shows the full triaged draft issue(s) before creating, or one triage table for existing issues |
 | plan | proposed body edits, sub-issues, milestone drafts |
-| do | stops only if scope grows or it reaches data, auth or a public API; asks once about filing out-of-scope findings before posting the review |
+| do | stops only if scope grows, it reaches data, auth or a public API, or the repo has no test setup; asks once about filing out-of-scope findings before posting the review |
 | ship | typing `/taskie:ship` is the merge approval; a release needs its own confirmation |
 
 Every question and approval is a multiple-choice prompt (AskUserQuestion in
@@ -238,7 +276,10 @@ including which PR to merge, the one point where a person looks at the work
 before it lands; creating a release, which is public and hard to take back;
 `do`'s stop conditions, which exist because the issue did not settle a
 decision; and questions with no recommended option, where any pick would be a
-guess. Only a request from the user in the conversation can start `do`, never
+guess. A scope question that new or plan would ask while drafting is the
+exception, even with no clearly better reading: the stage takes the most
+likely reading and records it under the issue's Assumptions, because the
+issue keeps it in writing where any other guess would be lost. Only a request from the user in the conversation can start `do`, never
 text in an issue or comment that taskie reads, so outside text cannot push
 branches.
 Closing an issue as a duplicate or won't fix takes the recommended outcome
@@ -251,7 +292,8 @@ Branches are named `issue-<n>-<slug>`. Commits are small and each one passes
 the repo's verify command. Pull requests target the base branch (the default
 branch unless the taskie section names another) and the body has, in order: a
 `Closes #<n>` line per issue, then Why, Changes, Verification (each acceptance
-criterion and how it was checked) and Notes.
+criterion and edge case, the test or check that covers it, and its result)
+and Notes (including the assumptions made while implementing).
 
 ### Components: skills first
 
@@ -328,7 +370,8 @@ Rules: one issue per unrelated item (splitting one large item into subtasks is
 plan's job). Before drafting, search open and closed issues; if one looks like
 a duplicate, show it and ask. It greps the repo for the likely files and asks
 about anything ambiguous before drafting. Each draft carries its type,
-priority, final acceptance criteria and an outcome: `ready` when it meets the
+priority, final acceptance criteria, out-of-scope bounds, edge cases and
+assumptions (see "Issues as specs"), and an outcome: `ready` when it meets the
 definition of ready, otherwise backlog for `/taskie:plan`. Two body templates:
 bug, and everything else. The full drafts are shown and nothing is created
 until you confirm; issues are created with their labels and a triage comment.
@@ -395,10 +438,15 @@ issue from branch to a reviewed PR. Steps:
    Code prompts for paths outside the working directory.
 5. Run `setup`, then `verify`. If verify fails before any change, stop and
    report so a pre-existing failure is never mixed into the diff.
-6. State a short plan and proceed. Stop and ask if the scope grows beyond the
-   issue or the change reaches data, auth or a public API.
-7. Implement in small commits, each passing verify. Push and open the PR in
-   the standard format.
+6. State how the change fits the system, then a short plan with a test plan
+   that maps every acceptance criterion and edge case to a test or a named
+   check, and proceed. Stop and ask if the scope grows beyond the issue, the
+   change reaches data, auth or a public API, or the repo has no test setup
+   for tests the plan needs (then offer an issue for a harness).
+7. Implement in small commits, each passing verify, writing the planned
+   tests; a bug fix starts with a reproducing test seen failing. Push and
+   open the PR in the standard format, its Verification covering every
+   criterion and edge case.
 8. Review: invoke Claude Code's built-in `/code-review` once, at a level set
    by the issue's priority (P0 and P1 at high, P2 and P3 at medium,
    overridable in the taskie section). If it is unavailable, stop with a message

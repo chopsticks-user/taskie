@@ -71,29 +71,63 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
 
 1. Read the code the issue touches. When resuming, read the branch's commits
    and any uncommitted changes first, and carry on from there.
-2. State a short plan in chat: the changes, in order, and how each acceptance
-   criterion will be checked. Then proceed without waiting.
-3. Make the change in small commits. Each commit is one logical step, passes
-   `verify`, and follows the commit rules in the conventions. Add or update
-   tests for new behavior; keep changes within the issue's scope.
-4. Stop and ask the user before going on when:
+2. The issue's Acceptance criteria, Edge cases and Out of scope are the spec
+   this PR is derived from and bounded by. If the issue predates those
+   sections or leaves one empty, derive what is missing from the issue and
+   the code, as the conventions describe, and treat it as an assumption.
+   Derive only what follows from the issue's own text and the code; a bound
+   or expected outcome with more than one plausible reading is a decision
+   the issue does not settle (step 5).
+   State in chat how the change fits the system: the parts it changes, and
+   the callers, dependents and existing behavior that must keep working.
+3. State a short plan in chat: the changes, in order, and a test plan that
+   maps every acceptance criterion and every edge case to the test that will
+   cover it. Where no automated test can apply (documentation, a config
+   value, a manual-only flow), name the check instead: what will be run or
+   read, and what result proves it. Then proceed without waiting.
+4. Make the change in small commits. Each commit is one logical step, passes
+   `verify`, and follows the commit rules in the conventions. Write the tests
+   from the test plan with the repo's existing test setup, next to the tests
+   already there; keep changes within the issue's scope. For a `type:bug`
+   issue, start with a test that reproduces the bug, and run it to see it
+   fail before changing the code; note that failure for the PR. A test that
+   passes before the fix does not reproduce the bug. Commit the test with
+   the fix, so no commit fails `verify`.
+5. Stop and ask the user before going on when:
    - the work turns out larger than the issue describes, or needs a decision
-     the issue does not settle
+     the issue does not settle that would change its scope or acceptance
+     criteria. A smaller guess, such as a name or a message's wording, is
+     not a stop: make it and list it as an assumption in the PR's Notes
    - the change would touch stored data or migrations, authentication or
      authorization, secrets, or a public API or interface other code depends
      on, and the issue did not say so
-   - an acceptance criterion looks wrong or impossible
-5. A problem found along the way that is outside the issue's scope: do not
-   fix it here. Note it, and file it with the review's out-of-scope findings
-   in "Report" step 1, so the run asks the user once. If the run stops before
-   "Report" for any reason, file the noted problems with `/taskie:new` before
-   stopping, so none is lost.
-6. When every acceptance criterion is met, run `verify` once more on the
-   final state.
-7. Push the branch (never force-push) and open a PR into the base branch with
+   - an acceptance criterion or edge case looks wrong or impossible
+   - the change is code that a test runner for its language could check (a
+     library, an app, a script) and the repo has no test setup for it
+     (`verify` runs no test runner): offer to file an issue for a minimal
+     test harness with `/taskie:new`, which can then be done first. Do not
+     skip the tests, and do not set up a harness inside this PR. A repo that
+     has a test runner but no tests near this code is not this case; add the
+     tests. Neither is content no ordinary test runner checks, such as
+     documentation, configuration or prompts; it gets named checks
+6. A problem found along the way that is outside the issue's scope, or
+   listed under its Out of scope: do not fix it here. Note it, and file it
+   with the review's out-of-scope findings in "Report" step 1, so the run
+   asks the user once. If the run stops before "Report" for any reason, file
+   the noted problems with `/taskie:new` before stopping, so none is lost.
+7. When every acceptance criterion and edge case has its test or check, run
+   `verify` once more on the final state, and run any manual check from the
+   test plan. Every changed file must trace back to the spec or to a rule
+   of the repo that the change triggers (a version bump, docs kept in sync,
+   a lockfile); move anything else out (step 6).
+8. Push the branch (never force-push) and open a PR into the base branch with
    the title and body from the conventions. Under Verification, list every
-   acceptance criterion with how it was checked; under Notes, anything left
-   out and any repo setting this run saved. Then go to "Review".
+   acceptance criterion and every edge case with the test or check that
+   covers it and its result from step 7, and, for a bug, the reproducing
+   test's failure before the fix. Under Notes, list every assumption this
+   run made (including spec sections it derived for an issue that lacked
+   them), anything left out, and any repo setting this run saved. Then go to
+   "Review".
 
 ## Address feedback
 
@@ -165,7 +199,7 @@ issue.
 ## Report
 
 1. Hand the out-of-scope findings, and any problems noted in "Implement" step
-   5, to `/taskie:new` as review findings of this PR. It shows the drafts and
+   6, to `/taskie:new` as review findings of this PR. It shows the drafts and
    asks the user to confirm; wait for that answer in this run, and record the
    issue numbers it creates. Add them to the PR body's Notes.
 2. Post one summary comment on the PR. Its first line is the review marker
