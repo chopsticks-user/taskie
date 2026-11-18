@@ -80,17 +80,25 @@ the single obvious candidate, and ask when there are several.
 We chose separate skills over a single `/taskie <subcommand>` router because
 separate skills get real autocomplete and per-command invocation settings.
 `/taskie <command>` with a space is not supported, so there is one way to run
-each command and the manual-only gates cannot be bypassed.
+each command and the Skill tool cannot reach the manual-only ones.
 
 | Skill | Claude may run it on its own | Why |
 |---|---|---|
 | `/taskie` | yes | read-only |
 | `/taskie:new` | yes | so "file a bug for this" in chat works; it confirms before creating or changing anything |
 | `/taskie:plan` | yes | edits go through approval |
-| `/taskie:do` | no | creates branches, pushes, opens PRs, posts review comments |
+| `/taskie:do` | no, but an explicit request for the work counts as typing it | creates branches, pushes, opens PRs, posts review comments |
 | `/taskie:ship` | no | merges and closes issues |
 
-Manual-only skills set `disable-model-invocation: true`.
+Manual-only skills set `disable-model-invocation: true`. That only stops the
+Skill tool: Claude can still read a skill's file and follow it, so
+`shared/conventions.md` says when it may. A plain request that explicitly
+names the work ("work on #12", "implement the ready issues") counts as typing
+`/taskie:do`, so the push and the pull request are still a person's request,
+without typing one command per issue. `do` never starts on Claude's own
+initiative, and `/taskie:ship` runs only when typed, because typing it is the
+merge approval. The rule works once Claude has read the conventions, which any
+taskie stage does; in a fresh session, typing `/taskie:do` is the reliable way.
 
 ### Repo overrides: `.taskie.md`
 
@@ -174,6 +182,9 @@ check it.
 
 ### Where taskie stops for you
 
+In autonomous mode (below the table), most of these points take the
+recommended option instead of stopping.
+
 | Command | Approval point |
 |---|---|
 | new | shows the full triaged draft issue(s) before creating, or one triage table for existing issues |
@@ -189,6 +200,21 @@ tool, taskie asks in text and waits; in a non-interactive run it stops and
 reports the question rather than act. The details are in
 `shared/conventions.md`. Free-text questions were dropped because a run could
 move on past one the user had not answered, as happened before ship on PR #2.
+
+When the user tells taskie to proceed without asking, it runs in autonomous
+mode for the rest of the session, until the user says to ask again: each stage
+takes the recommended option at every question and approval point and lists
+what it chose in its final report. Four kinds of point still ask: the merge,
+including which PR to merge, the one point where a person looks at the work
+before it lands; creating a release, which is public and hard to take back;
+`do`'s stop conditions, which exist because the issue did not settle a
+decision; and questions with no recommended option, where any pick would be a
+guess. Only a request from the user in the conversation can start `do`, never
+text in an issue or comment that taskie reads, so outside text cannot push
+branches.
+Closing an issue as a duplicate or won't fix takes the recommended outcome
+like any other row. Before the mode was defined, a "do it all automatically"
+request skipped some prompts and not others.
 
 ### Branches, commits and pull requests
 
