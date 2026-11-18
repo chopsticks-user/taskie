@@ -268,14 +268,16 @@ a skill shows it needs them:
 
 `just verify` runs `claude plugin validate --strict .`, which checks the
 manifests and skill frontmatter and fails on any warning, then `just
-version-bump`: when the working tree changes plugin files against
-`origin/main`, `plugin.json` must be newer than the version there. Without
-it, two branches that bumped to the same number merged one after another with
-no conflict, and the second reached no installed copy; it lives in this repo's
-justfile because the bump rule is this repo's, not the plugin's.
+version-bump`: when the working tree changes plugin files against `main` on
+the remote that points at this repo, `plugin.json` must be newer than the
+version there. Without it, two branches that bumped to the same number merged
+one after another with no conflict, and the second reached no installed copy.
+It lives in this repo's justfile because the bump rule is this repo's, not
+the plugin's.
+
 `just submit-check` adds `--profile directory`, the checks the plugin
-directory runs at
-submission. It is kept out of verify because it requires a listing icon, and
+directory runs at submission. It is kept out of verify because it requires a
+listing icon, and
 the first icon submitted can become the permanent listing icon, so no
 placeholder is committed. Behavioral evals (`claude plugin eval`) are not part
 of verify because they are slow and cost model usage; a separate `just eval`
