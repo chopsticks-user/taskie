@@ -156,6 +156,13 @@ head, run `gh pr checks <n> --watch --fail-fast`; it exits non-zero if a
 check fails. If its output says no checks were reported, the repo has no
 checks: treat that as green, whatever the exit code.
 
+A failing check is an entry with another `conclusion` (`FAILURE`,
+`TIMED_OUT`, `CANCELLED`, ...); one with no `conclusion` yet is still running.
+For a GitHub Actions check, read the log of its failed steps with
+`gh run view <run id> --log-failed`, taking the run id from the entry's
+`detailsUrl` (`.../actions/runs/<run id>/job/...`). Other checks only link to
+their own page; give the user that link.
+
 The latest review marker is the last entry in `comments` whose `body` starts
 with `<!-- taskie:review sha=`; compare its sha with `headRefOid`.
 
