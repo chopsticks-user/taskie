@@ -1,0 +1,5 @@
+# For this repo only: in target repos taskie hides .worktrees/ through info/exclude.
+.worktrees/
+.claude/settings.local.json
+.DS_Store
+*.swp
