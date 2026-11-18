@@ -105,8 +105,8 @@ Run reviews at high level for every priority.
 If `verify` or `setup` is missing, `/taskie:do` detects a likely command,
 confirms it with you, and offers to save it in that section as a commit of its
 own in the pull request, so your checkout is never changed. It adds the
-section if there is none, or a CLAUDE.md (`.claude/CLAUDE.md` in a Claude Code plugin or
-marketplace repo, `CLAUDE.md` at the root otherwise).
+section if there is none, or a CLAUDE.md (`.claude/CLAUDE.md` in a Claude Code
+plugin or marketplace repo, `CLAUDE.md` at the root otherwise).
 
 taskie finds the git remote that points at the GitHub repo. If it cannot tell
 (no remote or several match), it asks, and `/taskie:do` offers to save a

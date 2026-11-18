@@ -116,9 +116,9 @@ once its worktree exists, as a commit of its own on the issue's branch: saving
 earlier wrote into the main checkout, where the change was never committed and
 could block ship's final pull. It goes into the CLAUDE.md whose section is
 read, else the one that exists (the root one if both do), else a new
-`.claude/CLAUDE.md` in a Claude Code plugin or marketplace repo (a root one fails
-`validate --strict` there) or a new root `CLAUDE.md` elsewhere. Keys taskie
-itself writes or reads there:
+`.claude/CLAUDE.md` in a Claude Code plugin or marketplace repo (a root one
+fails `validate --strict` there) or a new root `CLAUDE.md` elsewhere. Keys
+taskie itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
