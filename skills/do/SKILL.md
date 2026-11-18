@@ -17,7 +17,8 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
 
 1. Run the "before any stage" check from the conventions, and find the
    repo's `verify` and `setup` commands as the conventions describe. Every
-   path below needs them.
+   path below needs them. Do not save a detected one yet; that is offered
+   once the worktree exists ("Start" step 3, "Address feedback" step 1).
 2. With a number: GitHub numbers issues and PRs in one sequence, so it names
    one or the other. An issue is used as is. A PR is taken with the issue it
    resolves (as the backend describes); if it resolves several, use the one
@@ -59,7 +60,12 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
    checkout.
 3. Run `setup` (unless it is `none`), then `verify`. If verify fails before
    any change, stop: report the failure as pre-existing, offer to file it
-   with `/taskie:new`, and leave the worktree in place.
+   with `/taskie:new`, and leave the worktree in place. Then, if `verify`,
+   `setup` or the git remote was detected or given rather than read from the
+   taskie section (check the worktree's copy, which an earlier run of this
+   issue may have saved into), offer to save it as the conventions describe:
+   a commit of its own in the worktree that holds only that file and passes
+   `verify`.
 
 ## Implement
 
@@ -87,7 +93,7 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
 7. Push the branch (never force-push) and open a PR into the base branch with
    the title and body from the conventions. Under Verification, list every
    acceptance criterion with how it was checked; under Notes, anything left
-   out. Then go to "Review".
+   out and any repo setting this run saved. Then go to "Review".
 
 ## Address feedback
 
@@ -96,8 +102,10 @@ issue.
 
 1. Prepare the worktree as in "Start" step 1, reusing it or adding one for
    the PR's branch, and bring it up to date with the remote branch
-   (fast-forward only). Then follow "Start" step 2, and run `setup` in a
-   worktree you just added (unless it is `none`).
+   (fast-forward only). Then follow "Start" step 2, run `setup` in a
+   worktree you just added (unless it is `none`), and offer to save a
+   detected or given repo command as in "Start" step 3; a saved setting is
+   a point to address, noted in the PR body's Notes.
 2. Collect the feedback: comments and reviews on the PR, comments on its
    diff, and anything the user said when running this command. Skip findings
    the latest `<!-- taskie:review` comment already marks as fixed or filed.

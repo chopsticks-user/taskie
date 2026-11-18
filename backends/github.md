@@ -40,9 +40,9 @@ The git remote of the repo, written `<remote>` below, is often but not always
 `shared/conventions.md`) if there is one. Otherwise take the remote whose
 fetch URL ends in `<nameWithOwner>` or `<nameWithOwner>.git`, right after `/`
 or `:`, compared case-insensitively. If no remote or more than one matches,
-ask the user which to use and offer to save it as `remote:` in the taskie
-section, where the conventions save repo commands. Only git commands need it;
-`gh` resolves the repo itself.
+ask the user which to use. `/taskie:do` then offers to save it as `remote:` in
+the taskie section, the way the conventions save repo commands. Only git
+commands need it; `gh` resolves the repo itself.
 
 ## Labels
 
