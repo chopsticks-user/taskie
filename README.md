@@ -18,7 +18,7 @@ the way most tech companies move tickets through a team.
 | `/taskie:new [#n]` | With no text, triages up to 10 issues that have no priority yet (usually filed outside taskie), or issue `#n`, in one table, and applies it after you approve. |
 | `/taskie:plan #n` | Adds acceptance criteria, splits large issues into sub-issues, and marks issues ready. |
 | `/taskie:plan <goal>` | Turns a goal such as `v0.2: offline mode` into a milestone with issues. |
-| `/taskie:do [n]` | Implements an issue in its own worktree, opens a pull request, reviews it with `/code-review`, fixes in-scope findings and posts a summary comment. Run it again to address feedback, including a conflict with the base branch, which it merges and resolves. With no argument it takes the current issue, or the most urgent in-progress or ready one, and asks when several qualify. |
+| `/taskie:do [n]` | Implements an issue in its own worktree, opens a pull request, reviews it with `/code-review`, fixes in-scope findings and posts a summary comment. Run it again to address feedback, including a conflict with the base branch, which it merges and resolves, and failing checks. With no argument it takes the current issue, or the most urgent in-progress or ready one, and asks when several qualify. |
 | `/taskie:ship [pr]` | Updates the PR with the base branch, verifies, merges, cleans up, and offers a release when a milestone completes. With no argument it takes the current PR or the one awaiting approval, and asks when several do. |
 
 Claude can run `/taskie`, `new` and `plan` on its own when the conversation

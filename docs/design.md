@@ -418,8 +418,9 @@ the base counts as feedback: `do` merges the base and resolves it like any
 other point, because `/taskie:ship` stops on a conflict and sends the user to
 `do`; otherwise `do` would report the PR ready and send them straight back.
 Failing checks count as feedback for the same reason: ship refuses a PR whose
-checks are red, so `do` reads the failed logs and fixes the cause instead of
-reviewing again or calling the PR ready.
+checks are red, so `do` reads the failed logs (GitHub Actions; other checks get
+their link passed on) and fixes the cause, or reports a failure the PR did not
+cause, instead of reviewing again or calling the PR ready.
 
 Rejected: waiting for plan approval before coding, draft PRs as the progress
 signal, assignee-only tracking, working on a branch in the main checkout, a

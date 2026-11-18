@@ -149,19 +149,29 @@ field only for PRs into the default branch, so for any other base also read
 the `Closes #<n>` lines in the PR body and the `issue-<n>-` prefix of the
 branch name.
 
-Checks are green when every entry in `statusCheckRollup` has a `conclusion` of
-`SUCCESS`, `NEUTRAL` or `SKIPPED`. Treat an empty `statusCheckRollup` as green,
-but tell the user the repo has no checks. To wait for checks on the current
-head, run `gh pr checks <n> --watch --fail-fast`; it exits non-zero if a
-check fails. If its output says no checks were reported, the repo has no
+`statusCheckRollup` holds two kinds of entry: check runs, with `conclusion`
+and `detailsUrl`, and commit statuses from outside CI, with `state` and
+`targetUrl`. An entry is:
+
+- green: a `conclusion` of `SUCCESS`, `NEUTRAL` or `SKIPPED`, or a `state` of
+  `SUCCESS`
+- still running: no `conclusion` yet, or a `state` of `PENDING` or `EXPECTED`
+- cancelled: a `conclusion` of `CANCELLED` or `STALE`, which says a run was
+  stopped or superseded, not that the code is wrong; it needs a re-run
+- failing: anything else, such as `FAILURE`, `TIMED_OUT`, `ACTION_REQUIRED`
+  or a `state` of `FAILURE` or `ERROR`
+
+Checks are green when every entry is. Treat an empty `statusCheckRollup` as
+green, but tell the user the repo has no checks. To wait for checks on the
+current head, run `gh pr checks <n> --watch --fail-fast`; it exits non-zero if
+a check fails. If its output says no checks were reported, the repo has no
 checks: treat that as green, whatever the exit code.
 
-A failing check is an entry with another `conclusion` (`FAILURE`,
-`TIMED_OUT`, `CANCELLED`, ...); one with no `conclusion` yet is still running.
-For a GitHub Actions check, read the log of its failed steps with
-`gh run view <run id> --log-failed`, taking the run id from the entry's
-`detailsUrl` (`.../actions/runs/<run id>/job/...`). Other checks only link to
-their own page; give the user that link.
+For a failing GitHub Actions check, read the log of its failed steps with
+`gh run view --job <job id> --log-failed`, taking the job id from the entry's
+`detailsUrl` (`.../actions/runs/<run id>/job/<job id>`). If gh cannot give the
+log yet (the rest of the run is still going), or the check is not from Actions,
+give the user the entry's `detailsUrl` or `targetUrl` instead.
 
 The latest review marker is the last entry in `comments` whose `body` starts
 with `<!-- taskie:review sha=`; compare its sha with `headRefOid`.

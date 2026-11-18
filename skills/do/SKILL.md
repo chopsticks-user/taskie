@@ -117,11 +117,16 @@ issue.
    <remote>/<base>` exits 0 when it does and 1 on a conflict; report any
    other exit as an error and stop. A conflict is a point to address, since
    `/taskie:ship` stops on it and sends the user here. Read the PR's checks
-   too, as the backend describes: each failing check is a point to address,
-   with its log where the backend can read one; checks still running are not
-   feedback yet, so say so.
-3. If there is nothing to address and the latest review marker is current,
-   say the PR is ready for `/taskie:ship <pr>` and stop.
+   too, as the backend describes. Each failing check is a point to address,
+   with its log where the backend can read one, unless the log shows the
+   failure does not come from the PR (it fails on the base too, or the runner
+   or network failed): report that as pre-existing and offer to file it with
+   `/taskie:new` instead of changing the PR. A cancelled check needs a
+   re-run, not a fix; say so.
+3. If there is nothing to address, no check is still running, and the latest
+   review marker is current, say the PR is ready for `/taskie:ship <pr>` and
+   stop. If checks are still running and nothing else needs addressing, say
+   the PR waits on them and stop.
 4. List the points you will address, then proceed. Ask first about any point
    you disagree with or that would grow the scope.
 5. Fix them as in "Implement": small commits, each passing `verify`. For a
