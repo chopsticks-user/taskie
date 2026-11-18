@@ -180,9 +180,9 @@ the value for the run and say that `/taskie:do` offers to save it.
 
 Save into the CLAUDE.md whose taskie section is read, else the one that exists
 (the root one if both do), else a new one: `.claude/CLAUDE.md` in a Claude
-Code plugin repo (one with `.claude-plugin/plugin.json`, where a root
-CLAUDE.md fails `claude plugin validate --strict`), `CLAUDE.md` at the root
-otherwise. Add a `## taskie` heading if there is none. If a repo needs no
+Code plugin or marketplace repo (one with a `.claude-plugin/` directory, where
+a root CLAUDE.md fails `claude plugin validate --strict`), `CLAUDE.md` at the
+root otherwise. Add a `## taskie` heading if there is none. If a repo needs no
 setup, record `setup: none`.
 
 ## Branches
