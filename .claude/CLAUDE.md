@@ -39,9 +39,16 @@ Labels in use: taskie's set (see `shared/conventions.md`), plus GitHub's
 
 ## Verify
 
-Run `just verify` (`claude plugin validate --strict .`) before and after every
-change; each commit must pass it. `just submit-check` adds the plugin
-directory's submission checks and fails until the plugin has a listing icon.
+Run `just verify` before and after every change; each commit must pass it. It
+runs `claude plugin validate --strict .`, then `just version-bump`, which fails
+when the working tree (untracked files included) changes `skills/`,
+`shared/`, `backends/` or `.claude-plugin/` against `main` on the remote that
+points at this repo, but `plugin.json`'s version is not higher than the one
+there. That catches a forgotten bump, and two branches that bumped to the same
+number: after one merges, the other fails until it bumps again (fetch first,
+so that `main` is current). `just submit-check`
+adds the plugin directory's submission checks and fails until the plugin has a
+listing icon.
 
 ## taskie
 
