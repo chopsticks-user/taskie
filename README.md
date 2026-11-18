@@ -33,8 +33,19 @@ it to proceed without asking and, for the rest of the session, it takes the
 recommended option itself and lists what it chose at the end. It still stops
 for a merge or a release, for `do`'s stop conditions (the work outgrows the
 issue or needs a decision it does not settle, reaches data, auth, secrets or
-a public API, or an acceptance criterion looks wrong) and for questions with
-no recommended answer.
+a public API, an acceptance criterion looks wrong, or the repo has no test
+setup for the tests it needs) and for questions with no recommended answer.
+
+Each issue is a small spec. Besides the problem and acceptance criteria, it
+lists what is out of scope, the edge cases with their expected outcomes, and
+every assumption taskie made while drafting it: questions that would change
+the scope are asked, and other guesses are written down instead of made
+silently (in autonomous mode, all of them are written down). `/taskie:do`
+works within that spec. It says how the change fits the existing code, maps
+every criterion and edge case to a test, starts a bug fix with a test that
+fails, and lists each criterion and edge case in the PR with the test that
+proves it. If your repo has no tests yet, it stops and offers to file an
+issue to set up a test harness first.
 
 `/taskie:do` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your
@@ -124,7 +135,7 @@ taskie creates these labels in your repo when it needs them:
 | `P2` | Degraded, workaround exists |
 | `P3` | Minor or cosmetic |
 | `needs-info` | Waiting on answers from the reporter |
-| `ready` | Clear acceptance criteria and fits in one pull request |
+| `ready` | A complete spec (acceptance criteria, bounds, edge cases, assumptions) that fits in one pull request |
 
 Status (in progress, in review, awaiting approval) is read from GitHub itself,
 from linked branches, open PRs and taskie's review comment, so there are no

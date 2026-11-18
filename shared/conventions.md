@@ -102,7 +102,10 @@ An issue is ready when all of these hold:
 - it has an acceptance-criteria checklist (see below), and every item is
   checkable by reading the code or running something
 - its scope is clear: someone new to the issue would know what to change and
-  what to leave alone
+  what to leave alone, and its Out of scope section says what is left alone
+- its Edge cases section lists the edge cases with expected outcomes, or
+  says "None" with a reason
+- every guess made while drafting it is written under Assumptions
 - its dependencies are known and none of them is open and blocking
 - it fits in one reviewable pull request
 - it is not a tracker
@@ -131,8 +134,17 @@ Bug:
 ## Environment
 <versions, OS, browser, config; or Unknown>
 
+## Out of scope
+- ...
+
+## Edge cases
+- ...
+
 ## Acceptance criteria
 - [ ] ...
+
+## Assumptions
+<guesses not settled by the source or the user; or None>
 
 ## Source
 <where this came from: chat, bug report, review of #<pr>, ...>
@@ -145,19 +157,50 @@ Everything else (feature, chore, docs):
 <what is missing or wrong, and why it matters>
 
 ## Context
-<relevant background, constraints, links>
+<relevant background, constraints, links; how the change fits the code
+around it>
+
+## Out of scope
+- ...
+
+## Edge cases
+- ...
 
 ## Acceptance criteria
 - [ ] ...
+
+## Assumptions
+<guesses not settled by the source or the user; or None>
 
 ## Source
 <where this came from>
 ```
 
+Together these sections are the issue's spec: what done looks like, its
+bounds, and what was guessed. The pull request is derived from them and
+proves them (see "Pull requests").
+
 Acceptance criteria are a markdown checklist. Each item states one observable
 outcome, for example "Exporting with an empty table shows 'Nothing to export'
 instead of an error". `/taskie:new` writes them final when it files an issue;
 `/taskie:plan` finalizes them for issues that are not ready yet.
+
+Out of scope lists what the change leaves alone that someone could expect it
+to touch, so the pull request has clear bounds.
+
+Edge cases list the inputs and states beyond the main path, each with the
+expected outcome, for example "an empty table: 'Nothing to export', no
+file". Draft them from the code the issue touches: empty, missing and
+maximal inputs, errors and failures of what it calls, repeated or concurrent
+runs, and existing data in an older shape. Write "None" with a reason only
+when there truly are none, such as a typo fix.
+
+Assumptions record every guess about scope, behavior or what done looks like
+that neither the source nor the user settled. A stage asks about a gap that
+would change the scope or the acceptance criteria and records the rest here;
+it never guesses silently. In autonomous mode it asks nothing and records
+every guess. Facts the source lacks, such as a reporter's environment, stay
+"Unknown" in their own section and are not assumptions.
 
 ## Repo commands
 
@@ -223,13 +266,21 @@ Closes #<n>
 <what changed, by area>
 
 ## Verification
-- [x] <acceptance criterion>: <how it was checked>
+- [x] <acceptance criterion>: <test or check that covers it>, <result>
+- [x] Edge case: <edge case>: <test or check that covers it>, <result>
 
 ## Notes
-<follow-up issues filed, risks, anything left out and why; or "None">
+<assumptions made while implementing, follow-up issues filed, risks,
+anything left out and why; or "None">
 ```
 
 Add one `Closes #<n>` line per issue the PR resolves.
+
+Verification lists every acceptance criterion and every edge case of the
+issue. Each names the test that covers it (or, where no automated test
+applies, the check that was done, such as a command run by hand and what it
+showed) and its result in the final `verify` run. A criterion that nothing
+checks is not done.
 
 ## Approval points
 
@@ -289,6 +340,10 @@ how questions are answered, not what work runs: it never starts `do` by itself
   `/taskie:do`'s stop conditions, including a feedback point that would grow
   the scope; and any question with no recommended option, where picking one
   would be a guess.
+- A question about an issue's scope or acceptance criteria, which `new` and
+  `plan` would ask, is not asked: the stage takes the most likely reading
+  and records it under the issue's Assumptions, where the user sees it
+  before `do` runs.
 - The stage's final report lists every choice it made without asking.
 
 ## Running do and ship
