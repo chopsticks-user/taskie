@@ -142,9 +142,10 @@ taskie creates missing labels idempotently. There are no area or component
 labels in v1.
 
 An open issue with no priority label is untriaged: every way taskie triages an
-issue sets a priority, adds `needs-info` or closes it. A `needs-triage` label
-was dropped because nothing set it (taskie never did, and GitHub does not), so
-issues filed outside taskie were never offered for triage.
+issue sets a priority, adds `needs-info` or closes it. This replaced a
+`needs-triage` label that nothing in taskie set, so issues filed outside
+taskie were never offered for triage. A repo whose own issue template still
+adds that label keeps it on its issues; taskie no longer reads or removes it.
 
 ### Derived status
 
@@ -262,9 +263,11 @@ bug, and everything else. The full drafts are shown and nothing is created
 until you confirm; issues are created with their labels and a triage comment.
 
 With no text it triages the issues that need triage (no priority label yet)
-plus `needs-info` issues with new comments, at most ten per run, oldest first,
-saying how many are left: a repo adopting taskie may have dozens of
-unprioritized issues, and a longer table is not reviewable. With `#n` it
+plus `needs-info` issues with new comments, at most ten per run, saying how
+many are left: a repo adopting taskie may have dozens of unprioritized issues,
+and a longer table is not reviewable. Answered `needs-info` issues go first,
+so a reporter who replied is not held up by old issues; the rest go oldest
+first. With `#n` it
 triages that one. For each issue it reads the text, greps the repo for the
 likely files, and proposes type, priority, outcome and reason in one table.
 Nothing changes until you approve the table, optionally editing rows. A scope

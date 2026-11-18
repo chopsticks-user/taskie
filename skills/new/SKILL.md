@@ -2,7 +2,7 @@
 name: new
 description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, or another taskie stage hands over problems to file.
 argument-hint: "[<request, bug report or findings> | #n]"
-allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh label list *)
+allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *)
 ---
 
 # taskie new
@@ -23,11 +23,13 @@ First run the "before any stage" check from the conventions. Then:
 
 - Input is exactly `#<n>`: triage that issue ("Triage" below), whatever its
   labels.
-- Input is empty: triage the open issues whose status is needs triage (see
-  the conventions), plus every open `needs-info` issue that has a comment
-  newer than its latest `<!-- taskie:triage -->` comment (the reporter
-  answered). Take at most 10, oldest first, and if more qualify, say how
-  many are left for the next run. If nothing is selected, say so and stop.
+- Input is empty: triage the open issues whose status is needs triage,
+  derived as the conventions describe (an open PR or a linked branch comes
+  before labels, so fetch those too), plus every open `needs-info` issue that
+  has a comment newer than its latest `<!-- taskie:triage -->` comment (the
+  reporter answered). Take at most 10, the answered `needs-info` issues
+  first, then the rest oldest first, and if more qualify, say how many are
+  left for the next run. If nothing is selected, say so and stop.
 - Anything else, including text that starts with a number or `#<n>`: file it
   ("File" below). When Claude starts this skill from a conversation (for
   example "file that as a bug"), it passes the problem as text.
