@@ -36,11 +36,13 @@ A repo with no remote on GitHub, or a `gh` that is not authenticated,
 fails the "before any stage" check in `shared/conventions.md`.
 
 The git remote of the repo, written `<remote>` below, is often but not always
-`origin`. Use a `remote:` line in `.taskie.md` if there is one. Otherwise take
-the remote whose fetch URL ends in `<nameWithOwner>` or `<nameWithOwner>.git`,
-right after `/` or `:`, compared case-insensitively. If no remote or more than
-one matches, ask the user which to use and offer to save it as `remote:` in
-`.taskie.md`. Only git commands need it; `gh` resolves the repo itself.
+`origin`. Use a `remote:` line in the repo's taskie section (see
+`shared/conventions.md`) if there is one. Otherwise take the remote whose
+fetch URL ends in `<nameWithOwner>` or `<nameWithOwner>.git`, right after `/`
+or `:`, compared case-insensitively. If no remote or more than one matches,
+ask the user which to use and offer to save it as `remote:` in the taskie
+section, where the conventions save repo commands. Only git commands need it;
+`gh` resolves the repo itself.
 
 ## Labels
 
@@ -133,7 +135,7 @@ query($owner: String!, $name: String!) {
 | PR of the current branch | the same `gh pr view` without `<n>` |
 | open a PR | `gh pr create --base <base> --head <branch> --title '<title>' --body-file -` |
 | comment | `gh pr comment <n> --body-file -` |
-| merge | `gh pr merge <n> --merge --delete-branch --match-head-commit <sha>` (`--squash` or `--rebase` instead of `--merge` if `.taskie.md` says so) |
+| merge | `gh pr merge <n> --merge --delete-branch --match-head-commit <sha>` (`--squash` or `--rebase` instead of `--merge` if the taskie section says so) |
 
 Comments on the PR's diff:
 

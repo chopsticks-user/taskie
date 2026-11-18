@@ -149,7 +149,7 @@ Thanks for the report. To triage this we need:
 The issue comes back to triage once someone comments after this.
 
 Won't fix: the request is out of the project's scope (judged from the README
-and `.taskie.md`), or the behavior is intended. Propose it only with a
+and CLAUDE.md), or the behavior is intended. Propose it only with a
 concrete reason. Comment with the reason, starting with the triage marker,
 then close the issue as not planned.
 

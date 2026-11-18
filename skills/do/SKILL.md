@@ -111,7 +111,7 @@ issue.
 ## Review
 
 1. Pick the review level from the issue's priority: `high` for `P0` and
-   `P1`, `medium` otherwise. A review level in `.taskie.md` overrides this.
+   `P1`, `medium` otherwise. A review level in the taskie section overrides this.
 2. Run Claude Code's built-in `/code-review` through the Skill tool with the
    arguments `<level> <pr number>`. Do not pass `--comment` or `--fix`;
    taskie posts its own summary and makes its own fixes. It runs as a
