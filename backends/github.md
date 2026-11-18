@@ -173,7 +173,7 @@ checked out, so remove the worktree before merging.
 List milestones:
 
 ```bash
-gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {number, title, state, open_issues, closed_issues}'
+gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {number, title, description, state, open_issues, closed_issues}'
 ```
 
 ## Releases
