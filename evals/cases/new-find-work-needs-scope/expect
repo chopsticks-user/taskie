@@ -1,0 +1,4 @@
+# A find-work request with no scope asks for one instead of reviewing everything.
+contains scope
+contains (reply|choose|pick|which)
+not_contains ## Acceptance criteria

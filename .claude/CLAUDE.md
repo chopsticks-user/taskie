@@ -52,6 +52,14 @@ so that `main` is current). `just submit-check`
 adds the plugin directory's submission checks and fails until the plugin has a
 listing icon.
 
+`just eval` runs the behavioral checks in `evals/cases/`: each case runs a
+taskie stage headless against a fresh clone of chopsticks-user/taskie-sandbox,
+with every GitHub write disallowed, and checks its output. It costs model
+usage (`EVAL_RUNS`, default 3 per case, and `EVAL_BUDGET`, default $1.00 per
+run, bound it), so it is not part of verify. Run it after changing a skill's
+behavior, and keep the sandbox's open issues as the cases expect (#9 untriaged,
+#1 ready, #4 a tracker). Results go to `evals/results/`, which git ignores.
+
 ## taskie
 
 verify: just verify

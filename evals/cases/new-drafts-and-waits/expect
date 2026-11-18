@@ -1,0 +1,5 @@
+# Interactive: it either drafts the spec or asks about a gap that changes the
+# scope (both are correct), then waits for approval; nothing is created.
+contains (## Edge cases|reply|answer)
+contains (create|approv)
+not_contains (created|filed) (issue )?#[0-9]+
