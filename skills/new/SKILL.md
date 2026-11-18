@@ -149,9 +149,9 @@ Thanks for the report. To triage this we need:
 The issue comes back to triage once someone comments after this.
 
 Won't fix: the request is out of the project's scope (judged from the README
-and CLAUDE.md), or the behavior is intended. Propose it only with a
-concrete reason. Comment with the reason, starting with the triage marker,
-then close the issue as not planned.
+and the repo's CLAUDE.md files), or the behavior is intended. Propose it only
+with a concrete reason. Comment with the reason, starting with the triage
+marker, then close the issue as not planned.
 
 Closing is visible to the reporter, so put every Duplicate and Won't fix in
 the table like any other outcome; the user's approval of the table covers

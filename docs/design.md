@@ -103,10 +103,11 @@ taskie stage does; in a fresh session, typing `/taskie:do` is the reliable way.
 ### Repo overrides: a `taskie` section in CLAUDE.md
 
 A repo may add an optional free-form `## taskie` section to its project
-CLAUDE.md (`CLAUDE.md` at the root or `.claude/CLAUDE.md`, the two places
-Claude Code reads; the root one wins if both have the section). It is a
-second-level heading because a CLAUDE.md often opens with the project's name as
-its title, as this repo's does. Skills read it after the defaults and follow
+CLAUDE.md (`CLAUDE.md` at the root or `.claude/CLAUDE.md`, the two places a
+repo keeps its shared Claude Code instructions; the root one wins if both have
+the section). It is a second-level heading, ending at the next heading of the
+same or a higher level, because a CLAUDE.md often opens with the project's
+name as its title, as this repo's does. Skills read it after the defaults and follow
 it where it differs. It needs no schema, and anything in
 `shared/conventions.md` can be overridden, but only by that section: the rest
 of CLAUDE.md is written for other work, and an instruction there should not

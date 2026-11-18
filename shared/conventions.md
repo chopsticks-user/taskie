@@ -15,9 +15,9 @@ read order is written down. Before doing anything else, also read, in order:
 
 1. `${CLAUDE_PLUGIN_ROOT}/backends/github.md`
 2. the taskie section of the target repo's CLAUDE.md, if there is one: the
-   part under a `## taskie` heading, up to the next heading of that level, in
-   `CLAUDE.md` at the repo root or in `.claude/CLAUDE.md` (the root one if
-   both have it)
+   part under a `## taskie` heading, up to the next heading of the same or a
+   higher level, in `CLAUDE.md` at the repo root or in `.claude/CLAUDE.md`
+   (the root one if both have it)
 
 The taskie section is free-form markdown written by the repo's maintainers.
 Where it says something different from this file, follow it. Only that
