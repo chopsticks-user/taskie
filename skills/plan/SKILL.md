@@ -39,8 +39,8 @@ Input is an issue number, with or without `#`.
    instead.
 7. Show the proposal and wait for approval: the new body, and the label
    changes (`ready` if the definition holds; a priority, and removal of
-   `needs-triage` and `needs-info`, if the issue has no priority yet). If the
-   definition does not hold, say which point fails.
+   `needs-info`, if the issue has no priority yet). If the definition does
+   not hold, say which point fails.
 8. Apply what the user approved: replace the body, then change the labels.
    Suggest `/taskie:do <n>` if the issue is now ready.
 
@@ -65,10 +65,9 @@ tracker and the work moves to sub-issues.
    create, as a batch (see "Asking the user" in the conventions), and wait
    for the answer.
 5. Apply what the user approved: create each child as a sub-issue of the
-   parent, with the parent's milestone, `ready` only if it meets the
-   definition, and no `needs-triage` (it was triaged as part of the parent).
-   Then replace the parent's body and remove `ready` from it if present; a
-   tracker is never ready.
+   parent, with the parent's milestone and `ready` only if it meets the
+   definition. Then replace the parent's body and remove `ready` from it if
+   present; a tracker is never ready.
 6. Print the children as `#<n> <title>` with their status, and suggest
    `/taskie:do` for the first ready one.
 
@@ -86,8 +85,8 @@ Input is a goal such as `v0.2: offline mode`.
    change the scope. Skip this step when nothing is ambiguous.
 5. Draft the work:
    - new issues in `/taskie:new`'s format, each with a type and a priority (the goal
-     was triaged by planning it, so no `needs-triage`), final acceptance
-     criteria, and `Depends on #<n>` for any order between them
+     was triaged by planning it), final acceptance criteria, and
+     `Depends on #<n>` for any order between them
    - an issue that would not fit in one reviewable pull request becomes a
      tracker with sub-issues, drafted as in "Split an issue"
    - existing open issues to add to the milestone

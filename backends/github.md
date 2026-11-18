@@ -56,7 +56,6 @@ Colors and descriptions used when a label is missing:
 | `P1` | `d93f0b` | Major feature broken, no workaround |
 | `P2` | `fbca04` | Degraded, workaround exists |
 | `P3` | `c5def5` | Minor or cosmetic |
-| `needs-triage` | `ededed` | Not triaged yet |
 | `needs-info` | `d876e3` | Waiting on answers from the reporter |
 | `ready` | `0e8a16` | Meets the definition of ready |
 

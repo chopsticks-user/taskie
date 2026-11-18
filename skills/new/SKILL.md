@@ -23,10 +23,11 @@ First run the "before any stage" check from the conventions. Then:
 
 - Input is exactly `#<n>`: triage that issue ("Triage" below), whatever its
   labels.
-- Input is empty: triage every open `needs-triage` issue, plus every open
-  `needs-info` issue that has a comment newer than its latest
-  `<!-- taskie:triage -->` comment (the reporter answered). If nothing is
-  selected, say so and stop.
+- Input is empty: triage the open issues whose status is needs triage (see
+  the conventions), plus every open `needs-info` issue that has a comment
+  newer than its latest `<!-- taskie:triage -->` comment (the reporter
+  answered). Take at most 10, oldest first, and if more qualify, say how
+  many are left for the next run. If nothing is selected, say so and stop.
 - Anything else, including text that starts with a number or `#<n>`: file it
   ("File" below). When Claude starts this skill from a conversation (for
   example "file that as a bug"), it passes the problem as text.
@@ -73,10 +74,9 @@ First run the "before any stage" check from the conventions. Then:
    "Asking the user" in the conventions). Create nothing until they answer.
    This holds even when another stage or Claude itself started this skill.
 8. For the confirmed drafts: make sure the labels exist, create each issue
-   with its type and priority labels (plus `ready` when that is the outcome;
-   never `needs-triage`), post any agreed comments on existing issues, and
-   post the Accept outcome's triage comment (under "Outcomes") on each new
-   issue.
+   with its type and priority labels (plus `ready` when that is the
+   outcome), post any agreed comments on existing issues, and post the
+   Accept outcome's triage comment (under "Outcomes") on each new issue.
 
 9. Print each result as `#<n> <title> <url>` with its status, and suggest
    `/taskie:do <n>` for a ready issue or `/taskie:plan #<n>` for one in the
@@ -112,8 +112,7 @@ For issues that already exist, usually filed by someone outside taskie.
 ### Outcomes
 
 Accept: the issue is valid and understood. Set the type label (removing a
-wrong one), add the priority label, remove `needs-triage` and `needs-info`,
-and comment:
+wrong one), add the priority label, remove `needs-info`, and comment:
 
 ```
 <!-- taskie:triage -->
@@ -133,10 +132,9 @@ has details the original lacks, add them to the original as a comment. Then
 close the duplicate as a duplicate of the original.
 
 Needs info: the issue cannot be classified or acted on without answers from
-the reporter. Add `needs-info`, remove `needs-triage`, and comment with
-specific, numbered questions (for example "Which browser and version?",
-"Does it happen with an empty table too?"), never a generic "please add more
-details":
+the reporter. Add `needs-info` and comment with specific, numbered questions
+(for example "Which browser and version?", "Does it happen with an empty table
+too?"), never a generic "please add more details":
 
 ```
 <!-- taskie:triage -->

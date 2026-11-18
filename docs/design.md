@@ -135,12 +135,16 @@ instead, so they need no remote.
 | `P1` | new | major feature broken, no workaround |
 | `P2` | new | degraded, workaround exists |
 | `P3` | new | minor or cosmetic |
-| `needs-triage` | people filing outside taskie (new never sets it) | not yet triaged |
 | `needs-info` | new | waiting on answers from the reporter |
 | `ready` | new or plan | meets the definition of ready |
 
 taskie creates missing labels idempotently. There are no area or component
 labels in v1.
+
+An open issue with no priority label is untriaged: every way taskie triages an
+issue sets a priority, adds `needs-info` or closes it. A `needs-triage` label
+was dropped because nothing set it (taskie never did, and GitHub does not), so
+issues filed outside taskie were never offered for triage.
 
 ### Derived status
 
@@ -221,11 +225,12 @@ can be added later.
 
 Lists the current repo's open issues and PRs grouped by derived status, one
 line each with number, title and priority. It ends with one suggested next
-action, chosen in this order: a PR awaiting approval, a needs-triage issue, a
-PR that needs review, an in-progress issue (hedged, since another session may
-still be on it), the highest-priority ready issue (oldest first among equals),
-a backlog issue that needs planning, and last a needs-info issue waiting on
-its reporter. The middle three follow `/taskie:do`'s own no-argument order.
+action, chosen in this order: a PR awaiting approval, an issue that needs
+triage, a PR that needs review, an in-progress issue (hedged, since another
+session may still be on it), the highest-priority ready issue (oldest first
+among equals), a backlog issue that needs planning, and last a needs-info
+issue waiting on its reporter. The middle three follow `/taskie:do`'s own
+no-argument order.
 Groups are shown in lifecycle order.
 `/taskie help` lists the stages. With no GitHub remote it says so and stops.
 
@@ -254,20 +259,21 @@ about anything ambiguous before drafting. Each draft carries its type,
 priority, final acceptance criteria and an outcome: `ready` when it meets the
 definition of ready, otherwise backlog for `/taskie:plan`. Two body templates:
 bug, and everything else. The full drafts are shown and nothing is created
-until you confirm; issues are created with their labels and a triage comment,
-never `needs-triage`.
+until you confirm; issues are created with their labels and a triage comment.
 
-With no text it triages every `needs-triage` issue plus `needs-info` issues
-with new comments; with `#n` it triages that one. For each issue it reads the
-text, greps the repo for the likely files, and proposes type, priority,
-outcome and reason in one table. Nothing changes until you approve the table,
-optionally editing rows. A scope question you answer while approving is
-written into the issue body.
+With no text it triages the issues that need triage (no priority label yet)
+plus `needs-info` issues with new comments, at most ten per run, oldest first,
+saying how many are left: a repo adopting taskie may have dozens of
+unprioritized issues, and a longer table is not reviewable. With `#n` it
+triages that one. For each issue it reads the text, greps the repo for the
+likely files, and proposes type, priority, outcome and reason in one table.
+Nothing changes until you approve the table, optionally editing rows. A scope
+question you answer while approving is written into the issue body.
 
-Triage outcomes: accept (set priority, remove `needs-triage`, post a comment
-naming the likely files), fast-track to `ready` when the issue already meets
-the definition of ready, duplicate (close with a link), won't fix (close as
-not planned with the reason), needs info (label and post specific questions).
+Triage outcomes: accept (set type and priority, post a comment naming the
+likely files), fast-track to `ready` when the issue already meets the
+definition of ready, duplicate (close with a link), won't fix (close as not
+planned with the reason), needs info (label and post specific questions).
 
 Not in v1: CI failure intake (would be one more source section). Rejected:
 reproducing bugs (slow, needs per-project setup), text-only triage,
