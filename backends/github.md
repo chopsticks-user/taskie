@@ -1,7 +1,7 @@
 # GitHub backend
 
-How to carry out each taskie action on GitHub with the `gh` CLI (tested with
-2.103; older versions may lack the sub-issue and duplicate flags). This is the only file that names `gh`
+How to carry out each taskie action on GitHub with the `gh` CLI (minimum
+versions are under Prerequisites). This is the only file that names `gh`
 commands; stages describe actions, and this file maps them.
 
 ## Rules for every command
@@ -36,7 +36,8 @@ commands; stages describe actions, and this file maps them.
 
 Minimum versions: gh 2.103 (sub-issues, `--duplicate-of` and the
 `subIssuesSummary` field; the version taskie is tested with, older ones may
-lack these) and git 2.38 (`git merge-tree --write-tree`). The version is the
+lack these) and git 2.38 (`git merge-tree --write-tree`, checked only by do
+and ship). The version is the
 first `<major>.<minor>` or `<major>.<minor>.<patch>` in the command's first
 line, so `gh version 2.103.3 (2026-10-26)` is 2.103.3 and `git version
 2.39.3 (Apple Git-146)` is 2.39.3; compare it number by number, so 2.103 is

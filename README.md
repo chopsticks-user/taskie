@@ -70,15 +70,14 @@ instead. For larger work that is not a single issue yet, start with
 ## Requirements
 
 - Claude Code with the built-in `/code-review` skill (tested with 2.1.318)
-- [GitHub CLI](https://cli.github.com/) (`gh`) 2.103 or later, authenticated
-  (taskie uses sub-issues and other recent flags; older releases, such as
-  some distributions ship, may lack them)
+- [GitHub CLI](https://cli.github.com/) (`gh`) 2.103 or later, authenticated.
+  Every command refuses to run with an older gh; some distributions ship
+  much older releases, so install a current one
 - git 2.38 or later (`/taskie:do` and `/taskie:ship` use `git merge-tree
-  --write-tree`)
+  --write-tree` and refuse to run with an older git)
 - A git repository with a GitHub remote, with issues enabled
 
-Every command checks the gh and git versions and that the repository accepts
-issues before it starts, and stops with what is missing.
+Each command checks these before it starts and stops with what is missing.
 
 ## Install
 

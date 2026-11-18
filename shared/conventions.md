@@ -29,8 +29,10 @@ optional.
 
 Check that the current directory is inside a git repository whose remote is
 hosted on a supported backend, that the backend CLI is installed, at least
-the version the backend names and authenticated, that git is at least the
-version the backend names, and that the repository accepts issues. If not,
+the version the backend names and authenticated, and that the repository
+accepts issues (except for `/taskie:do` on a pull request that resolves no
+issue). `/taskie:do` and `/taskie:ship`, the stages that merge, also check
+that git is at least the version the backend names. If not,
 say exactly what is missing (with the version found, for a version that is
 too old) and stop. A version that cannot be read, such as a development
 build, is not a reason to stop: continue, and start the stage's output with
