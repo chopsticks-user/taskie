@@ -22,11 +22,16 @@ the way most tech companies move tickets through a team.
 | `/taskie:ship [pr]` | Updates the PR with the base branch, verifies, merges, cleans up, and offers a release when a milestone completes. With no argument it takes the current PR or the one awaiting approval, and asks when several do. |
 
 Claude can run `/taskie`, `new` and `plan` on its own when the conversation
-calls for it (for example "file a bug for this"). `do` and `ship` push,
-comment and merge, so they only run when you type them.
+calls for it (for example "file a bug for this"). `do` pushes and opens pull
+requests, so it runs only when you type it or explicitly ask for that work
+("work on #12"). `ship` merges, so it runs only when you type it.
 
 Whenever taskie needs a decision it asks a multiple-choice question, with the
-recommended option first; you can always pick "Other" and type instead.
+recommended option first; you can always pick "Other" and type instead. Tell
+it to proceed without asking and, for the rest of the session, it takes the
+recommended option itself and lists what it chose at the end. It still stops
+for a merge, for `do`'s stop conditions (the work grows, or reaches data, auth
+or a public API) and for questions with no recommended answer.
 
 `/taskie:do` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your
