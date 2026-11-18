@@ -1,7 +1,7 @@
 ---
 name: new
-description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, or another taskie stage hands over problems to file.
-argument-hint: "[<request, bug report or findings> | #n]"
+description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, or asked to look for work in a named scope (code, docs, recent commits, stated goals), it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, asks taskie to find issues to file in a named part of the repo (not a plain review or fix), or another taskie stage hands over problems to file.
+argument-hint: "[<request, bug report, findings or a scope to search> | #n]"
 allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *)
 ---
 
@@ -50,7 +50,7 @@ First run the "before any stage" check from the conventions. Then:
 4. Read the code each item touches: search the repo with two or three terms
    from it (names, error messages, routes, UI text) and note up to three
    files that most likely need to change, or "none found". Read code only; do
-   not run anything.
+   not run anything (a find-work request may read a commit log, see below).
 5. Ask the user, in one message, about anything ambiguous whose answer would
    change the scope or the acceptance criteria. Skip this when nothing is
    ambiguous, and never ask for details the source cannot have (for a report
@@ -208,3 +208,39 @@ both.
 
 When another stage hands over findings, it has already told the user about
 them; still show the drafts and wait for confirmation.
+
+### Find-work request
+
+A request to go and look for work in a named scope, instead of a description
+of a problem: "review skills/do for bugs", "what's missing given the goals in
+docs/design.md", "look at the last 20 commits for unfinished work". Text that
+describes something the writer saw ("review is broken on large PRs") is a
+report, not a request. When it could be either, ask, offering both readings
+and no recommended option.
+
+The scope is required. If the request names none ("find some bugs"), ask for
+one, offering concrete scopes from this repo (its top-level directories, its
+main docs, the last 20 commits); review the whole repo only when the user
+names it as the scope.
+
+Read the scope directly instead of running another review tool. A large
+scope (a long range, a big directory, the whole repo) starts from an
+overview, such as file stats or the file list; read the parts that matter
+and say which were only skimmed.
+
+- paths: the named files or directories, as code or docs
+- a commit range: the log of the range with each commit's diff (running the
+  log is the one command this source needs)
+- a pull request: its commits and its diff, as the backend reads them
+- goals: the named document (a README, a design doc) and the descriptions of
+  open milestones, compared with what the code and the open issues already
+  cover; a goal that a closed issue declined as not planned is not drafted
+  again
+
+Each finding then becomes a draft as in "Review findings" above, with Source
+`Find-work request: <the request>`, and goes through the same duplicate
+search, batch and approval as every other draft. Unfinished new behavior,
+such as a stub left for later, is a `type:feature`. A draft derived from
+goals, rather than a defect found in code or docs, is a guess at what the
+maintainers want: it is typed by what is missing and filed to the backlog for
+`/taskie:plan`, never `ready`.

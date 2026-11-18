@@ -14,7 +14,7 @@ the way most tech companies move tickets through a team.
 | Command | What it does |
 |---|---|
 | `/taskie` | Board: open issues and PRs grouped by status, plus a suggested next action. `/taskie help` lists the stages. |
-| `/taskie:new <text>` | Turns a chat request, bug report or review findings into issues that are already triaged: type, priority, acceptance criteria, and `ready` when they qualify. Shows the drafts and creates only after you confirm. |
+| `/taskie:new <text>` | Turns a chat request, bug report or review findings into issues that are already triaged: type, priority, acceptance criteria, and `ready` when they qualify. It can also look for work in a scope you name, such as `review skills/do for bugs` or `look at the last 20 commits for unfinished work`. Shows the drafts and creates only after you confirm. |
 | `/taskie:new [#n]` | With no text, triages up to 10 issues that have no priority yet (usually filed outside taskie), or issue `#n`, in one table, and applies it after you approve. |
 | `/taskie:plan #n` | Adds acceptance criteria, splits large issues into sub-issues, and marks issues ready. |
 | `/taskie:plan <goal>` | Turns a goal such as `v0.2: offline mode` into a milestone with issues. |

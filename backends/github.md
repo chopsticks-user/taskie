@@ -73,7 +73,7 @@ overwrite a label the repo already customized.
 
 | Action | Command |
 |---|---|
-| search for duplicates | `gh issue list --state all --search '<keywords>' --limit 10 --json number,title,state,url` |
+| search for duplicates | `gh issue list --state all --search '<keywords>' --limit 10 --json number,title,state,stateReason,url` (`stateReason` tells a declined issue, `NOT_PLANNED`, from a finished one) |
 | list open issues | `gh issue list --state open --limit 500 --json number,title,labels,milestone,subIssuesSummary,createdAt` |
 | list issues with a label | `gh issue list --state open --label '<label>' --limit 500 --json number,title,labels,createdAt` |
 | read one issue | `gh issue view <n> --json number,title,body,state,labels,milestone,parent,subIssues,subIssuesSummary,comments,url` |
@@ -129,6 +129,8 @@ query($owner: String!, $name: String!) {
 |---|---|
 | list open PRs | `gh pr list --state open --limit 200 --json number,title,headRefName,headRefOid,baseRefName,isDraft,closingIssuesReferences,comments` |
 | read one PR | `gh pr view <n> --json number,title,body,state,isDraft,baseRefName,headRefName,headRefOid,closingIssuesReferences,comments,reviews,statusCheckRollup,mergeable,mergeStateStatus,url` |
+| commits of a PR | `gh pr view <n> --json commits --jq '.commits[].messageHeadline'` |
+| diff of a PR | `gh pr diff <n>` (add `--name-only` for the file list) |
 | comments on the PR's diff | see below |
 | replace a PR body | `gh pr edit <n> --body-file -` |
 | PR of the current branch | the same `gh pr view` without `<n>` |
@@ -174,7 +176,7 @@ checked out, so remove the worktree before merging.
 List milestones:
 
 ```bash
-gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {number, title, state, open_issues, closed_issues}'
+gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {number, title, description, state, open_issues, closed_issues}'
 ```
 
 ## Releases
