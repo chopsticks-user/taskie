@@ -65,8 +65,19 @@ second confirmation before merging; do stop at every gate below.
    undo that merge commit (`git reset --hard ORIG_HEAD`, only after checking
    the worktree had no other changes), report the failure, and stop.
 7. If `HEAD` is not the PR's head (step 5 made a merge commit, or an earlier
-   run left one unpushed), push it, then wait for the PR's checks on the new
-   head as the backend describes. Stop if any fail.
+   run left one unpushed), push it. Right after the push, comment on the PR
+   with a review marker for the new head, so its status stays "awaiting
+   approval" even if this run stops later:
+
+   ```
+   <!-- taskie:review sha=<full new head sha> -->
+   Review carried over by `/taskie:ship` from <short marker sha> after a clean merge of `<base>`.
+   ```
+
+   Step 4 checked that every commit after the old marker is a clean merge or
+   already on the base, so the new head adds no unreviewed change. Then wait
+   for the PR's checks on the new head as the backend describes. Stop if any
+   fail.
 8. Note the head sha that was just verified, and print a short summary: the
    PR, its title, the issues it closes, the checks, the review result and the
    merge method.

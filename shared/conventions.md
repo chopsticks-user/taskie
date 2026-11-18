@@ -87,8 +87,10 @@ reviewed again. The one exception is checked by `/taskie:ship` with local git:
 if the marker's commit is an ancestor of the head and every commit after it
 that is not on the base branch is a clean merge (in practice ship's own merge
 of the base branch, which also brings in the base's commits), the review
-still stands for shipping. A merge that
-resolved conflicts or changed code by hand does not count.
+still stands for shipping. A merge that resolved conflicts or changed code by
+hand does not count. After pushing its own merge, ship posts a marker for the
+new head that says the review was carried over, so every stage sees the PR as
+awaiting approval without checking git.
 
 ## Definition of ready
 
