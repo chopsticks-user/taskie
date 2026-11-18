@@ -246,6 +246,15 @@ With text, it files. Understood sources in v1:
 | chat request | problem, context, acceptance criteria |
 | bug report or stack trace | repro steps, expected vs actual, failing location, environment; missing parts are marked unknown, never invented |
 | review findings | one issue per finding, linking the source PR and file:line |
+| find-work request | reads a named scope (paths, a commit range, or goals in a document), turns what it finds into review findings, and drafts those |
+
+A find-work request ("review skills/do for bugs") must name a scope; with none,
+taskie asks for one instead of reviewing the whole repo, and text that could be
+either a request or a report gets a question with both readings. taskie reads
+the scope itself rather than running `/code-review` or another tool, so code,
+docs, commits and goals are handled the same way. Drafts derived from goals
+always go to the backlog, never `ready`: unlike a defect found in code, they
+are guesses about the maintainers' priorities and need planning.
 
 Rules: one issue per unrelated item (splitting one large item into subtasks is
 plan's job). Before drafting, search open and closed issues; if one looks like
