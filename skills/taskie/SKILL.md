@@ -2,7 +2,7 @@
 name: taskie
 description: Show the taskie board for the current repo, its open issues and pull requests grouped by lifecycle status (needs triage, needs info, backlog, ready, in progress, in review, awaiting approval). Use when the user asks what is open, where things stand, or what to work on next.
 argument-hint: "[help]"
-allowed-tools: Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh pr list *)
+allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh pr list *)
 ---
 
 # taskie board

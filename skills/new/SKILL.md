@@ -2,7 +2,7 @@
 name: new
 description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, or asked to look for work in a named scope (code, docs, recent commits, stated goals), it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, asks taskie to find issues to file in a named part of the repo (not a plain review or fix), or another taskie stage hands over problems to file.
 argument-hint: "[<request, bug report, findings or a scope to search> | #n]"
-allowed-tools: Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *)
+allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *)
 ---
 
 # taskie new

@@ -55,6 +55,17 @@ follows its Precedence section, the only place the read order is written down.
 Keeping the order in one file means a rename or reorder touches one place
 instead of every skill.
 
+In a user's repo the plugin directory is outside the working directory, so
+reading those shared files needed permission: every command prompted, and a
+headless run was denied and stopped (#57, found while testing #49). Each
+skill's `allowed-tools` therefore pre-approves `Read(/${CLAUDE_PLUGIN_ROOT}/**)`,
+which covers the plugin's own files and nothing else. The leading `/` turns
+the expanded absolute path into the `//` form permission rules need; without
+it the rule did not match. Moving the shared files into each skill's
+directory did not help (those reads were denied too), and inlining them at
+load time with a shell command was blocked for paths outside the working
+directory.
+
 `shared/` holds the conventions every stage shares. The name avoids `rules/`,
 which reads like Claude Code's `.claude/rules/`, `docs/`, which holds
 contributor docs, and the root directories Claude Code discovers on its own
@@ -331,7 +342,8 @@ a skill shows it needs them:
 
 `just verify` runs `claude plugin validate --strict .`, which checks the
 manifests and skill frontmatter and fails on any warning, then `just
-version-bump`: when the working tree changes plugin files against `main` on
+skill-rules`, which fails when a skill lacks the plugin-root Read rule (see
+"Plugin layout"), then `just version-bump`: when the working tree changes plugin files against `main` on
 the remote that points at this repo, `plugin.json` must be newer than the
 version there. Without it, two branches that bumped to the same number merged
 one after another with no conflict, and the second reached no installed copy.
@@ -578,6 +590,7 @@ is updated with the result.
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
 | a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: taskie's review step ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
 | taskie works on a repo other than its own | all | confirmed on a Node repo with `npm test` and no taskie section (#48): labels created once next to GitHub's defaults, verify detected from package.json and saved as its own commit, sub-issues created with `--parent`. Setup detection had no rules to follow (#54), and two open PRs saved the same setting (#53) |
+| `Read(/${CLAUDE_PLUGIN_ROOT}/**)` in a skill's allowed-tools covers an installed copy as it does a `--plugin-dir` one | all | confirmed for `--plugin-dir` (#57), including on the next turn of a resumed session; to check for the installed copy once 0.10.1 is installed. A plain "work on #12" request reads `do`'s file with no skill active and gets no pre-approval (#63) |
 | `/taskie:plan` works on real issues | 4 | confirmed in the #48 trial: a split into two sub-issues with the parent turned into a tracker, and a refine that added a missing edge case |
 | `do`'s fail-first rule and spec-based Verification work on real code | 5 | confirmed in the #48 trial: the reproducing tests failed before the fix, and each PR listed every criterion and edge case with its test. A base merge left Verification stale (#55) |
 

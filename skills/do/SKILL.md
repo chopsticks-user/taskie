@@ -3,7 +3,7 @@ name: do
 description: Implement an issue in its own worktree, open a pull request, review it with /code-review, fix the in-scope findings and post the review summary, all in one run. On an issue that already has a PR, address the feedback and review again. With no argument, pick the current or most urgent issue.
 argument-hint: "[issue number]"
 disable-model-invocation: true
-allowed-tools: Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(gh run view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git merge-tree *) Bash(git remote -v*)
+allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(gh run view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git merge-tree *) Bash(git remote -v*)
 ---
 
 # taskie do
