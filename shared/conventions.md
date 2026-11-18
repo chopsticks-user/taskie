@@ -15,8 +15,9 @@ read order is written down. Before doing anything else, also read, in order:
 
 1. `${CLAUDE_PLUGIN_ROOT}/backends/github.md`
 2. the taskie section of the target repo's CLAUDE.md, if there is one: the
-   section under a heading named `taskie` in `CLAUDE.md` at the repo root or
-   in `.claude/CLAUDE.md`
+   part under a `## taskie` heading, up to the next heading of that level, in
+   `CLAUDE.md` at the repo root or in `.claude/CLAUDE.md` (the root one if
+   both have it)
 
 The taskie section is free-form markdown written by the repo's maintainers.
 Where it says something different from this file, follow it. Only that
@@ -169,8 +170,8 @@ Find each one in this order:
 3. ask the user
 
 When a command was detected or given by the user, confirm it once, then offer
-to save it in the taskie section. Save into the CLAUDE.md that already has
-the section, else the one that exists (the root one if both do), else a new
+to save it in the taskie section. Save into the CLAUDE.md whose taskie section
+is read, else the one that exists (the root one if both do), else a new
 `CLAUDE.md` at the root, adding a `## taskie` heading if there is none. If a
 repo needs no setup, record `setup: none`.
 

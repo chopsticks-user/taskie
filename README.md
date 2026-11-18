@@ -69,8 +69,8 @@ work on it.
 
 ## Configuring a repo: a `taskie` section in CLAUDE.md
 
-taskie works with no setup. To change its defaults for one repo, add a section
-headed `taskie` to the repo's CLAUDE.md (`CLAUDE.md` at the root or
+taskie works with no setup. To change its defaults for one repo, add a
+`## taskie` section to the repo's CLAUDE.md (`CLAUDE.md` at the root or
 `.claude/CLAUDE.md`). It is free-form markdown, and anything you write there
 takes precedence over taskie's defaults; the rest of CLAUDE.md does not
 change them. For example:

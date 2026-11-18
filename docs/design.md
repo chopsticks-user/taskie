@@ -94,20 +94,24 @@ Manual-only skills set `disable-model-invocation: true`.
 
 ### Repo overrides: a `taskie` section in CLAUDE.md
 
-A repo may add an optional free-form markdown section headed `taskie` to its
-project CLAUDE.md (`CLAUDE.md` at the root or `.claude/CLAUDE.md`, the two
-places Claude Code reads). Skills read it after the defaults and follow it
-where it differs. It needs no schema, and anything in `shared/conventions.md`
-can be overridden, but only by that section: the rest of CLAUDE.md is written
-for other work, and an instruction there should not change taskie's rules by
-accident. Detected values are saved in the CLAUDE.md that already has the
-section, else the one that exists (the root one if both do), else a new root
-`CLAUDE.md`. Keys taskie itself writes or reads there:
+A repo may add an optional free-form `## taskie` section to its project
+CLAUDE.md (`CLAUDE.md` at the root or `.claude/CLAUDE.md`, the two places
+Claude Code reads; the root one wins if both have the section). It is a
+second-level heading because a CLAUDE.md often opens with the project's name as
+its title, as this repo's does. Skills read it after the defaults and follow
+it where it differs. It needs no schema, and anything in
+`shared/conventions.md` can be overridden, but only by that section: the rest
+of CLAUDE.md is written for other work, and an instruction there should not
+change taskie's rules by accident. Detected values are saved in the CLAUDE.md
+whose section is read, else the one that exists (the root one if both do),
+else a new root `CLAUDE.md`. Keys taskie itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
 | `verify:` | do, ship | command that runs formatting, linting and all tests |
 | `setup:` | do | command that prepares a fresh worktree (install dependencies) |
+| `remote:` | git steps in every stage | the git remote that points at the GitHub repo |
+| base branch | every stage | overrides the repo's default branch |
 | review level | do | overrides the priority-based `/code-review` level |
 | merge method | ship | overrides the merge-commit default |
 
@@ -131,8 +135,8 @@ its shape is a guess until a second backend exists.
 
 `gh` resolves the repo on its own, but a few git steps (fetching the base or a
 branch, the worktree fallback) need the git remote. taskie never assumes
-`origin`: it uses `remote:` from the taskie section, else the one remote whose URL
-ends in the repo's `owner/name`, and asks when none or several match. Checks
+`origin`: it uses `remote:` from the taskie section, else the one remote whose
+URL ends in the repo's `owner/name`, and asks when none or several match. Checks
 that `gh` can answer, such as whether a tag exists, go through `gh api`
 instead, so they need no remote.
 
