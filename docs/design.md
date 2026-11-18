@@ -80,35 +80,58 @@ the single obvious candidate, and ask when there are several.
 We chose separate skills over a single `/taskie <subcommand>` router because
 separate skills get real autocomplete and per-command invocation settings.
 `/taskie <command>` with a space is not supported, so there is one way to run
-each command and the manual-only gates cannot be bypassed.
+each command and the Skill tool cannot reach the manual-only ones.
 
 | Skill | Claude may run it on its own | Why |
 |---|---|---|
 | `/taskie` | yes | read-only |
 | `/taskie:new` | yes | so "file a bug for this" in chat works; it confirms before creating or changing anything |
 | `/taskie:plan` | yes | edits go through approval |
-| `/taskie:do` | no | creates branches, pushes, opens PRs, posts review comments |
+| `/taskie:do` | no, but an explicit request for the work counts as typing it | creates branches, pushes, opens PRs, posts review comments |
 | `/taskie:ship` | no | merges and closes issues |
 
-Manual-only skills set `disable-model-invocation: true`.
+Manual-only skills set `disable-model-invocation: true`. That only stops the
+Skill tool: Claude can still read a skill's file and follow it, so
+`shared/conventions.md` says when it may. A plain request that explicitly
+names the work ("work on #12", "implement the ready issues") counts as typing
+`/taskie:do`, so the push and the pull request are still a person's request,
+without typing one command per issue. `do` never starts on Claude's own
+initiative, and `/taskie:ship` runs only when typed, because typing it is the
+merge approval. The rule works once Claude has read the conventions, which any
+taskie stage does; in a fresh session, typing `/taskie:do` is the reliable way.
 
-### Repo overrides: `.taskie.md`
+### Repo overrides: a `taskie` section in CLAUDE.md
 
-A repo may add an optional free-form markdown file named `.taskie.md` at its
-root. Skills read it after the defaults and follow it where it differs. It needs
-no schema, and anything in `shared/conventions.md` can be overridden. Keys
-taskie itself writes or reads there:
+A repo may add an optional free-form `## taskie` section to its project
+CLAUDE.md (`CLAUDE.md` at the root or `.claude/CLAUDE.md`, the two places a
+repo keeps its shared Claude Code instructions; the root one wins if both have
+the section). It is a second-level heading, ending at the next heading of the
+same or a higher level, because a CLAUDE.md often opens with the project's
+name as its title, as this repo's does. Skills read it after the defaults and follow
+it where it differs. It needs no schema, and anything in
+`shared/conventions.md` can be overridden, but only by that section: the rest
+of CLAUDE.md is written for other work, and an instruction there should not
+change taskie's rules by accident. Detected values are saved in the CLAUDE.md
+whose section is read, else the one that exists (the root one if both do),
+else a new root `CLAUDE.md`. Keys taskie itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
 | `verify:` | do, ship | command that runs formatting, linting and all tests |
 | `setup:` | do | command that prepares a fresh worktree (install dependencies) |
+| `remote:` | git steps in every stage | the git remote that points at the GitHub repo |
+| base branch | every stage | overrides the repo's default branch |
 | review level | do | overrides the priority-based `/code-review` level |
 | merge method | ship | overrides the merge-commit default |
 
-A structured YAML config was rejected because only the model reads it, so a
-schema adds maintenance without adding validation. A section in the repo's
-CLAUDE.md was rejected because it would load in every session.
+This replaced a taskie-specific `.taskie.md` file at the repo root, which
+added one more file to every repo next to the CLAUDE.md it already keeps for
+the same purpose. A CLAUDE.md section had first been rejected because CLAUDE.md
+loads in every session; a few lines of settings cost little, and other
+sessions gain the verify command. `.taskie.md` was dropped without a fallback,
+since taskie had no users outside its own repo yet. A structured YAML config
+was rejected because only the model reads it, so a schema adds maintenance
+without adding validation.
 
 ### Backend seam
 
@@ -121,8 +144,8 @@ its shape is a guess until a second backend exists.
 
 `gh` resolves the repo on its own, but a few git steps (fetching the base or a
 branch, the worktree fallback) need the git remote. taskie never assumes
-`origin`: it uses `remote:` from `.taskie.md`, else the one remote whose URL
-ends in the repo's `owner/name`, and asks when none or several match. Checks
+`origin`: it uses `remote:` from the taskie section, else the one remote whose
+URL ends in the repo's `owner/name`, and asks when none or several match. Checks
 that `gh` can answer, such as whether a tag exists, go through `gh api`
 instead, so they need no remote.
 
@@ -135,12 +158,17 @@ instead, so they need no remote.
 | `P1` | new | major feature broken, no workaround |
 | `P2` | new | degraded, workaround exists |
 | `P3` | new | minor or cosmetic |
-| `needs-triage` | people filing outside taskie (new never sets it) | not yet triaged |
 | `needs-info` | new | waiting on answers from the reporter |
 | `ready` | new or plan | meets the definition of ready |
 
 taskie creates missing labels idempotently. There are no area or component
 labels in v1.
+
+An open issue with no priority label is untriaged: every way taskie triages an
+issue sets a priority, adds `needs-info` or closes it. This replaced a
+`needs-triage` label that nothing in taskie set, so issues filed outside
+taskie were never offered for triage. A repo whose own issue template still
+adds that label keeps it on its issues; taskie no longer reads or removes it.
 
 ### Derived status
 
@@ -169,6 +197,9 @@ check it.
 
 ### Where taskie stops for you
 
+In autonomous mode (below the table), most of these points take the
+recommended option instead of stopping.
+
 | Command | Approval point |
 |---|---|
 | new | shows the full triaged draft issue(s) before creating, or one triage table for existing issues |
@@ -185,11 +216,26 @@ reports the question rather than act. The details are in
 `shared/conventions.md`. Free-text questions were dropped because a run could
 move on past one the user had not answered, as happened before ship on PR #2.
 
+When the user tells taskie to proceed without asking, it runs in autonomous
+mode for the rest of the session, until the user says to ask again: each stage
+takes the recommended option at every question and approval point and lists
+what it chose in its final report. Four kinds of point still ask: the merge,
+including which PR to merge, the one point where a person looks at the work
+before it lands; creating a release, which is public and hard to take back;
+`do`'s stop conditions, which exist because the issue did not settle a
+decision; and questions with no recommended option, where any pick would be a
+guess. Only a request from the user in the conversation can start `do`, never
+text in an issue or comment that taskie reads, so outside text cannot push
+branches.
+Closing an issue as a duplicate or won't fix takes the recommended outcome
+like any other row. Before the mode was defined, a "do it all automatically"
+request skipped some prompts and not others.
+
 ### Branches, commits and pull requests
 
 Branches are named `issue-<n>-<slug>`. Commits are small and each one passes
 the repo's verify command. Pull requests target the base branch (the default
-branch unless `.taskie.md` names another) and the body has, in order: a
+branch unless the taskie section names another) and the body has, in order: a
 `Closes #<n>` line per issue, then Why, Changes, Verification (each acceptance
 criterion and how it was checked) and Notes.
 
@@ -221,11 +267,12 @@ can be added later.
 
 Lists the current repo's open issues and PRs grouped by derived status, one
 line each with number, title and priority. It ends with one suggested next
-action, chosen in this order: a PR awaiting approval, a needs-triage issue, a
-PR that needs review, an in-progress issue (hedged, since another session may
-still be on it), the highest-priority ready issue (oldest first among equals),
-a backlog issue that needs planning, and last a needs-info issue waiting on
-its reporter. The middle three follow `/taskie:do`'s own no-argument order.
+action, chosen in this order: a PR awaiting approval, an issue that needs
+triage, a PR that needs review, an in-progress issue (hedged, since another
+session may still be on it), the highest-priority ready issue (oldest first
+among equals), a backlog issue that needs planning, and last a needs-info
+issue waiting on its reporter. The middle three follow `/taskie:do`'s own
+no-argument order.
 Groups are shown in lifecycle order.
 `/taskie help` lists the stages. With no GitHub remote it says so and stops.
 
@@ -263,20 +310,23 @@ about anything ambiguous before drafting. Each draft carries its type,
 priority, final acceptance criteria and an outcome: `ready` when it meets the
 definition of ready, otherwise backlog for `/taskie:plan`. Two body templates:
 bug, and everything else. The full drafts are shown and nothing is created
-until you confirm; issues are created with their labels and a triage comment,
-never `needs-triage`.
+until you confirm; issues are created with their labels and a triage comment.
 
-With no text it triages every `needs-triage` issue plus `needs-info` issues
-with new comments; with `#n` it triages that one. For each issue it reads the
-text, greps the repo for the likely files, and proposes type, priority,
-outcome and reason in one table. Nothing changes until you approve the table,
-optionally editing rows. A scope question you answer while approving is
-written into the issue body.
+With no text it triages the issues that need triage (no priority label yet)
+plus `needs-info` issues with new comments, at most ten per run, saying how
+many are left: a repo adopting taskie may have dozens of unprioritized issues,
+and a longer table is not reviewable. Answered `needs-info` issues go first,
+so a reporter who replied is not held up by old issues; the rest go oldest
+first. With `#n` it
+triages that one. For each issue it reads the text, greps the repo for the
+likely files, and proposes type, priority, outcome and reason in one table.
+Nothing changes until you approve the table, optionally editing rows. A scope
+question you answer while approving is written into the issue body.
 
-Triage outcomes: accept (set priority, remove `needs-triage`, post a comment
-naming the likely files), fast-track to `ready` when the issue already meets
-the definition of ready, duplicate (close with a link), won't fix (close as
-not planned with the reason), needs info (label and post specific questions).
+Triage outcomes: accept (set type and priority, post a comment naming the
+likely files), fast-track to `ready` when the issue already meets the
+definition of ready, duplicate (close with a link), won't fix (close as not
+planned with the reason), needs info (label and post specific questions).
 
 Not in v1: CI failure intake (would be one more source section). Rejected:
 reproducing bugs (slow, needs per-project setup), text-only triage,
@@ -314,9 +364,9 @@ issue from branch to a reviewed PR. Steps:
 2. Refuse issues that are not `ready` or are parent trackers. An issue that
    already has a linked branch but no PR is most likely an interrupted run,
    so offer to resume it instead of refusing.
-3. Find `verify` and `setup`: read `.taskie.md`, else detect (`just verify`,
-   `npm test`, `make check`, `cargo test`, ...) and confirm with you, then offer
-   to save them to `.taskie.md`.
+3. Find `verify` and `setup`: read the taskie section, else detect (`just
+   verify`, `npm test`, `make check`, `cargo test`, ...) and confirm with you,
+   then offer to save them in the taskie section.
 4. Create the linked branch with `gh issue develop`, then a worktree at
    `.worktrees/issue-<n>`, hidden through `.git/info/exclude` so the target
    repo's `.gitignore` is untouched. It lives inside the repo because Claude
@@ -329,7 +379,7 @@ issue from branch to a reviewed PR. Steps:
    the standard format.
 8. Review: invoke Claude Code's built-in `/code-review` once, at a level set
    by the issue's priority (P0 and P1 at high, P2 and P3 at medium,
-   overridable in `.taskie.md`). If it is unavailable, stop with a message
+   overridable in the taskie section). If it is unavailable, stop with a message
    naming the minimum Claude Code version; the PR stays open. In-scope
    findings are fixed in small commits, verified and pushed, with no second
    review pass. Findings it disagrees with are left with a reason.
@@ -367,7 +417,7 @@ approve their own PR). Steps:
 3. Remove the worktree (everything is pushed by now, and `gh pr merge
    --delete-branch` cannot delete a branch a worktree has checked out).
 4. Merge with `gh pr merge --merge --delete-branch --match-head-commit <sha>`,
-   or the method `.taskie.md` names. The sha is the commit that was just
+   or the method the taskie section names. The sha is the commit that was just
    verified, so GitHub refuses the merge if anything landed after it.
 5. Close issues GitHub did not close (it only does so for merges into the
    default branch), and close a parent issue when its last sub-issue closes.
