@@ -2,7 +2,7 @@
 name: new
 description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, or asked to look for work in a named scope (code, docs, recent commits, stated goals), it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, asks taskie to find issues to file in a named part of the repo (not a plain review or fix), or another taskie stage hands over problems to file.
 argument-hint: "[<request, bug report, findings or a scope to search> | #n]"
-allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *) Bash(git log*)
+allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *)
 ---
 
 # taskie new
@@ -50,7 +50,7 @@ First run the "before any stage" check from the conventions. Then:
 4. Read the code each item touches: search the repo with two or three terms
    from it (names, error messages, routes, UI text) and note up to three
    files that most likely need to change, or "none found". Read code only; do
-   not run the project or its tests.
+   not run anything (a find-work request may read a commit log, see below).
 5. Ask the user, in one message, about anything ambiguous whose answer would
    change the scope or the acceptance criteria. Skip this when nothing is
    ambiguous, and never ask for details the source cannot have (for a report
@@ -223,12 +223,15 @@ one, offering concrete scopes from this repo (its top-level directories, its
 main docs, the last 20 commits); review the whole repo only when the user
 names it as the scope.
 
-Read the scope directly instead of running another review tool:
+Read the scope directly instead of running another review tool. A large
+scope (a long range, a big directory, the whole repo) starts from an
+overview, such as file stats or the file list; read the parts that matter
+and say which were only skimmed.
 
 - paths: the named files or directories, as code or docs
-- a commit range, or a pull request's commits: the log of the range with each
-  commit's diff; for a large range, start from each commit's file stats, read
-  the diffs that matter, and say which commits were only skimmed
+- a commit range: the log of the range with each commit's diff (running the
+  log is the one command this source needs)
+- a pull request: its commits and its diff, as the backend reads them
 - goals: the named document (a README, a design doc) and the descriptions of
   open milestones, compared with what the code and the open issues already
   cover; a goal that a closed issue declined as not planned is not drafted
