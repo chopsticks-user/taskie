@@ -67,8 +67,9 @@ tracker and the work moves to sub-issues.
    between children. Every edge case of the parent goes to at least one
    child. Source is `Split from #<parent>`.
 3. Draft the parent's new body: keep the template, replace its acceptance
-   criteria with one item per child ("<child title> is done"), and add a
-   short plan under Context explaining the order.
+   criteria with one item per child ("<child title> is done") and its Edge
+   cases with "Covered by the sub-issues", so they are not kept in two
+   places, and add a short plan under Context explaining the order.
 4. Show the parent's new body and all child drafts in one message, saying
    which children meet the definition of ready. Ask which children to
    create, as a batch (see "Asking the user" in the conventions), and wait
@@ -91,11 +92,15 @@ Input is a goal such as `v0.2: offline mode`.
 3. Read the README, the repo's CLAUDE.md files and the code the goal touches,
    and list open issues that already belong to the goal.
 4. Ask the user, in one message, about anything ambiguous whose answer would
-   change the scope. Skip this step when nothing is ambiguous.
+   change the scope, including what done looks like for the goal. Skip this
+   step when nothing is ambiguous. Every other guess goes under the drafts'
+   Assumptions; in autonomous mode, so do these questions' answers (see the
+   conventions).
 5. Draft the work:
    - new issues in `/taskie:new`'s format, each with a type and a priority (the goal
-     was triaged by planning it), final acceptance criteria, and
-     `Depends on #<n>` for any order between them
+     was triaged by planning it), final acceptance criteria, Out of scope,
+     Edge cases and Assumptions, and `Depends on #<n>` for any order between
+     them
    - an issue that would not fit in one reviewable pull request becomes a
      tracker with sub-issues, drafted as in "Split an issue"
    - existing open issues to add to the milestone

@@ -277,9 +277,9 @@ anything left out and why; or "None">
 Add one `Closes #<n>` line per issue the PR resolves.
 
 Verification lists every acceptance criterion and every edge case of the
-issue. Each names the test that covers it (or, where no automated test
-applies, the check that was done, such as a command run by hand and what it
-showed) and its result in the final `verify` run. A criterion that nothing
+issue. Each names the test that covers it and its result in the final
+`verify` run, or, where no automated test applies, the check that was done
+(such as a command run by hand) and what it showed. A criterion that nothing
 checks is not done.
 
 ## Approval points
@@ -341,9 +341,10 @@ how questions are answered, not what work runs: it never starts `do` by itself
   the scope; and any question with no recommended option, where picking one
   would be a guess.
 - A question about an issue's scope or acceptance criteria, which `new` and
-  `plan` would ask, is not asked: the stage takes the most likely reading
-  and records it under the issue's Assumptions, where the user sees it
-  before `do` runs.
+  `plan` would ask while drafting, is not asked, even when no reading is
+  clearly better: the stage takes the most likely reading, records it under
+  the issue's Assumptions and lists it in its final report. This overrides
+  the rule above for questions with no recommended option.
 - The stage's final report lists every choice it made without asking.
 
 ## Running do and ship

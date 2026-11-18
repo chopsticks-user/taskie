@@ -75,6 +75,9 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
    this PR is derived from and bounded by. If the issue predates those
    sections or leaves one empty, derive what is missing from the issue and
    the code, as the conventions describe, and treat it as an assumption.
+   Derive only what follows from the issue's own text and the code; a bound
+   or expected outcome with more than one plausible reading is a decision
+   the issue does not settle (step 5).
    State in chat how the change fits the system: the parts it changes, and
    the callers, dependents and existing behavior that must keep working.
 3. State a short plan in chat: the changes, in order, and a test plan that
@@ -88,7 +91,8 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
    already there; keep changes within the issue's scope. For a `type:bug`
    issue, start with a test that reproduces the bug, and run it to see it
    fail before changing the code; note that failure for the PR. A test that
-   passes before the fix does not reproduce the bug.
+   passes before the fix does not reproduce the bug. Commit the test with
+   the fix, so no commit fails `verify`.
 5. Stop and ask the user before going on when:
    - the work turns out larger than the issue describes, or needs a decision
      the issue does not settle that would change its scope or acceptance
@@ -98,12 +102,14 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
      authorization, secrets, or a public API or interface other code depends
      on, and the issue did not say so
    - an acceptance criterion or edge case looks wrong or impossible
-   - the test plan needs automated tests and the repo has no test setup
-     (`verify` runs no test runner, or nothing that could check this
-     behavior): offer to file an issue for a minimal test harness with
-     `/taskie:new`, which can then be done first. Do not skip the tests, and
-     do not set up a harness inside this PR. A repo that has a test runner
-     but no tests near this code is not this case; add the tests
+   - the change is code that a test runner for its language could check (a
+     library, an app, a script) and the repo has no test setup for it
+     (`verify` runs no test runner): offer to file an issue for a minimal
+     test harness with `/taskie:new`, which can then be done first. Do not
+     skip the tests, and do not set up a harness inside this PR. A repo that
+     has a test runner but no tests near this code is not this case; add the
+     tests. Neither is content no ordinary test runner checks, such as
+     documentation, configuration or prompts; it gets named checks
 6. A problem found along the way that is outside the issue's scope, or
    listed under its Out of scope: do not fix it here. Note it, and file it
    with the review's out-of-scope findings in "Report" step 1, so the run
@@ -111,8 +117,9 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
    the noted problems with `/taskie:new` before stopping, so none is lost.
 7. When every acceptance criterion and edge case has its test or check, run
    `verify` once more on the final state, and run any manual check from the
-   test plan. Every changed file must trace back to the spec; move anything
-   else out (step 6).
+   test plan. Every changed file must trace back to the spec or to a rule
+   of the repo that the change triggers (a version bump, docs kept in sync,
+   a lockfile); move anything else out (step 6).
 8. Push the branch (never force-push) and open a PR into the base branch with
    the title and body from the conventions. Under Verification, list every
    acceptance criterion and every edge case with the test or check that

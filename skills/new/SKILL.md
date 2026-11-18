@@ -66,8 +66,8 @@ First run the "before any stage" check from the conventions. Then:
    - body: the bug template for `type:bug`, the general template otherwise,
      from the conventions. Fill the problem's sections only from what the
      source and the user's answers say; write "Unknown" for the rest. List
-     dependencies as `Depends on #<n>`, and, in Context, how the change fits
-     the code from step 4.
+     dependencies as `Depends on #<n>`, and, in Context (or Problem, for a
+     bug), how the change fits the code from step 4.
    - Out of scope, Edge cases and Assumptions: drafted from the request and
      the code read in step 4, as the conventions describe. An expected
      outcome for an edge case that the source does not give is a guess, so

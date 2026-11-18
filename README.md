@@ -44,8 +44,9 @@ silently (in autonomous mode, all of them are written down). `/taskie:do`
 works within that spec. It says how the change fits the existing code, maps
 every criterion and edge case to a test, starts a bug fix with a test that
 fails, and lists each criterion and edge case in the PR with the test that
-proves it. If your repo has no tests yet, it stops and offers to file an
-issue to set up a test harness first.
+proves it. If your repo has no test setup for code that tests could check,
+it stops and offers to file an issue to set up a test harness first;
+documentation, configuration and prompts get named checks instead.
 
 `/taskie:do` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your

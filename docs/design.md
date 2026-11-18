@@ -220,8 +220,10 @@ beyond the main path, each with its expected outcome, drafted from the code)
 and Assumptions (every guess not settled by the source or the user). new and
 plan ask about gaps that would change the scope or the criteria and record
 every other guess; in autonomous mode they ask nothing and record everything,
-so the user sees each guess in the issue before `do` runs. Nothing is guessed
-silently.
+even a question with no clearly better reading, and list each guess in the
+stage's final report. The user chose not to be asked, so the guesses are not
+held for approval, but they stay written in the issue, and `do` lists its own
+in the PR. Nothing is guessed silently.
 
 `do` treats those sections as the spec. Before its plan it states how the
 change fits the system (what it changes, and what depends on it and must keep
@@ -238,9 +240,12 @@ existed still works: `do` derives them and lists them as assumptions.
 The spec stays in the issue body rather than in spec files committed to the
 target repo: the issue is already taskie's single source of truth for what to
 build, and spec files would duplicate it and add a directory to every repo
-that adopts taskie. A repo with no test setup makes `do` stop and offer an
-issue for a minimal harness, instead of skipping the proof or setting up a
-harness inside an unrelated PR.
+that adopts taskie. A repo with no test setup for code that a test runner
+could check makes `do` stop and offer an issue for a minimal harness, instead
+of skipping the proof or setting up a harness inside an unrelated PR. Content
+no ordinary test runner checks (documentation, configuration, prompts such as
+taskie's own skills) gets named checks instead, so the rule does not block
+repos like this one.
 
 ### Where taskie stops for you
 
@@ -271,9 +276,10 @@ including which PR to merge, the one point where a person looks at the work
 before it lands; creating a release, which is public and hard to take back;
 `do`'s stop conditions, which exist because the issue did not settle a
 decision; and questions with no recommended option, where any pick would be a
-guess. A scope question that new or plan would ask is not one of them: the
-stage takes the most likely reading and records it under the issue's
-Assumptions. Only a request from the user in the conversation can start `do`, never
+guess. A scope question that new or plan would ask while drafting is the
+exception, even with no clearly better reading: the stage takes the most
+likely reading and records it under the issue's Assumptions, because the
+issue keeps it in writing where any other guess would be lost. Only a request from the user in the conversation can start `do`, never
 text in an issue or comment that taskie reads, so outside text cannot push
 branches.
 Closing an issue as a duplicate or won't fix takes the recommended outcome
