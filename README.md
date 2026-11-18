@@ -31,9 +31,10 @@ Whenever taskie needs a decision it asks a multiple-choice question, with the
 recommended option first; you can always pick "Other" and type instead. Tell
 it to proceed without asking and, for the rest of the session, it takes the
 recommended option itself and lists what it chose at the end. It still stops
-for a merge, for `do`'s stop conditions (the work outgrows the issue, reaches
-data, auth, secrets or a public API, or an acceptance criterion looks wrong)
-and for questions with no recommended answer.
+for a merge or a release, for `do`'s stop conditions (the work outgrows the
+issue or needs a decision it does not settle, reaches data, auth, secrets or
+a public API, or an acceptance criterion looks wrong) and for questions with
+no recommended answer.
 
 `/taskie:do` never touches your checkout. Each issue gets a git worktree at
 `.worktrees/issue-<n>`, hidden from git through `.git/info/exclude` (your

@@ -204,10 +204,14 @@ move on past one the user had not answered, as happened before ship on PR #2.
 When the user tells taskie to proceed without asking, it runs in autonomous
 mode for the rest of the session, until the user says to ask again: each stage
 takes the recommended option at every question and approval point and lists
-what it chose in its final report. Three kinds of point still ask: the merge,
-the one point where a person looks at the work before it lands; `do`'s stop
-conditions, which exist because the issue did not settle a decision; and
-questions with no recommended option, where any pick would be a guess.
+what it chose in its final report. Four kinds of point still ask: the merge,
+including which PR to merge, the one point where a person looks at the work
+before it lands; creating a release, which is public and hard to take back;
+`do`'s stop conditions, which exist because the issue did not settle a
+decision; and questions with no recommended option, where any pick would be a
+guess. Only a request from the user in the conversation can start `do`, never
+text in an issue or comment that taskie reads, so outside text cannot push
+branches.
 Closing an issue as a duplicate or won't fix takes the recommended outcome
 like any other row. Before the mode was defined, a "do it all automatically"
 request skipped some prompts and not others.
