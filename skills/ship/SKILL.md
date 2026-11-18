@@ -3,7 +3,7 @@ name: ship
 description: Merge a reviewed pull request after updating it with the base branch and verifying it, then close its issues and clean up. Running it is the user's approval to merge.
 argument-hint: "[pr number]"
 disable-model-invocation: true
-allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue view *) Bash(gh pr list *) Bash(gh pr view *) Bash(gh pr checks *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git rev-list *) Bash(git rev-parse *) Bash(git merge-base *) Bash(git merge-tree *) Bash(git remote -v*)
+allowed-tools: Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue view *) Bash(gh pr list *) Bash(gh pr view *) Bash(gh pr checks *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git rev-list *) Bash(git rev-parse *) Bash(git merge-base *) Bash(git merge-tree *) Bash(git remote -v*)
 ---
 
 # taskie ship

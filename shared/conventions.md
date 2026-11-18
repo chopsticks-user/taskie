@@ -28,8 +28,16 @@ optional.
 ## Before any stage
 
 Check that the current directory is inside a git repository whose remote is
-hosted on a supported backend, and that the backend CLI is authenticated. If
-not, say exactly what is missing and stop.
+hosted on a supported backend, that the backend CLI is installed, at least
+the version the backend names and authenticated, and that the repository
+accepts issues (except for `/taskie:do` on a pull request that resolves no
+issue). `/taskie:do` and `/taskie:ship`, the stages that merge, also check
+that git is at least the version the backend names. If not,
+say exactly what is missing (with the version found, for a version that is
+too old) and stop. A version that cannot be read, such as a development
+build, is not a reason to stop: continue, and start the stage's output with
+a line saying which version could not be checked and what was found, for
+example `Could not check the gh version ("gh version DEV").`
 
 The base branch is the repo's default branch unless the taskie section names
 another.

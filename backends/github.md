@@ -1,7 +1,7 @@
 # GitHub backend
 
-How to carry out each taskie action on GitHub with the `gh` CLI (tested with
-2.103; older versions may lack the sub-issue and duplicate flags). This is the only file that names `gh`
+How to carry out each taskie action on GitHub with the `gh` CLI (minimum
+versions are under Prerequisites). This is the only file that names `gh`
 commands; stages describe actions, and this file maps them.
 
 ## Rules for every command
@@ -27,13 +27,27 @@ commands; stages describe actions, and this file maps them.
 
 | Action | Command |
 |---|---|
+| gh version | `gh --version` |
+| git version | `git --version` |
 | check authentication | `gh auth status` |
-| repo name and default branch | `gh repo view --json nameWithOwner,defaultBranchRef --jq '{repo: .nameWithOwner, base: .defaultBranchRef.name}'` |
+| repo name, default branch and whether it accepts issues | `gh repo view --json nameWithOwner,defaultBranchRef,hasIssuesEnabled --jq '{repo: .nameWithOwner, base: .defaultBranchRef.name, issues: .hasIssuesEnabled}'` |
 | current user | `gh api user --jq .login` |
 | git remote of the repo | `git remote -v` (see below) |
 
-A repo with no remote on GitHub, or a `gh` that is not authenticated,
-fails the "before any stage" check in `shared/conventions.md`.
+Minimum versions: gh 2.103 (sub-issues, `--duplicate-of` and the
+`subIssuesSummary` field; the version taskie is tested with, older ones may
+lack these) and git 2.38 (`git merge-tree --write-tree`, checked only by do
+and ship). The version is the
+first `<major>.<minor>` or `<major>.<minor>.<patch>` in the command's first
+line, so `gh version 2.103.3 (2026-10-26)` is 2.103.3 and `git version
+2.39.3 (Apple Git-146)` is 2.39.3; compare it number by number, so 2.103 is
+newer than 2.45. A version exactly at the minimum passes. If the command is
+not found, the tool is missing.
+
+A repo with no remote on GitHub, a missing or too old gh or git, a `gh`
+that is not authenticated, or a repo whose `issues` is `false` (enable them
+under the repository's Settings, General, Features) fails the "before any
+stage" check in `shared/conventions.md`.
 
 The git remote of the repo, written `<remote>` below, is often but not always
 `origin`. Use a `remote:` line in the repo's taskie section (see
