@@ -55,6 +55,17 @@ follows its Precedence section, the only place the read order is written down.
 Keeping the order in one file means a rename or reorder touches one place
 instead of every skill.
 
+In a user's repo the plugin directory is outside the working directory, so
+reading those shared files needed permission: every command prompted, and a
+headless run was denied and stopped (#57, found while testing #49). Each
+skill's `allowed-tools` therefore pre-approves `Read(/${CLAUDE_PLUGIN_ROOT}/**)`,
+which covers the plugin's own files and nothing else. The leading `/` turns
+the expanded absolute path into the `//` form permission rules need; without
+it the rule did not match. Moving the shared files into each skill's
+directory did not help (those reads were denied too), and inlining them at
+load time with a shell command was blocked for paths outside the working
+directory.
+
 `shared/` holds the conventions every stage shares. The name avoids `rules/`,
 which reads like Claude Code's `.claude/rules/`, `docs/`, which holds
 contributor docs, and the root directories Claude Code discovers on its own

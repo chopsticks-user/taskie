@@ -70,5 +70,9 @@ when the version changes. Changes to docs alone do not bump it.
   names `gh` commands. The one exception is `allowed-tools` frontmatter, which
   may pre-approve read-only `gh` commands (never `gh api graphql`, which can
   also mutate).
+- Every skill's `allowed-tools` starts with `Read(/${CLAUDE_PLUGIN_ROOT}/**)`,
+  so it can read taskie's shared files in any repo without a prompt. Keep
+  the leading `/`: the expanded path is absolute, and a permission rule
+  needs `//` for an absolute path.
 - `do` and `ship` set `disable-model-invocation: true`.
 - Keep each `SKILL.md` under 500 lines.

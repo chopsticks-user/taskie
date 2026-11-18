@@ -2,7 +2,7 @@
 name: plan
 description: Refine an issue in the current repo until it is ready to implement (final acceptance criteria, clear scope, split into sub-issues when too big), or turn a goal into a milestone with planned issues. Use when the user asks to plan, refine, scope, break down or split an issue, or to plan a milestone, release or larger goal.
 argument-hint: "#n | <goal>"
-allowed-tools: Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh label list *)
+allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh label list *)
 ---
 
 # taskie plan
