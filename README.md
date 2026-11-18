@@ -6,8 +6,8 @@ gets triaged and planned, then implemented on a branch, reviewed, and merged,
 the way most tech companies move tickets through a team.
 
 > **Status: early.** Every command is written, and taskie has taken its own
-> issues from request to merge, but it has not been used on other
-> repositories yet. See [docs/design.md](docs/design.md) for the full design.
+> issues from request to merge and has run end to end on one other repository
+> (see [#48](https://github.com/chopsticks-user/taskie/issues/48)). See [docs/design.md](docs/design.md) for the full design.
 
 ## Commands
 
