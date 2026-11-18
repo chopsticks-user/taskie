@@ -395,9 +395,9 @@ issue from branch to a reviewed PR. Steps:
 
 Running `/taskie:do n` again on an issue that already has a PR resumes in the
 same worktree, addresses the PR's feedback, and reviews again. A conflict with
-the base counts as feedback: `do` merges the base and resolves it, because
-`/taskie:ship` stops on a conflict and sends the user to `do`, which before
-this would report the PR ready and send them straight back.
+the base counts as feedback: `do` merges the base and resolves it like any
+other point, because `/taskie:ship` stops on a conflict and sends the user to
+`do`; otherwise `do` would report the PR ready and send them straight back.
 
 Rejected: waiting for plan approval before coding, draft PRs as the progress
 signal, assignee-only tracking, working on a branch in the main checkout, a

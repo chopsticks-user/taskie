@@ -96,24 +96,28 @@ issue.
 
 1. Prepare the worktree as in "Start" step 1, reusing it or adding one for
    the PR's branch, and bring it up to date with the remote branch
-   (fast-forward only). Then follow "Start" step 2.
+   (fast-forward only). Then follow "Start" step 2, and run `setup` in a
+   worktree you just added (unless it is `none`).
 2. Collect the feedback: comments and reviews on the PR, comments on its
    diff, and anything the user said when running this command. Skip findings
    the latest `<!-- taskie:review` comment already marks as fixed or filed.
-   Also fetch the base from `<remote>` and check that the branch still merges
-   cleanly with it (`git merge-tree --write-tree HEAD <remote>/<base>` exits
-   0). If it does not, the conflict is feedback too, since `/taskie:ship`
-   stops on it and sends the user here: merge `<remote>/<base>` into the
-   branch, resolve the conflicts, run `verify`, commit the merge and push.
-3. If there is nothing to address, the branch merges cleanly with the base,
-   and the latest review marker is current, say the PR is ready for
-   `/taskie:ship <pr>` and stop. A merge made in step 2 is a new commit, so
-   the marker is no longer current.
+   Also fetch the base from `<remote>` (the repo's git remote, as the backend
+   finds it; if the fetch fails, report it and stop) and check whether the
+   branch still merges cleanly with it: `git merge-tree --write-tree HEAD
+   <remote>/<base>` exits 0 when it does and 1 on a conflict; report any
+   other exit as an error and stop. A conflict is a point to address, since
+   `/taskie:ship` stops on it and sends the user here.
+3. If there is nothing to address and the latest review marker is current,
+   say the PR is ready for `/taskie:ship <pr>` and stop.
 4. List the points you will address, then proceed. Ask first about any point
    you disagree with or that would grow the scope.
-5. Fix them as in "Implement": small commits, each passing `verify`. Push,
-   and update the PR body if Verification or Notes changed. New commits make
-   the review stale, so go on to "Review".
+5. Fix them as in "Implement": small commits, each passing `verify`. For a
+   conflict with the base, merge `<remote>/<base>` into the branch (only into
+   a clean worktree: if it has uncommitted changes, stop and show them),
+   resolve the conflicts and commit the merge; if `verify` then fails because
+   of the base itself, undo the merge, report the failure as pre-existing and
+   stop. Push, and update the PR body if Verification or Notes changed. New
+   commits make the review stale, so go on to "Review".
 
 ## Review
 
