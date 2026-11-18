@@ -108,7 +108,9 @@ issue.
    a point to address, noted in the PR body's Notes.
 2. Collect the feedback: comments and reviews on the PR, comments on its
    diff, and anything the user said when running this command. Skip findings
-   the latest `<!-- taskie:review` comment already marks as fixed or filed.
+   the latest review summary already marks as fixed or filed: the latest
+   `<!-- taskie:review` comment with a findings table (a carried-over marker
+   from ship has none and links to the summary it carries).
    Also fetch the base from `<remote>` (the repo's git remote, as the backend
    finds it; if the fetch fails, report it and stop) and check whether the
    branch still merges cleanly with it: `git merge-tree --write-tree HEAD

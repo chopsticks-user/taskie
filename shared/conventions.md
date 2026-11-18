@@ -88,9 +88,12 @@ if the marker's commit is an ancestor of the head and every commit after it
 that is not on the base branch is a clean merge (in practice ship's own merge
 of the base branch, which also brings in the base's commits), the review
 still stands for shipping. A merge that resolved conflicts or changed code by
-hand does not count. After pushing its own merge, ship posts a marker for the
-new head that says the review was carried over, so every stage sees the PR as
-awaiting approval without checking git.
+hand does not count. After pushing its own merge and seeing its checks pass,
+ship posts a marker for the new head that says the review was carried over and
+links the review summary it carries, so every stage sees the PR as awaiting
+approval without checking git. For status, the latest marker counts, carried
+over or not; for findings, read the latest review summary, the latest marker
+comment with a findings table.
 
 ## Definition of ready
 

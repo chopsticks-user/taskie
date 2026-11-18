@@ -192,11 +192,13 @@ merges. Any new commit makes the review stale. `/taskie:ship` checks the
 marker before it merges the base branch in, so its own merge commit does not
 interfere; on a re-run it also accepts commits after the marker that are
 already on the base or are clean merges, recreated with `git merge-tree` to
-show nothing was changed by hand. After pushing its own merge, ship posts a
-marker for the new head saying the review was carried over: otherwise a run
-that stopped after the push (checks failing, merge refused) left the PR looking
-unreviewed to the board, to no-argument ship and to `do`, which only compare
-the marker with the head. A parent issue that has been split into
+show nothing was changed by hand. Once its own merge is pushed and its checks
+pass, ship posts a marker for the new head saying the review was carried over,
+linking the review summary: otherwise a run that stopped later (the merge
+refused) left the PR looking unreviewed to the board, to no-argument ship and
+to `do`, which only compare the marker with the head. The marker waits for the
+checks so a PR whose merge broke them is not shown as ready. A parent issue
+that has been split into
 sub-issues is a tracker. It never gets `ready` and is never worked on
 directly.
 
@@ -429,8 +431,9 @@ approve their own PR). Steps:
    while the worktree holds non-merge commits that are in neither the PR head
    nor the base: merging deletes the local branch, so they would be lost.
 2. Merge the base into the branch and run verify. If verify fails, undo the
-   merge commit and stop. Otherwise push, post a carried-over review marker
-   for the new head, wait for checks on it, and print a one-screen summary.
+   merge commit and stop. Otherwise push, wait for checks on the new head,
+   post a carried-over review marker for it once they pass, and print a
+   one-screen summary.
 3. Remove the worktree (everything is pushed by now, and `gh pr merge
    --delete-branch` cannot delete a branch a worktree has checked out).
 4. Merge with `gh pr merge --merge --delete-branch --match-head-commit <sha>`,
