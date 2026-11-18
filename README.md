@@ -59,6 +59,7 @@ instead. For larger work that is not a single issue yet, start with
 
 - Claude Code with the built-in `/code-review` skill
 - [GitHub CLI](https://cli.github.com/) (`gh`), authenticated
+- git 2.38 or later (`/taskie:ship` uses `git merge-tree --write-tree`)
 - A git repository with a GitHub remote
 
 ## Install
