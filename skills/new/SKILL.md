@@ -1,8 +1,8 @@
 ---
 name: new
-description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, or another taskie stage hands over problems to file.
-argument-hint: "[<request, bug report or findings> | #n]"
-allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh label list *)
+description: File and triage issues in the current repo in one approval. Given a request, bug report or review findings, or asked to look for work in a named scope (code, docs, recent commits, stated goals), it drafts issues already typed, prioritized and with acceptance criteria; given nothing or an issue number, it triages untriaged issues. Use when the user asks to file, open, create, track or triage an issue, says something is a bug to record, asks taskie to find issues to file in a named part of the repo (not a plain review or fix), or another taskie stage hands over problems to file.
+argument-hint: "[<request, bug report, findings or a scope to search> | #n]"
+allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh label list *)
 ---
 
 # taskie new
@@ -23,10 +23,13 @@ First run the "before any stage" check from the conventions. Then:
 
 - Input is exactly `#<n>`: triage that issue ("Triage" below), whatever its
   labels.
-- Input is empty: triage every open `needs-triage` issue, plus every open
-  `needs-info` issue that has a comment newer than its latest
-  `<!-- taskie:triage -->` comment (the reporter answered). If nothing is
-  selected, say so and stop.
+- Input is empty: triage the open issues whose status is needs triage,
+  derived as the conventions describe (an open PR or a linked branch comes
+  before labels, so fetch those too), plus every open `needs-info` issue that
+  has a comment newer than its latest `<!-- taskie:triage -->` comment (the
+  reporter answered). Take at most 10, the answered `needs-info` issues
+  first, then the rest oldest first, and if more qualify, say how many are
+  left for the next run. If nothing is selected, say so and stop.
 - Anything else, including text that starts with a number or `#<n>`: file it
   ("File" below). When Claude starts this skill from a conversation (for
   example "file that as a bug"), it passes the problem as text.
@@ -47,7 +50,7 @@ First run the "before any stage" check from the conventions. Then:
 4. Read the code each item touches: search the repo with two or three terms
    from it (names, error messages, routes, UI text) and note up to three
    files that most likely need to change, or "none found". Read code only; do
-   not run anything.
+   not run anything (a find-work request may read a commit log, see below).
 5. Ask the user, in one message, about anything ambiguous whose answer would
    change the scope or the acceptance criteria. Skip this when nothing is
    ambiguous, and never ask for details the source cannot have (for a report
@@ -73,10 +76,9 @@ First run the "before any stage" check from the conventions. Then:
    "Asking the user" in the conventions). Create nothing until they answer.
    This holds even when another stage or Claude itself started this skill.
 8. For the confirmed drafts: make sure the labels exist, create each issue
-   with its type and priority labels (plus `ready` when that is the outcome;
-   never `needs-triage`), post any agreed comments on existing issues, and
-   post the Accept outcome's triage comment (under "Outcomes") on each new
-   issue.
+   with its type and priority labels (plus `ready` when that is the
+   outcome), post any agreed comments on existing issues, and post the
+   Accept outcome's triage comment (under "Outcomes") on each new issue.
 
 9. Print each result as `#<n> <title> <url>` with its status, and suggest
    `/taskie:do <n>` for a ready issue or `/taskie:plan #<n>` for one in the
@@ -112,8 +114,7 @@ For issues that already exist, usually filed by someone outside taskie.
 ### Outcomes
 
 Accept: the issue is valid and understood. Set the type label (removing a
-wrong one), add the priority label, remove `needs-triage` and `needs-info`,
-and comment:
+wrong one), add the priority label, remove `needs-info`, and comment:
 
 ```
 <!-- taskie:triage -->
@@ -133,10 +134,9 @@ has details the original lacks, add them to the original as a comment. Then
 close the duplicate as a duplicate of the original.
 
 Needs info: the issue cannot be classified or acted on without answers from
-the reporter. Add `needs-info`, remove `needs-triage`, and comment with
-specific, numbered questions (for example "Which browser and version?",
-"Does it happen with an empty table too?"), never a generic "please add more
-details":
+the reporter. Add `needs-info` and comment with specific, numbered questions
+(for example "Which browser and version?", "Does it happen with an empty table
+too?"), never a generic "please add more details":
 
 ```
 <!-- taskie:triage -->
@@ -149,9 +149,9 @@ Thanks for the report. To triage this we need:
 The issue comes back to triage once someone comments after this.
 
 Won't fix: the request is out of the project's scope (judged from the README
-and `.taskie.md`), or the behavior is intended. Propose it only with a
-concrete reason. Comment with the reason, starting with the triage marker,
-then close the issue as not planned.
+and the repo's CLAUDE.md files), or the behavior is intended. Propose it only
+with a concrete reason. Comment with the reason, starting with the triage
+marker, then close the issue as not planned.
 
 Closing is visible to the reporter, so put every Duplicate and Won't fix in
 the table like any other outcome; the user's approval of the table covers
@@ -208,3 +208,39 @@ both.
 
 When another stage hands over findings, it has already told the user about
 them; still show the drafts and wait for confirmation.
+
+### Find-work request
+
+A request to go and look for work in a named scope, instead of a description
+of a problem: "review skills/do for bugs", "what's missing given the goals in
+docs/design.md", "look at the last 20 commits for unfinished work". Text that
+describes something the writer saw ("review is broken on large PRs") is a
+report, not a request. When it could be either, ask, offering both readings
+and no recommended option.
+
+The scope is required. If the request names none ("find some bugs"), ask for
+one, offering concrete scopes from this repo (its top-level directories, its
+main docs, the last 20 commits); review the whole repo only when the user
+names it as the scope.
+
+Read the scope directly instead of running another review tool. A large
+scope (a long range, a big directory, the whole repo) starts from an
+overview, such as file stats or the file list; read the parts that matter
+and say which were only skimmed.
+
+- paths: the named files or directories, as code or docs
+- a commit range: the log of the range with each commit's diff (running the
+  log is the one command this source needs)
+- a pull request: its commits and its diff, as the backend reads them
+- goals: the named document (a README, a design doc) and the descriptions of
+  open milestones, compared with what the code and the open issues already
+  cover; a goal that a closed issue declined as not planned is not drafted
+  again
+
+Each finding then becomes a draft as in "Review findings" above, with Source
+`Find-work request: <the request>`, and goes through the same duplicate
+search, batch and approval as every other draft. Unfinished new behavior,
+such as a stub left for later, is a `type:feature`. A draft derived from
+goals, rather than a defect found in code or docs, is a guess at what the
+maintainers want: it is typed by what is missing and filed to the backlog for
+`/taskie:plan`, never `ready`.

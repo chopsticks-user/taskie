@@ -9,12 +9,11 @@ skills, shared conventions and a backend mapping. The design is in
 
 | File | Audience | Purpose |
 |---|---|---|
-| `README.md` | users | what taskie does, install, commands, `.taskie.md`, labels |
+| `README.md` | users | what taskie does, install, commands, the `taskie` CLAUDE.md section, labels |
 | `docs/design.md` | contributors | the current design and the reasons behind it, build plan, assumptions to verify |
-| `.claude/CLAUDE.md` | contributors and Claude | how to work in this repo (not at the root: a root CLAUDE.md fails `validate --strict`) |
+| `.claude/CLAUDE.md` | contributors, Claude and taskie | how to work in this repo, and its taskie section: verify command and version-bump rule (not at the root: a root CLAUDE.md fails `validate --strict`) |
 | `shared/conventions.md` | the skills | default rules every stage follows |
 | `backends/github.md` | the skills | the only file that maps actions to `gh` commands |
-| `.taskie.md` | taskie, working on this repo | this repo's verify command and its version-bump rule |
 | `.claude/settings.json` | Claude Code | loads taskie in this repo from its GitHub marketplace |
 
 Keep them in sync with the code. A change to behavior updates `docs/design.md`
@@ -29,7 +28,7 @@ Never commit on `main` directly. The base branch is `main`.
 
 The plugin that sessions here load is the released copy from GitHub, declared
 in `.claude/settings.json`. A change reaches your sessions once its PR is
-merged with a version bump (see `.taskie.md`) and the plugin updates: it
+merged with a version bump (see the taskie section) and the plugin updates: it
 auto-updates, or run `claude plugin update taskie@taskie`, then
 `/reload-plugins`. To try an unmerged change, start a session with
 `claude --plugin-dir .worktrees/issue-<n>`, which takes precedence over the
@@ -43,6 +42,17 @@ Labels in use: taskie's set (see `shared/conventions.md`), plus GitHub's
 Run `just verify` (`claude plugin validate --strict .`) before and after every
 change; each commit must pass it. `just submit-check` adds the plugin
 directory's submission checks and fails until the plugin has a listing icon.
+
+## taskie
+
+verify: just verify
+setup: none
+
+Every pull request that changes what the plugin does (skills,
+`shared/conventions.md`, `backends/`, manifests) bumps `version` in
+`.claude-plugin/plugin.json`: patch for fixes, minor for new behavior.
+Installed copies, including the one this repo loads on itself, update only
+when the version changes. Changes to docs alone do not bump it.
 
 ## Rules for skill files
 

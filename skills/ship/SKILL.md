@@ -76,8 +76,8 @@ second confirmation before merging; do stop at every gate below.
    backend cannot delete a branch a worktree still has checked out. If git
    refuses because the worktree has changes, stop and show them.
 2. Merge the PR as the backend describes, passing the verified head sha, with
-   the merge method from `.taskie.md` or a merge commit by default. If the
-   merge is refused (the head moved, or branch protection blocks it), report
+   the merge method from the taskie section, or a merge commit by default. If
+   the merge is refused (the head moved, or branch protection blocks it), report
    the reason and stop.
 3. Close what the merge did not:
    - each issue the PR resolves that is still open: close it as done with
