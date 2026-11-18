@@ -36,9 +36,16 @@ recommended option first; you can always pick "Other" and type instead.
 
 ```
 /taskie:new the export button does nothing on Safari
+/taskie:plan #12
 /taskie:do 12
 /taskie:ship
 ```
+
+Run `/taskie:plan` only when `/taskie:new` put the issue in the backlog: new
+ends by suggesting `/taskie:do` or `/taskie:plan`, whichever applies. If plan
+splits the issue into sub-issues, run `/taskie:do` on the one it suggests
+instead. For larger work that is not a single issue yet, start with
+`/taskie:plan <goal>`.
 
 ## Requirements
 
