@@ -255,8 +255,10 @@ itself.
 ## Autonomous mode
 
 When the user tells taskie in the session to proceed without asking (for
-example "do the rest automatically"), every stage from then on runs in
-autonomous mode, until the user says to ask again:
+example "stop asking, go with your recommendations"), every stage from then on
+runs in autonomous mode, until the user says to ask again. The mode changes
+how questions are answered, not what work runs: it never starts `do` by itself
+(see "Running do and ship"). In autonomous mode:
 
 - At each question and approval point, take the recommended option instead
   of asking; a batch is applied in full.
@@ -268,11 +270,14 @@ autonomous mode, until the user says to ask again:
 ## Running do and ship
 
 `/taskie:do` and `/taskie:ship` cannot be started through the Skill tool. A
-plain request that explicitly names the work, such as "work on #12" or
-"implement the ready issues", counts as typing `/taskie:do`: read
-`${CLAUDE_PLUGIN_ROOT}/skills/do/SKILL.md` and follow it, with the named issues
-as its input. Never start `do` on your own initiative. `/taskie:ship` runs only
-when the user types it, in any mode, because typing it is the merge approval.
+plain request that explicitly names the work, by issue number ("work on #12")
+or as a set ("implement the ready issues"), counts as typing `/taskie:do`:
+read `${CLAUDE_PLUGIN_ROOT}/skills/do/SKILL.md` and follow it, replacing
+`${CLAUDE_PLUGIN_ROOT}` with the plugin root and `$ARGUMENTS` with the issue
+number, since reading the file does not expand them. For several issues, run
+it once per issue, one at a time, in the order `do` uses with no argument.
+Never start `do` on your own initiative. `/taskie:ship` runs only when the
+user types it, in any mode, because typing it is the merge approval.
 
 ## Unrelated problems
 

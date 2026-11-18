@@ -97,7 +97,8 @@ names the work ("work on #12", "implement the ready issues") counts as typing
 `/taskie:do`, so the push and the pull request are still a person's request,
 without typing one command per issue. `do` never starts on Claude's own
 initiative, and `/taskie:ship` runs only when typed, because typing it is the
-merge approval.
+merge approval. The rule works once Claude has read the conventions, which any
+taskie stage does; in a fresh session, typing `/taskie:do` is the reliable way.
 
 ### Repo overrides: `.taskie.md`
 
@@ -175,6 +176,9 @@ lives in `shared/conventions.md` because both new and plan
 check it.
 
 ### Where taskie stops for you
+
+In autonomous mode (below the table), most of these points take the
+recommended option instead of stopping.
 
 | Command | Approval point |
 |---|---|
