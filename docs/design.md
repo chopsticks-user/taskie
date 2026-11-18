@@ -154,6 +154,18 @@ URL ends in the repo's `owner/name`, and asks when none or several match. Checks
 that `gh` can answer, such as whether a tag exists, go through `gh api`
 instead, so they need no remote.
 
+Every stage's first check also reads the gh and git versions and whether the
+repo accepts issues, and stops naming what is missing. gh must be at least
+2.103 (sub-issues, `--duplicate-of`, `subIssuesSummary`) and git at least
+2.38 (`merge-tree --write-tree`). Without the check, an older gh made the
+board fail on an unknown JSON field, an older git failed only once do or ship
+reached a merge, and a repo with issues disabled failed at the first create;
+distributions often ship releases older than these. The gh minimum is the
+version taskie is tested with, not a measured floor. A version that cannot be
+read, such as a development build, only warns, so those builds still work.
+The minimums live in `backends/github.md`, and every skill pre-approves the
+two version commands, so the check never prompts.
+
 ### Labels
 
 | Label | Set by | Meaning |
