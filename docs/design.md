@@ -111,9 +111,14 @@ name as its title, as this repo's does. Skills read it after the defaults and fo
 it where it differs. It needs no schema, and anything in
 `shared/conventions.md` can be overridden, but only by that section: the rest
 of CLAUDE.md is written for other work, and an instruction there should not
-change taskie's rules by accident. Detected values are saved in the CLAUDE.md
-whose section is read, else the one that exists (the root one if both do),
-else a new root `CLAUDE.md`. Keys taskie itself writes or reads there:
+change taskie's rules by accident. Only `/taskie:do` saves a detected value,
+once its worktree exists, as a commit of its own on the issue's branch: saving
+earlier wrote into the main checkout, where the change was never committed and
+could block ship's final pull. It goes into the CLAUDE.md whose section is
+read, else the one that exists (the root one if both do), else a new
+`.claude/CLAUDE.md` in a Claude Code plugin repo (a root one fails
+`validate --strict` there) or a new root `CLAUDE.md` elsewhere. Keys taskie
+itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
@@ -369,7 +374,8 @@ issue from branch to a reviewed PR. Steps:
    so offer to resume it instead of refusing.
 3. Find `verify` and `setup`: read the taskie section, else detect (`just
    verify`, `npm test`, `make check`, `cargo test`, ...) and confirm with you,
-   then offer to save them in the taskie section.
+   then, once the worktree exists, offer to save them in the taskie section as
+   a commit of their own in the PR.
 4. Create the linked branch with `gh issue develop`, then a worktree at
    `.worktrees/issue-<n>`, hidden through `.git/info/exclude` so the target
    repo's `.gitignore` is untouched. It lives inside the repo because Claude

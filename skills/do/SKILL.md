@@ -17,7 +17,8 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
 
 1. Run the "before any stage" check from the conventions, and find the
    repo's `verify` and `setup` commands as the conventions describe. Every
-   path below needs them.
+   path below needs them. Do not save a detected one yet; "Start" step 3
+   offers that once the worktree exists.
 2. With a number: GitHub numbers issues and PRs in one sequence, so it names
    one or the other. An issue is used as is. A PR is taken with the issue it
    resolves (as the backend describes); if it resolves several, use the one
@@ -57,9 +58,12 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
 2. From here on, work only inside `.worktrees/issue-<n>`: run every command
    there and read and edit files only under that path. Never change the main
    checkout.
-3. Run `setup` (unless it is `none`), then `verify`. If verify fails before
-   any change, stop: report the failure as pre-existing, offer to file it
-   with `/taskie:new`, and leave the worktree in place.
+3. If `verify`, `setup` or the git remote was detected or given rather than
+   read from the taskie section, offer to save it as the conventions
+   describe: in the worktree, as a commit of its own, noted later under the
+   PR body's Notes. Then run `setup` (unless it is `none`), then `verify`. If
+   verify fails before any change, stop: report the failure as pre-existing,
+   offer to file it with `/taskie:new`, and leave the worktree in place.
 
 ## Implement
 

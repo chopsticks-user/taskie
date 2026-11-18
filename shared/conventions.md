@@ -171,11 +171,19 @@ Find each one in this order:
    for a Cargo project, and so on
 3. ask the user
 
-When a command was detected or given by the user, confirm it once, then offer
-to save it in the taskie section. Save into the CLAUDE.md whose taskie section
-is read, else the one that exists (the root one if both do), else a new
-`CLAUDE.md` at the root, adding a `## taskie` heading if there is none. If a
-repo needs no setup, record `setup: none`.
+When a command was detected or given by the user, confirm it once. Only
+`/taskie:do` offers to save it in the taskie section, and only once its
+worktree exists: it writes the value there as a commit of its own on the
+issue's branch, which the PR body's Notes mention, so the setting is reviewed
+and merged with the PR and the main checkout never changes. Other stages use
+the value for the run and say that `/taskie:do` offers to save it.
+
+Save into the CLAUDE.md whose taskie section is read, else the one that exists
+(the root one if both do), else a new one: `.claude/CLAUDE.md` in a Claude
+Code plugin repo (one with `.claude-plugin/plugin.json`, where a root
+CLAUDE.md fails `claude plugin validate --strict`), `CLAUDE.md` at the root
+otherwise. Add a `## taskie` heading if there is none. If a repo needs no
+setup, record `setup: none`.
 
 ## Branches
 
