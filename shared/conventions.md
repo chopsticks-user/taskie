@@ -80,9 +80,10 @@ line is
 Only the most recent comment with this marker counts. Any new commit on the PR
 makes the marker stale, so the PR goes back to "in review" until it is
 reviewed again. The one exception is checked by `/taskie:ship` with local git:
-if every commit after the marker that is not on the base branch is a merge (in
-practice ship's own merge of the base branch, which also brings in the base's
-commits), the review still stands for shipping.
+if every commit after the marker that is not on the base branch is a clean
+merge (in practice ship's own merge of the base branch, which also brings in
+the base's commits), the review still stands for shipping. A merge that
+resolved conflicts or changed code by hand does not count.
 
 ## Definition of ready
 

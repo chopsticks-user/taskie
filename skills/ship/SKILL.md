@@ -30,15 +30,22 @@ second confirmation before merging; do stop at every gate below.
    for the PR's branch. Bring it up to date with the remote branch
    (fast-forward only). Run git commands for the branch there.
 4. Fetch the base branch from `<remote>` (the repo's git remote, as the
-   backend finds it). Then refuse, saying why and what to run instead, unless
-   all of these hold:
+   backend finds it); if the fetch fails, report it and stop. Then refuse,
+   saying why and what to run instead, unless all of these hold:
    - the PR is open and not a draft
    - its latest review marker is current: the marker's sha equals the PR's
      head, or the marker's sha is an ancestor of the head and every commit
-     after it that is not on the base is a merge (`git rev-list --no-merges
-     <marker sha>..HEAD ^<remote>/<base>` prints nothing; the base's own
-     commits arrive with ship's earlier merge and were reviewed in their own
-     PRs). Otherwise suggest `/taskie:do <pr>`.
+     after it that is not on the base is a clean merge:
+     - `git rev-list --no-merges <marker sha>..HEAD ^<remote>/<base>` prints
+       nothing, and
+     - for each commit `git rev-list --merges <marker sha>..HEAD ^<remote>/<base>`
+       prints, `git merge-tree --write-tree <commit>^1 <commit>^2` prints the
+       same tree as `git rev-parse <commit>^{tree}`.
+
+     The base's own commits arrive with ship's earlier merge and were
+     reviewed in their own PRs. A merge that resolved conflicts or changed
+     code by hand was not reviewed, so it fails. Otherwise suggest
+     `/taskie:do <pr>`.
    - the worktree has no unpushed commits of its own:
      `git rev-list --no-merges HEAD ^<PR head sha> ^<remote>/<base>`
      prints nothing. Merge commits, and base commits brought in by ship's own
@@ -47,8 +54,8 @@ second confirmation before merging; do stop at every gate below.
      merge below deletes the local branch, so they would be lost.
    - its checks are green, as the backend defines. If checks are still
      running, say so and stop; do not wait at this step.
-5. Fetch the base branch from `<remote>` and merge `<remote>/<base>` into the
-   PR's branch in the worktree.
+5. Merge `<remote>/<base>`, as fetched in step 4, into the PR's branch in the
+   worktree.
    - Already up to date: continue.
    - Conflicts: abort the merge, stop, and suggest `/taskie:do <pr>` to
      resolve them (that adds commits, so the PR needs a new review).

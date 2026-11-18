@@ -157,7 +157,9 @@ awaiting approval) records the head commit it reviewed instead of comparing
 timestamps, because PR commit data from `gh` does not say which commits are
 merges. Any new commit makes the review stale. `/taskie:ship` checks the
 marker before it merges the base branch in, so its own merge commit does not
-interfere. A parent issue that has been split into sub-issues is a tracker. It
+interfere; on a re-run it also accepts commits after the marker that are
+already on the base or are clean merges, recreated with `git merge-tree` to
+show nothing was changed by hand. A parent issue that has been split into sub-issues is a tracker. It
 never gets `ready` and is never worked on directly.
 
 ### Definition of ready
@@ -348,11 +350,11 @@ approve their own PR). Steps:
 
 1. Refuse unless checks are green and the review marker is current (see
    derived status). A marker whose sha is an ancestor of the head also counts
-   when every commit after it is a merge or already on the base, checked with
-   local git, so re-running ship after its own base merge works even when the
-   base gained commits since the branch point. Also refuse while the worktree holds
-   non-merge commits that are in neither the PR head nor the base: merging
-   deletes the local branch, so they would be lost.
+   when every commit after it is a clean merge or already on the base,
+   checked with local git, so re-running ship after its own base merge works
+   even when the base gained commits since the branch point. Also refuse
+   while the worktree holds non-merge commits that are in neither the PR head
+   nor the base: merging deletes the local branch, so they would be lost.
 2. Merge the base into the branch and run verify. If verify fails, undo the
    merge commit and stop. Otherwise push, wait for checks on the new head,
    and print a one-screen summary.
