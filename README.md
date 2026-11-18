@@ -15,7 +15,7 @@ the way most tech companies move tickets through a team.
 |---|---|
 | `/taskie` | Board: open issues and PRs grouped by status, plus a suggested next action. `/taskie help` lists the stages. |
 | `/taskie:new <text>` | Turns a chat request, bug report or review findings into issues that are already triaged: type, priority, acceptance criteria, and `ready` when they qualify. Shows the drafts and creates only after you confirm. |
-| `/taskie:new [#n]` | With no text, triages issues filed outside taskie (or issue `#n`) in one table, and applies it after you approve. |
+| `/taskie:new [#n]` | With no text, triages up to 10 issues that have no priority yet (usually filed outside taskie), or issue `#n`, in one table, and applies it after you approve. |
 | `/taskie:plan #n` | Adds acceptance criteria, splits large issues into sub-issues, and marks issues ready. |
 | `/taskie:plan <goal>` | Turns a goal such as `v0.2: offline mode` into a milestone with issues. |
 | `/taskie:do [n]` | Implements an issue in its own worktree, opens a pull request, reviews it with `/code-review`, fixes in-scope findings and posts a summary comment. Run it again to address feedback. With no argument it takes the current issue, or the most urgent in-progress or ready one, and asks when several qualify. |
@@ -43,9 +43,16 @@ and for questions with no recommended answer.
 
 ```
 /taskie:new the export button does nothing on Safari
+/taskie:plan #12
 /taskie:do 12
 /taskie:ship
 ```
+
+Run `/taskie:plan` only when `/taskie:new` put the issue in the backlog: new
+ends by suggesting `/taskie:do` or `/taskie:plan`, whichever applies. If plan
+splits the issue into sub-issues, run `/taskie:do` on the one it suggests
+instead. For larger work that is not a single issue yet, start with
+`/taskie:plan <goal>`.
 
 ## Requirements
 
@@ -105,7 +112,6 @@ taskie creates these labels in your repo when it needs them:
 | `P1` | Major feature broken, no workaround |
 | `P2` | Degraded, workaround exists |
 | `P3` | Minor or cosmetic |
-| `needs-triage` | Not triaged yet |
 | `needs-info` | Waiting on answers from the reporter |
 | `ready` | Clear acceptance criteria and fits in one pull request |
 

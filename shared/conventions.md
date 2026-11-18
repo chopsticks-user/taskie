@@ -41,7 +41,6 @@ another.
 | `P1` | major feature broken, no workaround |
 | `P2` | degraded, a workaround exists |
 | `P3` | minor or cosmetic |
-| `needs-triage` | not triaged yet |
 | `needs-info` | waiting on answers from the reporter |
 | `ready` | meets the definition of ready |
 
@@ -61,7 +60,7 @@ rules top to bottom and use the first that matches.
 | in review | an open PR closes the issue |
 | in progress | the issue has a linked branch |
 | needs info | labelled `needs-info` |
-| needs triage | labelled `needs-triage` |
+| needs triage | the issue has no priority label |
 | ready | labelled `ready` |
 | backlog | anything else that is open |
 
