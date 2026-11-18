@@ -82,13 +82,17 @@ taskie is developed with taskie: issues and pull requests in this repo go
 through its own stages. See [.claude/CLAUDE.md](.claude/CLAUDE.md) for how to
 work on it.
 
-## Configuring a repo: `.taskie.md`
+## Configuring a repo: a `taskie` section in CLAUDE.md
 
 taskie works with no setup. To change its defaults for one repo, add a
-`.taskie.md` file at the repo root. It is free-form markdown, and anything you
-write there takes precedence over taskie's defaults. For example:
+`## taskie` section to the repo's CLAUDE.md (`CLAUDE.md` at the root or
+`.claude/CLAUDE.md`). It is free-form markdown, and anything you write there
+takes precedence over taskie's defaults; the rest of CLAUDE.md does not
+change them. For example:
 
 ```markdown
+## taskie
+
 verify: just verify
 setup: npm ci
 Base branch is `develop`.
@@ -97,10 +101,12 @@ Run reviews at high level for every priority.
 ```
 
 If `verify` or `setup` is missing, `/taskie:do` detects a likely command,
-confirms it with you, and offers to save it here.
+confirms it with you, and offers to save it in that section, adding the
+section (or a root `CLAUDE.md`) if there is none.
 
 taskie finds the git remote that points at the GitHub repo. If it cannot tell
-(no remote or several match), it asks and offers to save a `remote:` line.
+(no remote or several match), it asks and offers to save a `remote:` line
+there too.
 
 ## Labels
 

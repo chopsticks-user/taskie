@@ -100,23 +100,38 @@ initiative, and `/taskie:ship` runs only when typed, because typing it is the
 merge approval. The rule works once Claude has read the conventions, which any
 taskie stage does; in a fresh session, typing `/taskie:do` is the reliable way.
 
-### Repo overrides: `.taskie.md`
+### Repo overrides: a `taskie` section in CLAUDE.md
 
-A repo may add an optional free-form markdown file named `.taskie.md` at its
-root. Skills read it after the defaults and follow it where it differs. It needs
-no schema, and anything in `shared/conventions.md` can be overridden. Keys
-taskie itself writes or reads there:
+A repo may add an optional free-form `## taskie` section to its project
+CLAUDE.md (`CLAUDE.md` at the root or `.claude/CLAUDE.md`, the two places a
+repo keeps its shared Claude Code instructions; the root one wins if both have
+the section). It is a second-level heading, ending at the next heading of the
+same or a higher level, because a CLAUDE.md often opens with the project's
+name as its title, as this repo's does. Skills read it after the defaults and follow
+it where it differs. It needs no schema, and anything in
+`shared/conventions.md` can be overridden, but only by that section: the rest
+of CLAUDE.md is written for other work, and an instruction there should not
+change taskie's rules by accident. Detected values are saved in the CLAUDE.md
+whose section is read, else the one that exists (the root one if both do),
+else a new root `CLAUDE.md`. Keys taskie itself writes or reads there:
 
 | Key | Used by | Meaning |
 |---|---|---|
 | `verify:` | do, ship | command that runs formatting, linting and all tests |
 | `setup:` | do | command that prepares a fresh worktree (install dependencies) |
+| `remote:` | git steps in every stage | the git remote that points at the GitHub repo |
+| base branch | every stage | overrides the repo's default branch |
 | review level | do | overrides the priority-based `/code-review` level |
 | merge method | ship | overrides the merge-commit default |
 
-A structured YAML config was rejected because only the model reads it, so a
-schema adds maintenance without adding validation. A section in the repo's
-CLAUDE.md was rejected because it would load in every session.
+This replaced a taskie-specific `.taskie.md` file at the repo root, which
+added one more file to every repo next to the CLAUDE.md it already keeps for
+the same purpose. A CLAUDE.md section had first been rejected because CLAUDE.md
+loads in every session; a few lines of settings cost little, and other
+sessions gain the verify command. `.taskie.md` was dropped without a fallback,
+since taskie had no users outside its own repo yet. A structured YAML config
+was rejected because only the model reads it, so a schema adds maintenance
+without adding validation.
 
 ### Backend seam
 
@@ -129,8 +144,8 @@ its shape is a guess until a second backend exists.
 
 `gh` resolves the repo on its own, but a few git steps (fetching the base or a
 branch, the worktree fallback) need the git remote. taskie never assumes
-`origin`: it uses `remote:` from `.taskie.md`, else the one remote whose URL
-ends in the repo's `owner/name`, and asks when none or several match. Checks
+`origin`: it uses `remote:` from the taskie section, else the one remote whose
+URL ends in the repo's `owner/name`, and asks when none or several match. Checks
 that `gh` can answer, such as whether a tag exists, go through `gh api`
 instead, so they need no remote.
 
@@ -220,7 +235,7 @@ request skipped some prompts and not others.
 
 Branches are named `issue-<n>-<slug>`. Commits are small and each one passes
 the repo's verify command. Pull requests target the base branch (the default
-branch unless `.taskie.md` names another) and the body has, in order: a
+branch unless the taskie section names another) and the body has, in order: a
 `Closes #<n>` line per issue, then Why, Changes, Verification (each acceptance
 criterion and how it was checked) and Notes.
 
@@ -340,9 +355,9 @@ issue from branch to a reviewed PR. Steps:
 2. Refuse issues that are not `ready` or are parent trackers. An issue that
    already has a linked branch but no PR is most likely an interrupted run,
    so offer to resume it instead of refusing.
-3. Find `verify` and `setup`: read `.taskie.md`, else detect (`just verify`,
-   `npm test`, `make check`, `cargo test`, ...) and confirm with you, then offer
-   to save them to `.taskie.md`.
+3. Find `verify` and `setup`: read the taskie section, else detect (`just
+   verify`, `npm test`, `make check`, `cargo test`, ...) and confirm with you,
+   then offer to save them in the taskie section.
 4. Create the linked branch with `gh issue develop`, then a worktree at
    `.worktrees/issue-<n>`, hidden through `.git/info/exclude` so the target
    repo's `.gitignore` is untouched. It lives inside the repo because Claude
@@ -355,7 +370,7 @@ issue from branch to a reviewed PR. Steps:
    the standard format.
 8. Review: invoke Claude Code's built-in `/code-review` once, at a level set
    by the issue's priority (P0 and P1 at high, P2 and P3 at medium,
-   overridable in `.taskie.md`). If it is unavailable, stop with a message
+   overridable in the taskie section). If it is unavailable, stop with a message
    naming the minimum Claude Code version; the PR stays open. In-scope
    findings are fixed in small commits, verified and pushed, with no second
    review pass. Findings it disagrees with are left with a reason.
@@ -393,7 +408,7 @@ approve their own PR). Steps:
 3. Remove the worktree (everything is pushed by now, and `gh pr merge
    --delete-branch` cannot delete a branch a worktree has checked out).
 4. Merge with `gh pr merge --merge --delete-branch --match-head-commit <sha>`,
-   or the method `.taskie.md` names. The sha is the commit that was just
+   or the method the taskie section names. The sha is the commit that was just
    verified, so GitHub refuses the merge if anything landed after it.
 5. Close issues GitHub did not close (it only does so for merges into the
    default branch), and close a parent issue when its last sub-issue closes.

@@ -14,11 +14,16 @@ Every taskie skill reads this file first. This section is the only place the
 read order is written down. Before doing anything else, also read, in order:
 
 1. `${CLAUDE_PLUGIN_ROOT}/backends/github.md`
-2. `.taskie.md` at the root of the target repo, if it exists
+2. the taskie section of the target repo's CLAUDE.md, if there is one: the
+   part under a `## taskie` heading, up to the next heading of the same or a
+   higher level, in `CLAUDE.md` at the repo root or in `.claude/CLAUDE.md`
+   (the root one if both have it)
 
-`.taskie.md` is free-form markdown written by the repo's maintainers. Where it
-says something different from this file, follow `.taskie.md`. Do not ask the
-user to create it; it is optional.
+The taskie section is free-form markdown written by the repo's maintainers.
+Where it says something different from this file, follow it. Only that
+section overrides this file; the rest of CLAUDE.md is written for other work
+and does not change taskie's rules. Do not ask the user to create it; it is
+optional.
 
 ## Before any stage
 
@@ -26,7 +31,7 @@ Check that the current directory is inside a git repository whose remote is
 hosted on a supported backend, and that the backend CLI is authenticated. If
 not, say exactly what is missing and stop.
 
-The base branch is the repo's default branch unless `.taskie.md` names
+The base branch is the repo's default branch unless the taskie section names
 another.
 
 ## Labels
@@ -157,15 +162,17 @@ Two commands come from the target repo:
 
 Find each one in this order:
 
-1. a `verify:` or `setup:` line in `.taskie.md`
+1. a `verify:` or `setup:` line in the taskie section
 2. detect it from the repo: a `verify`, `check` or `test` recipe in a
    `justfile` or `Makefile`, a `test` script in `package.json`, `cargo test`
    for a Cargo project, and so on
 3. ask the user
 
 When a command was detected or given by the user, confirm it once, then offer
-to save it to `.taskie.md` (creating the file if needed). If a repo needs no
-setup, record `setup: none`.
+to save it in the taskie section. Save into the CLAUDE.md whose taskie section
+is read, else the one that exists (the root one if both do), else a new
+`CLAUDE.md` at the root, adding a `## taskie` heading if there is none. If a
+repo needs no setup, record `setup: none`.
 
 ## Branches
 

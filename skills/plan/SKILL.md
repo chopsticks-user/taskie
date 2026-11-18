@@ -79,8 +79,8 @@ Input is a goal such as `v0.2: offline mode`.
 2. Name the milestone: the text before the first colon is its title and the
    rest its description. Without a colon, propose a short title and confirm
    it. If a milestone with that title exists, plan into it.
-3. Read the README, `.taskie.md` and the code the goal touches, and list
-   open issues that already belong to the goal.
+3. Read the README, the repo's CLAUDE.md files and the code the goal touches,
+   and list open issues that already belong to the goal.
 4. Ask the user, in one message, about anything ambiguous whose answer would
    change the scope. Skip this step when nothing is ambiguous.
 5. Draft the work:
