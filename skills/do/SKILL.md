@@ -3,7 +3,7 @@ name: do
 description: Implement an issue in its own worktree, open a pull request, review it with /code-review, fix the in-scope findings and post the review summary, all in one run. On an issue that already has a PR, address the feedback and review again. With no argument, pick the current or most urgent issue.
 argument-hint: "[issue number]"
 disable-model-invocation: true
-allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git remote -v*)
+allowed-tools: Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git merge-tree *) Bash(git remote -v*)
 ---
 
 # taskie do
@@ -96,17 +96,28 @@ issue.
 
 1. Prepare the worktree as in "Start" step 1, reusing it or adding one for
    the PR's branch, and bring it up to date with the remote branch
-   (fast-forward only). Then follow "Start" step 2.
+   (fast-forward only). Then follow "Start" step 2, and run `setup` in a
+   worktree you just added (unless it is `none`).
 2. Collect the feedback: comments and reviews on the PR, comments on its
    diff, and anything the user said when running this command. Skip findings
    the latest `<!-- taskie:review` comment already marks as fixed or filed.
+   Also fetch the base from `<remote>` (the repo's git remote, as the backend
+   finds it; if the fetch fails, report it and stop) and check whether the
+   branch still merges cleanly with it: `git merge-tree --write-tree HEAD
+   <remote>/<base>` exits 0 when it does and 1 on a conflict; report any
+   other exit as an error and stop. A conflict is a point to address, since
+   `/taskie:ship` stops on it and sends the user here.
 3. If there is nothing to address and the latest review marker is current,
    say the PR is ready for `/taskie:ship <pr>` and stop.
 4. List the points you will address, then proceed. Ask first about any point
    you disagree with or that would grow the scope.
-5. Fix them as in "Implement": small commits, each passing `verify`. Push,
-   and update the PR body if Verification or Notes changed. New commits make
-   the review stale, so go on to "Review".
+5. Fix them as in "Implement": small commits, each passing `verify`. For a
+   conflict with the base, merge `<remote>/<base>` into the branch (only into
+   a clean worktree: if it has uncommitted changes, stop and show them),
+   resolve the conflicts and commit the merge; if `verify` then fails because
+   of the base itself, undo the merge, report the failure as pre-existing and
+   stop. Push, and update the PR body if Verification or Notes changed. New
+   commits make the review stale, so go on to "Review".
 
 ## Review
 
