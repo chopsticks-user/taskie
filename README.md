@@ -36,9 +36,13 @@ recommended option first; you can always pick "Other" and type instead.
 
 ```
 /taskie:new the export button does nothing on Safari
+/taskie:plan #12    # only if new put it in the backlog
 /taskie:do 12
 /taskie:ship
 ```
+
+`/taskie:new` says which case applies. For larger work that is not a single
+issue yet, start with `/taskie:plan <goal>` instead.
 
 ## Requirements
 
