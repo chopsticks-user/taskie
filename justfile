@@ -1,6 +1,18 @@
-# Validate manifests and skills (fails on warnings), then check the version bump
-verify: && version-bump
+# Validate manifests and skills (fails on warnings), then check the skill rules and the version bump
+verify: && skill-rules version-bump
     claude plugin validate --strict .
+
+# Fail when a skill's allowed-tools does not start with the plugin-root Read
+# rule: without it, the skill prompts for its own shared files outside this repo.
+skill-rules:
+    #!/usr/bin/env bash
+    set -euo pipefail
+    rule='allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) '
+    missing=0
+    for f in skills/*/SKILL.md; do
+        grep -qF -- "$rule" "$f" || { echo "skill-rules: $f: allowed-tools must start with $rule" >&2; missing=1; }
+    done
+    exit "$missing"
 
 # Fail when plugin files differ from main but plugin.json is not newer:
 # installed copies only update when the version rises, and two branches that

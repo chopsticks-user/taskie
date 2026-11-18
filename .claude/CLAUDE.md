@@ -40,7 +40,9 @@ Labels in use: taskie's set (see `shared/conventions.md`), plus GitHub's
 ## Verify
 
 Run `just verify` before and after every change; each commit must pass it. It
-runs `claude plugin validate --strict .`, then `just version-bump`, which fails
+runs `claude plugin validate --strict .`, then `just skill-rules`, which fails
+when a skill's `allowed-tools` lacks the `Read(/${CLAUDE_PLUGIN_ROOT}/**)` rule,
+then `just version-bump`, which fails
 when the working tree (untracked files included) changes `skills/`,
 `shared/`, `backends/` or `.claude-plugin/` against `main` on the remote that
 points at this repo, but `plugin.json`'s version is not higher than the one
