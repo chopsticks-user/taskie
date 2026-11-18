@@ -1,5 +1,5 @@
-# For this repo only: in target repos taskie hides .worktrees/ through info/exclude.
-.worktrees/
+# Maintained by hand: taskie itself never edits a .gitignore (it uses info/exclude).
+/.worktrees/
 .claude/settings.local.json
 .DS_Store
 *.swp
