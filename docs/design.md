@@ -1,8 +1,13 @@
 # taskie design
 
 Status: v1 design, agreed 2026-11-14. All stages are written as skills, and
-taskie has taken its own issues from request to merge on GitHub.
-`/taskie:plan` has not run on a real issue yet.
+taskie has taken its own issues from request to merge on GitHub. On
+2026-11-18 it also ran on a separate Node repo with a test suite
+(chopsticks-user/taskie-sandbox, private; taskie 0.9.0 rules, gh 2.103.3,
+Claude Code 2.1.318): filing, triage of an outside report, a split and a
+refine with `/taskie:plan`, `do` with fail-first and autonomous runs, ship
+merging a bug fix, and ship stopping on a conflict that `do` then resolved.
+The trial report is on #48; the problems it found are #52 to #55.
 
 This is the reference for the current design. When a decision changes, update
 this document in the same pull request as the change.
@@ -134,7 +139,7 @@ added one more file to every repo next to the CLAUDE.md it already keeps for
 the same purpose. A CLAUDE.md section had first been rejected because CLAUDE.md
 loads in every session; a few lines of settings cost little, and other
 sessions gain the verify command. `.taskie.md` was dropped without a fallback,
-since taskie had no users outside its own repo yet. A structured YAML config
+since taskie had no users outside its own repo at the time. A structured YAML config
 was rejected because only the model reads it, so a schema adds maintenance
 without adding validation.
 
@@ -572,6 +577,9 @@ is updated with the result.
 | `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
 | a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: taskie's review step ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
+| taskie works on a repo other than its own | all | confirmed on a Node repo with `npm test` and no taskie section (#48): labels created once next to GitHub's defaults, verify detected from package.json and saved as its own commit, sub-issues created with `--parent`. Setup detection had no rules to follow (#54), and two open PRs saved the same setting (#53) |
+| `/taskie:plan` works on real issues | 4 | confirmed in the #48 trial: a split into two sub-issues with the parent turned into a tracker, and a refine that added a missing edge case |
+| `do`'s fail-first rule and spec-based Verification work on real code | 5 | confirmed in the #48 trial: the reproducing tests failed before the fix, and each PR listed every criterion and edge case with its test. A base merge left Verification stale (#55) |
 
 ## Out of scope for v1
 
