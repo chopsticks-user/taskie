@@ -1,4 +1,0 @@
-# A find-work request with no scope asks for one instead of reviewing everything.
-contains (need|name|pick|choose|which) (a |the )?scope|scope (to|for) (look|review|search)|where (to|should i) look
-contains reply with|which (one|of these|scope|part|area)
-not_contains ## Acceptance criteria

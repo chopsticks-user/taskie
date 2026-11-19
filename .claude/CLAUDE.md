@@ -52,19 +52,18 @@ so that `main` is current). `just submit-check`
 adds the plugin directory's submission checks and fails until the plugin has a
 listing icon.
 
-`just eval` runs the behavioral checks in `evals/cases/`: each case runs a
-taskie stage headless against a fresh clone of chopsticks-user/taskie-sandbox,
-with every GitHub write disallowed, and checks its output. It costs model
-usage (`EVAL_RUNS`, default 3 per case, and `EVAL_BUDGET`, default $1.00 per
-run, bound it), so it is not part of verify. Run it after changing a skill's
-behavior, and keep the sandbox's open issues as the cases expect (#9 and #10
-untriaged, #1 ready, #4 a tracker). Results go to `evals/results/`, which git
-ignores.
-
 ## taskie
 
 verify: just verify
 setup: none
+
+Testing taskie's own issues is shallow on purpose: `just verify` plus reading
+the changed skill text against the issue's acceptance criteria and edge
+cases, recorded as named checks in the PR. Do not run taskie headless
+(`claude -p`) or against another repo to test a change here; each run is a
+full Claude session and the cost outweighs what it catches for a markdown
+plugin. This overrides do's default only for this repo: the testing rules
+for users' projects stay as they are.
 
 Every pull request that changes what the plugin does (skills,
 `shared/conventions.md`, `backends/`, manifests) bumps `version` in

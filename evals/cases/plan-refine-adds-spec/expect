@@ -1,6 +1,0 @@
-# Refining an issue filed outside taskie drafts the spec sections and waits for approval.
-contains ## Out of scope
-contains ## Edge cases
-contains ## Acceptance criteria
-contains ## Assumptions
-not_contains (updated|replaced|edited|rewrote) (the )?(body|issue|#9)|#9 (was |has been )?(updated|edited)

@@ -3,7 +3,7 @@
 Status: v1 design, agreed 2026-11-14. All stages are written as skills, and
 taskie has taken its own issues from request to merge on GitHub. On
 2026-11-18 it also ran on a separate Node repo with a test suite
-(chopsticks-user/taskie-sandbox, private; taskie 0.9.0 rules, gh 2.103.3,
+(a private sandbox repo, since deleted; taskie 0.9.0 rules, gh 2.103.3,
 Claude Code 2.1.318): filing, triage of an outside report, a split and a
 refine with `/taskie:plan`, `do` with fail-first and autonomous runs, ship
 merging a bug fix, and ship stopping on a conflict that `do` then resolved.
@@ -355,21 +355,13 @@ directory runs at submission. It is kept out of verify because it requires a
 listing icon, and the first icon submitted can become the permanent listing
 icon, so no placeholder is committed.
 
-Behavioral checks run with `just eval`, not verify, because they are slow and
-cost model usage. Each case in `evals/cases/<name>/` is a `prompt` and an
-`expect` file of `contains` and `not_contains` patterns. `evals/run.sh` runs
-the prompt as `claude -p --plugin-dir <repo>` in a fresh clone of a sandbox
-repo (chopsticks-user/taskie-sandbox, with a fixed set of open issues), without
-the user's settings, plugins or MCP servers, collects every assistant message,
-and checks them. Every GitHub write is disallowed,
-each run has a cost ceiling, a case passes when most of its runs (3 by default)
-do, and a snapshot of the sandbox's issues, pull requests and labels must be
-the same after the suite as before it. Checks are patterns, not an LLM judge,
-so a result is repeatable and costs nothing to grade.
-
-`claude plugin eval` was tried first and dropped (#50): its runs get a sealed
-home directory and a scrubbed environment, so `gh` was neither on PATH nor
-logged in, and every taskie stage needs `gh` from its first check.
+Beyond verify, taskie's own changes are checked by reading the changed skill
+text against the issue, not by running taskie. A behavioral suite (`just
+eval`, #50) ran each case as a headless Claude session against a private
+sandbox repo; it caught real problems, but every run cost a full session, and
+token usage spiked. It was removed (#68), along with the sandbox repo, and the
+repo's taskie section now says to keep testing of taskie itself shallow. The
+spec-driven testing `do` requires in users' projects is unaffected.
 
 ## Stages
 
@@ -618,5 +610,4 @@ is updated with the result.
 
 Backports and maintained release branches, the incident fast lane, CI failure
 intake, area labels, cross-repo boards, parallel review loops, non-GitHub
-backends, and evals of stages that write to GitHub (`just eval` covers
-the read-only ones).
+backends, and a behavioral eval suite (tried in #50, removed in #68).
