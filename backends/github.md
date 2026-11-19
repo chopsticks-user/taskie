@@ -51,7 +51,8 @@ stage" check in `shared/conventions.md`.
 
 The git remote of the repo, written `<remote>` below, is often but not always
 `origin`. Use a `remote:` line in the repo's taskie section (see
-`shared/conventions.md`) if there is one. Otherwise take the remote whose
+`shared/conventions.md`) if there is one, else one an open PR adds to it, found
+as the conventions describe for repo commands. Otherwise take the remote whose
 fetch URL ends in `<nameWithOwner>` or `<nameWithOwner>.git`, right after `/`
 or `:`, compared case-insensitively. If no remote or more than one matches,
 ask the user which to use. `/taskie:do` then offers to save it as `remote:` in
@@ -145,12 +146,20 @@ query($owner: String!, $name: String!) {
 | read one PR | `gh pr view <n> --json number,title,body,state,isDraft,baseRefName,headRefName,headRefOid,closingIssuesReferences,comments,reviews,statusCheckRollup,mergeable,mergeStateStatus,url` |
 | commits of a PR | `gh pr view <n> --json commits --jq '.commits[].messageHeadline'` |
 | diff of a PR | `gh pr diff <n>` (add `--name-only` for the file list) |
+| open PRs that change a CLAUDE.md | see below |
 | comments on the PR's diff | see below |
 | replace a PR body | `gh pr edit <n> --body-file -` |
 | PR of the current branch | the same `gh pr view` without `<n>` |
 | open a PR | `gh pr create --base <base> --head <branch> --title '<title>' --body-file -` |
 | comment | `gh pr comment <n> --body-file -` |
 | merge | `gh pr merge <n> --merge --delete-branch --match-head-commit <sha>` (`--squash` or `--rebase` instead of `--merge` if the taskie section says so) |
+
+Open PRs that change a CLAUDE.md, most recently updated first; read the lines
+each one adds with `gh pr diff <n>`:
+
+```bash
+gh pr list --state open --limit 200 --json number,updatedAt,files --jq '[.[] | select(any(.files[]; .path == "CLAUDE.md" or .path == ".claude/CLAUDE.md"))] | sort_by(.updatedAt) | reverse | .[].number'
+```
 
 Comments on the PR's diff:
 

@@ -3,7 +3,7 @@ name: do
 description: Implement an issue in its own worktree, open a pull request, review it with /code-review, fix the in-scope findings and post the review summary, all in one run. On an issue that already has a PR, address the feedback and review again. With no argument, pick the current or most urgent issue.
 argument-hint: "[issue number]"
 disable-model-invocation: true
-allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(gh run view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git merge-tree *) Bash(git remote -v*)
+allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue view *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(gh pr view *) Bash(gh pr diff *) Bash(gh run view *) Bash(git status*) Bash(git diff*) Bash(git log*) Bash(git merge-tree *) Bash(git remote -v*)
 ---
 
 # taskie do
@@ -63,7 +63,8 @@ Input: $ARGUMENTS (an issue or PR number, with or without `#`, or empty)
    with `/taskie:new`, and leave the worktree in place. Then, if `verify`,
    `setup` or the git remote was detected or given rather than read from the
    taskie section (check the worktree's copy, which an earlier run of this
-   issue may have saved into), offer to save it as the conventions describe:
+   issue may have saved into) or from an open PR that saves it, offer to
+   save it as the conventions describe:
    a commit of its own in the worktree that holds only that file and passes
    `verify`.
 

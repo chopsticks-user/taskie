@@ -222,10 +222,15 @@ Two commands come from the target repo:
 Find each one in this order:
 
 1. a `verify:` or `setup:` line in the taskie section
-2. detect it from the repo: a `verify`, `check` or `test` recipe in a
+2. a `verify:` or `setup:` line that an open pull request adds to a taskie
+   section (an earlier `/taskie:do` saving it, not merged yet), from the
+   most recently updated such PR. Say which PR it came from; if it differs
+   from what detection would find, use it anyway and say so. Never offer to
+   save a value found this way: that PR already saves it
+3. detect it from the repo: a `verify`, `check` or `test` recipe in a
    `justfile` or `Makefile`, a `test` script in `package.json`, `cargo test`
    for a Cargo project, and so on
-3. ask the user
+4. ask the user
 
 When a command was detected or given by the user, confirm it once. Only
 `/taskie:do` offers to save it in the taskie section, and only once its
