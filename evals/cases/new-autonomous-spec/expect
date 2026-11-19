@@ -1,0 +1,6 @@
+# Autonomous: no question, a full spec, and the guesses written down.
+contains ## Out of scope
+contains ## Edge cases
+contains ## Acceptance criteria
+contains ## Assumptions
+not_contains (created|filed|opened) (issue )?#[0-9]+|issue #[0-9]+ (was )?(created|filed|opened)|github\.com/[^ ]+/issues/[0-9]+

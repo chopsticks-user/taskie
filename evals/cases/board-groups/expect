@@ -1,0 +1,8 @@
+# The sandbox's fixed issues: #9 untriaged, #1 ready, #4 a tracker in the backlog.
+contains ^ *Needs triage \(
+contains ^ *#9 
+contains ^ *Ready \(
+contains ^ *#1 +P2
+contains ^ *Backlog \(
+contains #4 .*tracker
+contains /taskie:new

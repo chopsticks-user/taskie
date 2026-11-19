@@ -44,3 +44,9 @@ version-bump:
 # Extra checks the plugin directory runs at submission (needs an icon first)
 submit-check:
     claude plugin validate --strict --profile directory .
+
+# Behavioral checks: run taskie stages headless against the sandbox repo, with
+# every GitHub write disallowed. Costs model usage, so it is not part of verify.
+# Pass case names to run only those; EVAL_RUNS and EVAL_BUDGET tune it.
+eval *cases:
+    evals/run.sh {{cases}}
