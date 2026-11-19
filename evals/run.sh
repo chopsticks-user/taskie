@@ -31,14 +31,15 @@ snapshot() {
         --jq 'sort_by(.number)[] | "pr \(.number) \(.state) \(.updatedAt)"' || return 1
     gh label list -R "$repo" --limit 500 --json name,color,description \
         --jq 'sort_by(.name)[] | "label \(.name) \(.color) \(.description)"' || return 1
-    gh api "repos/$repo/milestones?state=all&per_page=100" \
+    gh api --paginate "repos/$repo/milestones?state=all&per_page=100" \
         --jq 'sort_by(.number)[] | "milestone \(.number) \(.state) \(.updated_at)"' || return 1
-    gh api "repos/$repo/branches?per_page=100" --jq 'sort_by(.name)[] | "branch \(.name) \(.commit.sha)"' || return 1
+    gh api --paginate "repos/$repo/branches?per_page=100" --jq 'sort_by(.name)[] | "branch \(.name) \(.commit.sha)"' || return 1
 }
-take_snapshot() { snapshot > "$1" || { echo "could not read the sandbox's state; stopping" >&2; exit 2; }; }
+take_snapshot() { snapshot > "$1" || { echo "could not read the repo's state; stopping" >&2; exit 2; }; }
 
 # Writes taskie could make; none of them may run in a case. Read-only commands
-# a skill pre-approves (gh issue develop --list) are left alone on purpose.
+# a skill pre-approves (gh issue develop --list) are left alone on purpose, so
+# a linked branch created by `gh issue develop <n>` is caught by the snapshot.
 # `gh api` stays denied: no skill pre-approves it, since it can also write.
 deny=(
     'Bash(gh issue create*)' 'Bash(gh issue edit*)' 'Bash(gh issue comment*)'
@@ -49,7 +50,8 @@ deny=(
     'Bash(gh pr create*)' 'Bash(gh pr edit*)' 'Bash(gh pr comment*)' 'Bash(gh pr merge*)'
     'Bash(gh pr close*)' 'Bash(gh pr reopen*)' 'Bash(gh pr review*)' 'Bash(gh pr ready*)'
     'Bash(gh release*)' 'Bash(gh api*)' 'Bash(gh repo edit*)' 'Bash(gh repo delete*)'
-    'Bash(gh workflow*)' 'Bash(git push*)'
+    'Bash(gh workflow*)' 'Bash(gh repo fork*)' 'Bash(gh repo create*)' 'Bash(gh project*)'
+    'Bash(gh secret*)' 'Bash(gh variable*)' 'Bash(gh gist*)' 'Bash(git push*)'
 )
 
 # Lines in a case's expect file: "contains <ERE>" or "not_contains <ERE>",
@@ -73,16 +75,21 @@ run_case() {
     if ! gh repo clone "$repo" "$work" -- --quiet 2> "$result.err"; then
         echo "    could not clone $repo"; cleanup; work=""; return 1
     fi
-    # User settings, plugins, hooks and MCP servers stay out, so a run behaves
-    # the same on any machine. Every assistant message counts, not only the
+    # User and project settings, plugins, hooks and MCP servers stay out, so a
+    # run behaves the same on any machine and against any repo. Every assistant message counts, not only the
     # last: a stage often shows its draft in one message and asks in the next.
     (cd "$work" && claude -p --plugin-dir "$root" --max-budget-usd "$budget" \
-        --setting-sources project,local --strict-mcp-config \
+        --setting-sources local --strict-mcp-config \
         --output-format stream-json --verbose --allowedTools Skill \
         --disallowedTools "${deny[@]}" -- "$(cat "$dir/prompt")" < /dev/null > "$result.jsonl" 2>> "$result.err") || true
     cleanup; work=""
     jq -r 'select(.type == "assistant") | .message.content[] | select(.type == "text") | .text' \
         < "$result.jsonl" > "$result" 2>/dev/null || true
+    # A run that hit its budget or failed has no successful result; its
+    # partial output must not count as an answer.
+    if ! jq -e 'select(.type == "result" and .is_error == false)' < "$result.jsonl" > /dev/null 2>&1; then
+        echo "    the run did not finish (see $result.err)"; return 1
+    fi
     check "$dir/expect" "$result"
 }
 
@@ -104,7 +111,7 @@ done
 
 take_snapshot "$out/after.txt"
 if ! diff -q "$out/before.txt" "$out/after.txt" > /dev/null; then
-    echo "FAIL: the sandbox changed during the run:"
+    echo "FAIL: the repo changed during the run (if someone else changed it, run again):"
     diff "$out/before.txt" "$out/after.txt" || true
     failed=1
 fi

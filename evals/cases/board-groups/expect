@@ -1,5 +1,5 @@
 # The board in any state: status groups with counts, or "Board is empty.",
-# and a next-action line naming a taskie command (or saying none applies).
-contains ^ *(Needs triage|Needs info|Backlog|Ready|In progress|In review|Awaiting approval) \(|Board is empty
-contains /taskie(:[a-z]+)?|no (rule|next action) applies
-not_contains (created|filed|opened) (issue )?#[0-9]+
+# and a next action naming a stage command (or saying none applies).
+contains ^[ #*]*(Needs triage|Needs info|Backlog|Ready|In progress|In review|Awaiting approval) \(|Board is empty
+contains /taskie:(new|plan|do|ship)|no (rule|next action) applies
+not_contains (created|filed|opened) (issue )?#[0-9]+|issue #[0-9]+ (was )?(created|filed|opened)
