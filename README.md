@@ -31,16 +31,6 @@ requests, so it runs only when you type it or, once a taskie command has run in
 the session, when you explicitly ask for that work ("work on #12"). `ship`
 merges, so it runs only when you type it.
 
-Typed commands read taskie's own files without asking. A plain request such
-as "work on #12" runs `do` by reading its file directly, outside any
-command, so Claude Code may ask to read taskie's plugin files. To allow
-that once for good, add this to `permissions.allow` in your user settings
-(`~/.claude/settings.json`):
-
-```json
-"Read(~/.claude/plugins/cache/taskie/**)"
-```
-
 Whenever taskie needs a decision it asks a multiple-choice question, with the
 recommended option first; you can always pick "Other" and type instead. Tell
 it to proceed without asking and, for the rest of the session, it takes the
@@ -136,6 +126,26 @@ issues"). `/taskie:ship` merges only when you type it, in any mode. taskie
 never force-pushes, never commits directly on your base branch (changes reach
 it only by merging a pull request), never edits your `.gitignore`, and never
 merges on its own.
+
+### Fewer permission prompts
+
+Typed commands (`/taskie:do 12`) read taskie's files and run their read-only
+`gh` and `git` commands without asking. A plain request such as "work on
+#12" runs `do` by following its file outside any command, so Claude Code
+asks for those reads and commands. Type the command when you want no
+prompts. To at least stop the prompts for taskie's own files, add a rule to
+your user settings (`~/.claude/settings.json`):
+
+```json
+{
+  "permissions": {
+    "allow": ["Read(~/.claude/plugins/cache/*/taskie/**)"]
+  }
+}
+```
+
+It covers taskie installed from any marketplace, not a `--plugin-dir`
+checkout, and assumes Claude Code's config lives in `~/.claude`.
 
 ### Updating, removing and cleaning up
 

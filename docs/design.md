@@ -64,7 +64,10 @@ the expanded absolute path into the `//` form permission rules need; without
 it the rule did not match. Moving the shared files into each skill's
 directory did not help (those reads were denied too), and inlining them at
 load time with a shell command was blocked for paths outside the working
-directory.
+directory. The pre-approval only exists while a skill is active, so a plain
+"work on #12" request, which follows do's file by hand, still prompts for
+those reads and for do's read-only commands. The README recommends typing the
+command and offers a user-level Read rule for the plugin cache (#63).
 
 `shared/` holds the conventions every stage shares. The name avoids `rules/`,
 which reads like Claude Code's `.claude/rules/`, `docs/`, which holds
@@ -621,7 +624,8 @@ is updated with the result.
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
 | a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: taskie's review step ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
 | taskie works on a repo other than its own | all | confirmed on a Node repo with `npm test` and no taskie section (#48): labels created once next to GitHub's defaults, verify detected from package.json and saved as its own commit, sub-issues created with `--parent`. Setup detection had no rules to follow (#54), and two open PRs saved the same setting (#53, fixed in 0.10.3: a value another unmerged run saves is reused) |
-| `Read(/${CLAUDE_PLUGIN_ROOT}/**)` in a skill's allowed-tools covers an installed copy as it does a `--plugin-dir` one | all | confirmed for both: `--plugin-dir` (#57) and an installed 0.10.1 copy in another repo (#62). A plain "work on #12" request reads `do`'s file with no skill active and gets no pre-approval; README gives a user-level rule for it (#63) |
+| `Read(/${CLAUDE_PLUGIN_ROOT}/**)` in a skill's allowed-tools covers an installed copy as it does a `--plugin-dir` one | all | confirmed for both: `--plugin-dir` (#57) and an installed 0.10.1 copy in another repo (#62) |
+| a user-level `Read(~/.claude/plugins/cache/*/taskie/**)` rule stops the file prompts on a plain "work on #12" request | do | not verified: this repo no longer runs headless checks (#68); if it fails, users type `/taskie:do`, which needs no rule (#63) |
 | `/taskie:plan` works on real issues | 4 | confirmed in the #48 trial: a split into two sub-issues with the parent turned into a tracker, and a refine that added a missing edge case |
 | `do`'s fail-first rule and spec-based Verification work on real code | 5 | confirmed in the #48 trial: the reproducing tests failed before the fix, and each PR listed every criterion and edge case with its test. A base merge left Verification stale (#55) |
 
