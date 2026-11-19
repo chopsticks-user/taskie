@@ -30,7 +30,8 @@ second confirmation before merging; do stop at every gate below.
    for the PR's branch. Bring it up to date with the remote branch
    (fast-forward only). Run git commands for the branch there.
 4. Fetch the base branch from `<remote>` (the repo's git remote, as the
-   backend finds it); if the fetch fails, report it and stop. Then refuse,
+   backend finds it), and note the base's sha; if the fetch fails, report it
+   and stop. Then refuse,
    saying why and what to run instead, unless all of these hold:
    - the PR is open and not a draft
    - its latest review marker is current, judged against the worktree's
@@ -87,21 +88,29 @@ second confirmation before merging; do stop at every gate below.
    Everything is pushed, and the
    backend cannot delete a branch a worktree still has checked out. If git
    refuses because the worktree has changes, stop and show them.
-2. Merge the PR as the backend describes, passing the verified head sha, with
+2. Read the PR's mergeability as the backend describes, waiting while it is
+   still being computed (right after a push, with no checks to wait on, it
+   is, and a merge then is refused). If it stays uncomputed past the wait,
+   say so and stop. If it is conflicting, stop and suggest `/taskie:do <pr>`.
+3. Merge the PR as the backend describes, passing the verified head sha, with
    the merge method from the taskie section, or a merge commit by default. If
-   the merge is refused (the head moved, or branch protection blocks it), report
-   the reason and stop.
-3. Close what the merge did not:
+   the merge is refused, fetch the base again and compare it with the base
+   sha noted in "Gate and update" step 4. If the base moved, report that and
+   stop. If it did not and the refusal says the base was modified, repeat
+   step 2 and retry the merge once; if that is refused too, report it and
+   stop. Any other refusal (the head moved, branch protection) is reported,
+   and the run stops.
+4. Close what the merge did not:
    - each issue the PR resolves that is still open: close it as done with
      the comment `Fixed by #<pr>.` (the backend closes issues automatically
      only for merges into the default branch)
    - each parent of those issues whose sub-issues are now all closed: close
      it as done with the comment `All sub-issues are done.`
-4. Update the main checkout: if it is on the base branch with no uncommitted
+5. Update the main checkout: if it is on the base branch with no uncommitted
    changes, pull with fast-forward only. If it is on the base branch but has
    changes, or is on another branch, only fetch, and tell the user why their
    checkout was left as it is.
-5. Print what was merged and closed.
+6. Print what was merged and closed.
 
 ## Offer a release
 
