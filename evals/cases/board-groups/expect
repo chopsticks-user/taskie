@@ -1,4 +1,4 @@
-# The sandbox's fixed issues: #9 untriaged, #1 ready, #4 a tracker in the backlog.
+# The sandbox's fixed issues: #9 and #10 untriaged, #1 ready, #4 a tracker in the backlog.
 contains ^ *Needs triage \(
 contains ^ *#9 
 contains ^ *Ready \(

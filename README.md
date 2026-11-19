@@ -105,6 +105,9 @@ What taskie creates in your repository, as it needs them:
 - the labels in [Labels](#labels), created once, never recolored or renamed
 - issues, triage comments, milestones and sub-issues (`/taskie:new`,
   `/taskie:plan`)
+- when you approve marking an issue someone else filed as ready, a rewrite of
+  its body into taskie's template, with the original kept in a collapsed
+  "Original report" block
 - a linked branch, a pull request and a review summary comment per issue
   (`/taskie:do`), and, if it detected your verify or setup command and you
   agreed, a commit in that pull request adding a `taskie` section to

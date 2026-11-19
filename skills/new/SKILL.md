@@ -115,7 +115,7 @@ For issues that already exist, usually filed by someone outside taskie.
    If the user's answer settles a question of scope or acceptance criteria,
    write it into the issue's body (keeping the template) when applying the
    row, and re-check the definition of ready with it. Below the table, show
-   the body sections any Ready row would add (see "Outcomes").
+   the whole new body each Ready row would write (see "Outcomes").
 3. Apply each approved row as its outcome describes. Make sure every label
    exists before adding it.
 4. Print one line per issue with what was done, then suggest the next
@@ -144,18 +144,18 @@ sections can be drafted from the issue and the code as in "File" step 6.
 Show the new body below the table, and on approval replace the body with
 it, built this way:
 
-- the reporter's text goes, unreworded, into the template section it
-  belongs to: what is wrong into Problem, steps into Steps to reproduce, an
-  error or trace into Actual (trimmed as "Bug report or stack trace" below
-  describes), versions into Environment; text that fits no section stays in
-  Problem or Context
-- a body that already uses the template's headings keeps them as they are;
-  only the missing sections are added, in the template's order
-- an issue with no text beyond its title gets its title as Problem, and
-  "Unknown" for what the reporter would know (steps, expected, actual,
-  environment)
-- the original body is kept verbatim at the end, in a collapsed block, so
-  nothing the reporter wrote is lost:
+- a body follows the template when every heading in it is one of the
+  template's: keep it as it is and add only the missing sections, in the
+  template's order, with no block below
+- otherwise the reporter's text is placed, unreworded, into the section it
+  belongs to. For a bug: what is wrong into Problem, steps into Steps to
+  reproduce, the expected result into Expected, an error or trace into
+  Actual (trimmed as "Bug report or stack trace" below describes), versions
+  into Environment. For anything else: what is missing or wrong into
+  Problem, background, links and workarounds into Context. Text that fits
+  no section is not copied; the block below keeps it
+- the original body is then kept verbatim at the end, in a collapsed block,
+  so nothing the reporter wrote is lost:
 
   ```
   <details><summary>Original report</summary>
@@ -165,7 +165,11 @@ it, built this way:
   </details>
   ```
 
-  Skip the block when the body was empty or already followed the template.
+- secrets, tokens, passwords, email addresses and other personal data are
+  replaced with `<redacted>` everywhere they appear, the block included, as
+  for any bug report
+- an issue with no text beyond its title is never Ready: nothing says what
+  done looks like, so propose Needs info instead
 
 Duplicate: another issue, open or closed, describes the same problem. Search
 for it as in "File" step 3 and name it in the Reason column. If the duplicate

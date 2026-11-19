@@ -1,6 +1,6 @@
 # Triage of a well-specified outside bug report: Ready, with the report fitted
 # into the template unreworded and kept verbatim in a collapsed block.
-contains Ready
+contains \| *Ready *\|
 contains Original report
 contains I forgot to pass the list and got an unhelpful error
 contains ## Edge cases

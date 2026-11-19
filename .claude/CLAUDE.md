@@ -58,7 +58,8 @@ with every GitHub write disallowed, and checks its output. It costs model
 usage (`EVAL_RUNS`, default 3 per case, and `EVAL_BUDGET`, default $1.00 per
 run, bound it), so it is not part of verify. Run it after changing a skill's
 behavior, and keep the sandbox's open issues as the cases expect (#9 and #10
-untriaged, #1 ready, #4 a tracker). Results go to `evals/results/`, which git ignores.
+untriaged, #1 ready, #4 a tracker). Results go to `evals/results/`, which git
+ignores.
 
 ## taskie
 
