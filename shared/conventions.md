@@ -233,9 +233,22 @@ Find each one in this order:
    Confirm it once like a detected value: it runs as a command, so it is
    never taken without a look. Never offer to save a value found this way;
    its own branch already saves it
-3. detect it from the repo: a `verify`, `check` or `test` recipe in a
-   `justfile` or `Makefile`, a `test` script in `package.json`, `cargo test`
-   for a Cargo project, and so on
+3. detect it from the repo. For `verify`: a `verify`, `check` or `test`
+   recipe in a `justfile` or `Makefile`, a `test` script in `package.json`,
+   `cargo test` for a Cargo project, and so on. For `setup`, only these
+   clear cases; anything else is asked, since a wrong guess fails verify and
+   looks like a pre-existing failure:
+   - a `setup` recipe in a `justfile` or `Makefile`
+   - lockfiles at the repo root, one command per ecosystem joined with
+     `&&`: `package-lock.json` → `npm ci`, `pnpm-lock.yaml` → `pnpm install
+     --frozen-lockfile`, `yarn.lock` → `yarn install --immutable` with a
+     `.yarnrc.yml` (Yarn 2 or later) or `yarn install --frozen-lockfile`
+     without, `bun.lock` or `bun.lockb` → `bun install --frozen-lockfile`,
+     `uv.lock` → `uv sync --frozen`. With several JavaScript lockfiles, use
+     the one `package.json`'s `packageManager` field names, or ask
+   - a Cargo or Go project, whose build fetches its own dependencies → `none`
+   - a `package.json` that lists no `dependencies` or `devDependencies`,
+     with nothing else to install → `none`
 4. ask the user
 
 When a command was detected or given by the user, confirm it once. Only

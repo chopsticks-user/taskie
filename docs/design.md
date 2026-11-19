@@ -474,7 +474,9 @@ issue from branch to a reviewed PR. Steps:
    worktree's branch, or an open PR of the user's own from this repo, never a
    fork, since the value runs as a command; confirmed once, never saved
    twice), else detect (`just
-   verify`, `npm test`, `make check`, `cargo test`, ...) and confirm with you,
+   verify`, `npm test`, `make check`, `cargo test`, ...; for setup, only clear
+   cases: a `setup` recipe, the frozen install for each root lockfile, `none`
+   when nothing needs installing; otherwise it asks) and confirm with you,
    then, once the worktree exists, offer to save them in the taskie section as
    a commit of their own in the PR.
 4. Create the linked branch with `gh issue develop`, then a worktree at
