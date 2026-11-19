@@ -436,7 +436,9 @@ question you answer while approving is written into the issue body.
 
 Triage outcomes: accept (set type and priority, post a comment naming the
 likely files), fast-track to `ready` when the issue already meets the
-definition of ready, duplicate (close with a link), won't fix (close as not
+definition of ready (an outside report is fitted into the template with
+its words unchanged, and the original kept verbatim in a collapsed block),
+duplicate (close with a link), won't fix (close as not
 planned with the reason), needs info (label and post specific questions).
 
 Not in v1: CI failure intake (would be one more source section). Rejected:

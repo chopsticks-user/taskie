@@ -141,8 +141,31 @@ definition holds; otherwise Accept and leave it for `/taskie:plan`. An
 issue filed outside taskie usually lacks the Out of scope, Edge cases and
 Assumptions sections; it can still be Ready when the rest holds and those
 sections can be drafted from the issue and the code as in "File" step 6.
-Show them below the table, and on approval add them to the body (keeping
-the existing text and the template's section order).
+Show the new body below the table, and on approval replace the body with
+it, built this way:
+
+- the reporter's text goes, unreworded, into the template section it
+  belongs to: what is wrong into Problem, steps into Steps to reproduce, an
+  error or trace into Actual (trimmed as "Bug report or stack trace" below
+  describes), versions into Environment; text that fits no section stays in
+  Problem or Context
+- a body that already uses the template's headings keeps them as they are;
+  only the missing sections are added, in the template's order
+- an issue with no text beyond its title gets its title as Problem, and
+  "Unknown" for what the reporter would know (steps, expected, actual,
+  environment)
+- the original body is kept verbatim at the end, in a collapsed block, so
+  nothing the reporter wrote is lost:
+
+  ```
+  <details><summary>Original report</summary>
+
+  <the body as it was>
+
+  </details>
+  ```
+
+  Skip the block when the body was empty or already followed the template.
 
 Duplicate: another issue, open or closed, describes the same problem. Search
 for it as in "File" step 3 and name it in the Reason column. If the duplicate
