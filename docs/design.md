@@ -378,10 +378,12 @@ no-argument order.
 Groups are shown in lifecycle order.
 `/taskie help` lists the stages. With no GitHub remote it says so and stops.
 
-Linked branches are read with the read-only `gh issue develop --list`, one
-call per open issue without an open PR, at most 30, so the board can
-pre-approve every command it runs; a single `gh api graphql` query was
-faster but can also write, so it prompted on every run (#58).
+Linked branches are read with read-only commands every stage can
+pre-approve: one `git ls-remote --heads` finds branches named `issue-<n>-`
+(taskie's) or `<n>-` (GitHub's), and `gh issue develop --list` confirms only
+those issues. The single `gh api graphql` query it replaced can also write,
+so it could never be pre-approved and prompted on every board run (#58). A
+linked branch under any other name is missed, which is rare.
 
 Rejected: milestone progress lines (not needed until plan is used), counts
 only, cross-repo `--all`.

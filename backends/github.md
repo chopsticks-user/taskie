@@ -89,7 +89,7 @@ overwrite a label the repo already customized.
 | Action | Command |
 |---|---|
 | search for duplicates | `gh issue list --state all --search '<keywords>' --limit 10 --json number,title,state,stateReason,url` (`stateReason` tells a declined issue, `NOT_PLANNED`, from a finished one) |
-| list open issues | `gh issue list --state open --limit 500 --json number,title,labels,milestone,subIssuesSummary,createdAt,updatedAt` |
+| list open issues | `gh issue list --state open --limit 500 --json number,title,labels,milestone,subIssuesSummary,createdAt` |
 | list issues with a label | `gh issue list --state open --label '<label>' --limit 500 --json number,title,labels,createdAt` |
 | read one issue | `gh issue view <n> --json number,title,body,state,labels,milestone,parent,subIssues,subIssuesSummary,comments,url` |
 | create an issue | `gh issue create --title '<title>' --label '<a>' --label '<b>' --body-file -` (add `--milestone '<title>'` and `--parent <n>` as needed) |
@@ -110,6 +110,14 @@ An issue is a tracker when `subIssuesSummary.total` is greater than 0.
 |---|---|
 | linked branches of one issue | `gh issue develop --list <n>` |
 | create the linked branch and its worktree | `gh issue develop <n> --name issue-<n>-<slug> --base <base> --checkout --worktree .worktrees/issue-<n>` |
+
+Linked branches of all open issues, for deriving status in bulk: list the
+remote's branches once with `git ls-remote --heads <remote>`, take the issue
+numbers from names that start with `issue-<n>-` (taskie's) or `<n>-`
+(GitHub's own "create a branch" from an issue), and confirm each of those
+open issues with `gh issue develop --list <n>`, one tool call per issue, so
+every call matches its pre-approval. A linked branch with any other name is
+not found this way.
 
 Run both from the repo's top-level directory, so `.worktrees/` lands at the
 root where the other stages look for it.
