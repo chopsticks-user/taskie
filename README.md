@@ -5,9 +5,13 @@ GitHub. A chat request, bug report or review finding becomes an issue, which
 gets triaged and planned, then implemented on a branch, reviewed, and merged,
 the way most tech companies move tickets through a team.
 
-> **Status: early.** Every command is written, and taskie has taken its own
-> issues from request to merge and has run end to end on one other repository
-> (see [#48](https://github.com/chopsticks-user/taskie/issues/48)). See [docs/design.md](docs/design.md) for the full design.
+> **Status: experimental.** Ready to try on personal projects, not yet on
+> work you can't afford to redo. taskie runs its own development, and has run
+> end to end on a separate repo with a test suite: filing and triage,
+> planning and splitting, implementing with tests, review, merging, and a
+> conflict between two pull requests
+> ([trial report](https://github.com/chopsticks-user/taskie/issues/48#issuecomment-6990392399)).
+> See [docs/design.md](docs/design.md) for the full design.
 
 ## Commands
 
@@ -93,6 +97,52 @@ To try a local checkout for one session instead:
 ```
 claude --plugin-dir /path/to/taskie
 ```
+
+## Trying taskie on your project
+
+What taskie creates in your repository, as it needs them:
+
+- the labels in [Labels](#labels), created once, never recolored or renamed
+- issues, triage comments, milestones and sub-issues (`/taskie:new`,
+  `/taskie:plan`)
+- a linked branch, a pull request and a review summary comment per issue
+  (`/taskie:do`), and, if it detected your verify or setup command and you
+  agreed, a commit in that pull request adding a `taskie` section to
+  CLAUDE.md
+- a git worktree per issue under `.worktrees/`, hidden from git by a
+  `.worktrees/` line in `.git/info/exclude`
+- a release, only when a milestone is complete and you confirm it
+
+What waits for you: `/taskie:new` and `/taskie:plan` show their drafts and
+change nothing until you approve. `/taskie:do` starts only when you type it
+or ask for the work by number. `/taskie:ship` merges only when you type it.
+taskie never force-pushes, never commits on your base branch, never edits
+your `.gitignore`, and never merges on its own.
+
+### Updating, removing and cleaning up
+
+Update (add `--scope project` or `--scope local` if you installed it for one
+project), then reload in any open session:
+
+```
+claude plugin marketplace update taskie
+claude plugin update taskie@taskie
+/reload-plugins
+```
+
+Remove it the same way: `claude plugin uninstall taskie@taskie`, with the
+same `--scope` you installed it with.
+
+Uninstalling leaves what taskie created in your repository. Its labels stay
+on your issues; delete any you no longer want with `gh label delete <name>`.
+Issues, pull requests and the CLAUDE.md section are ordinary GitHub and git
+content.
+
+A worktree left by an interrupted `/taskie:do` stays under `.worktrees/`.
+Run `/taskie:do <n>` to resume that issue, or remove the worktree with
+`git worktree remove .worktrees/issue-<n>` (its branch is kept, and pushed
+commits stay on GitHub). `/taskie:ship` removes worktrees itself after a
+merge.
 
 ## Development
 
