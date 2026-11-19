@@ -2,7 +2,7 @@
 name: taskie
 description: Show the taskie board for the current repo, its open issues and pull requests grouped by lifecycle status (needs triage, needs info, backlog, ready, in progress, in review, awaiting approval). Use when the user asks what is open, where things stand, or what to work on next.
 argument-hint: "[help]"
-allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh pr list *)
+allowed-tools: Read(/${CLAUDE_PLUGIN_ROOT}/**) Bash(gh --version*) Bash(git --version*) Bash(gh auth status*) Bash(gh repo view *) Bash(gh issue list *) Bash(gh issue develop --list *) Bash(gh pr list *) Bash(git remote -v*) Bash(git ls-remote *)
 ---
 
 # taskie board
@@ -29,7 +29,9 @@ If the argument is `help`, print this table and stop:
      creation date
    - all open pull requests with their head branch, head commit, closing
      issues and comments
-   - the linked branches of all open issues
+   - the linked branches of the open issues that no open PR resolves (an
+     open PR already decides their status), in bulk as the backend
+     describes
 3. Work out which issues each open PR resolves, as the backend describes.
 
 ## Classify

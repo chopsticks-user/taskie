@@ -111,6 +111,14 @@ An issue is a tracker when `subIssuesSummary.total` is greater than 0.
 | linked branches of one issue | `gh issue develop --list <n>` |
 | create the linked branch and its worktree | `gh issue develop <n> --name issue-<n>-<slug> --base <base> --checkout --worktree .worktrees/issue-<n>` |
 
+Linked branches of all open issues, for deriving status in bulk: list the
+remote's branches once with `git ls-remote --heads <remote>`, take the issue
+numbers from names that start with `issue-<n>-` (taskie's) or `<n>-`
+(GitHub's own "create a branch" from an issue), and confirm each of those
+open issues with `gh issue develop --list <n>`, one tool call per issue, so
+every call matches its pre-approval. A linked branch with any other name is
+not found this way.
+
 Run both from the repo's top-level directory, so `.worktrees/` lands at the
 root where the other stages look for it.
 
@@ -123,19 +131,6 @@ created it), then add the worktree with git:
 gh issue develop <n> --name issue-<n>-<slug> --base <base>   # only if not linked yet
 git fetch <remote> issue-<n>-<slug>:refs/remotes/<remote>/issue-<n>-<slug>
 git worktree add --track -b issue-<n>-<slug> .worktrees/issue-<n> <remote>/issue-<n>-<slug>
-```
-
-Linked branches of all open issues in one call (for the board):
-
-```bash
-gh api graphql -F owner='{owner}' -F name='{repo}' -f query='
-query($owner: String!, $name: String!) {
-  repository(owner: $owner, name: $name) {
-    issues(states: OPEN, first: 100) {
-      nodes { number linkedBranches(first: 5) { nodes { ref { name } } } }
-    }
-  }
-}' --jq '.data.repository.issues.nodes[] | select(.linkedBranches.nodes | length > 0) | {number, branches: [.linkedBranches.nodes[].ref.name]}'
 ```
 
 ## Pull requests
