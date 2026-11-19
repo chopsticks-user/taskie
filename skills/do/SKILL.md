@@ -169,13 +169,8 @@ issue.
    a clean worktree: if it has uncommitted changes, stop and show them),
    resolve the conflicts and commit the merge; if `verify` then fails because
    of the base itself, undo the merge, report the failure as pre-existing and
-   stop. Push, and update the PR body if Verification or Notes changed. After
-   any merge of the base, conflicted or not, they always have: rewrite
-   Verification with the result of `verify` on the merged head (the same
-   checks, the new numbers, naming that head), and record the merge in
-   Changes and Notes (what it resolved, or that it was clean). With review
-   fixes still to come, make this one body update after them, covering both.
-   New commits make the review stale, so go on to "Review".
+   stop. Push; "Report" refreshes the PR body. New commits make the review
+   stale, so go on to "Review".
 
 ## Review
 
@@ -208,7 +203,14 @@ issue.
    6, to `/taskie:new` as review findings of this PR. It shows the drafts and
    asks the user to confirm; wait for that answer in this run, and record the
    issue numbers it creates. Add them to the PR body's Notes.
-2. Post one summary comment on the PR. Its first line is the review marker
+2. If this run pushed any commit after the PR body was last written (a fix,
+   a merge of the base, a review fix), update the body first, so the
+   evidence matches the head the user approves: rewrite Verification from
+   the final `verify` on that head, naming its short sha (re-run each named
+   check that the new commits could affect, and say which), and record what
+   changed in Changes and Notes, including any merge of the base and what it
+   resolved.
+3. Post one summary comment on the PR. Its first line is the review marker
    from the conventions, with the PR's head commit after your fixes were
    pushed (that state, fixes included, is what the user approves at ship):
 
@@ -227,6 +229,6 @@ issue.
 
    With no findings, replace the table with `No findings.` A finding the user
    declined to file is listed as `left: not filed`.
-3. Print the PR's URL and the same table, and suggest `/taskie:ship <pr>`,
+4. Print the PR's URL and the same table, and suggest `/taskie:ship <pr>`,
    reminding the user that running it is their approval to merge. Leave the
    worktree in place; ship and further feedback use it.
