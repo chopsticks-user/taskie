@@ -181,8 +181,10 @@ Merge with squash.
 Run reviews at high level for every priority.
 ```
 
-If `verify` or `setup` is missing, `/taskie:do` detects a likely command,
-confirms it with you, and offers to save it in that section as a commit of its
+If `verify` or `setup` is missing, `/taskie:do` first looks for one that
+another of your unmerged taskie runs is already saving (your own pull
+requests and local worktrees, never a fork's) and reuses it. Otherwise it
+detects a likely command, confirms it with you, and offers to save it in that section as a commit of its
 own in the pull request, so your checkout is never changed. It adds the
 section if there is none, or a CLAUDE.md (`.claude/CLAUDE.md` in a Claude Code
 plugin or marketplace repo, `CLAUDE.md` at the root otherwise).

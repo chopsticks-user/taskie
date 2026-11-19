@@ -477,7 +477,11 @@ issue from branch to a reviewed PR. Steps:
 2. Refuse issues that are not `ready` or are parent trackers. An issue that
    already has a linked branch but no PR is most likely an interrupted run,
    so offer to resume it instead of refusing.
-3. Find `verify` and `setup`: read the taskie section, else detect (`just
+3. Find `verify` and `setup`: read the taskie section (in a worktree, its own
+   copy), else a value another unmerged do run is saving (another local
+   worktree's branch, or an open PR of the user's own from this repo, never a
+   fork, since the value runs as a command; confirmed once, never saved
+   twice), else detect (`just
    verify`, `npm test`, `make check`, `cargo test`, ...) and confirm with you,
    then, once the worktree exists, offer to save them in the taskie section as
    a commit of their own in the PR.
@@ -605,7 +609,7 @@ is updated with the result.
 | `gh` can create and list native sub-issues | 4 | confirmed at the CLI level: `gh issue create --parent`, `gh issue edit --add-sub-issue`, `subIssues` JSON field (gh 2.103) |
 | a branch from `gh issue develop` can be checked out in a worktree | 5 | confirmed: `gh issue develop --checkout --worktree` creates both (gh 2.103.3); `--worktree` without `--checkout` fails. Fallback in `backends/github.md`: create the linked branch, then `git worktree add` |
 | a skill can invoke `/code-review` through the Skill tool | 6 | confirmed: taskie's review step ran it through the Skill tool on PR #2 (Claude Code 2.1.318). Fallback written into the skill: ask the user to run it and continue from its findings |
-| taskie works on a repo other than its own | all | confirmed on a Node repo with `npm test` and no taskie section (#48): labels created once next to GitHub's defaults, verify detected from package.json and saved as its own commit, sub-issues created with `--parent`. Setup detection had no rules to follow (#54), and two open PRs saved the same setting (#53) |
+| taskie works on a repo other than its own | all | confirmed on a Node repo with `npm test` and no taskie section (#48): labels created once next to GitHub's defaults, verify detected from package.json and saved as its own commit, sub-issues created with `--parent`. Setup detection had no rules to follow (#54), and two open PRs saved the same setting (#53, fixed in 0.10.3: a value another unmerged run saves is reused) |
 | `Read(/${CLAUDE_PLUGIN_ROOT}/**)` in a skill's allowed-tools covers an installed copy as it does a `--plugin-dir` one | all | confirmed for `--plugin-dir` (#57), including on the next turn of a resumed session; to check for the installed copy once 0.10.1 is installed. A plain "work on #12" request reads `do`'s file with no skill active and gets no pre-approval (#63) |
 | `/taskie:plan` works on real issues | 4 | confirmed in the #48 trial: a split into two sub-issues with the parent turned into a tracker, and a refine that added a missing edge case |
 | `do`'s fail-first rule and spec-based Verification work on real code | 5 | confirmed in the #48 trial: the reproducing tests failed before the fix, and each PR listed every criterion and edge case with its test. A base merge left Verification stale (#55) |
