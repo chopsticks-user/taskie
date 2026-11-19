@@ -199,12 +199,11 @@ give the user the entry's `detailsUrl` or `targetUrl` instead.
 The latest review marker is the last entry in `comments` whose `body` starts
 with `<!-- taskie:review sha=`; compare its sha with `headRefOid`.
 
-Mergeability is still being computed while `mergeable` is `UNKNOWN`. Wait for
-it with a bounded poll, about a minute:
-
-```bash
-for i in 1 2 3 4 5 6; do s=$(gh pr view <n> --json mergeable --jq .mergeable); [ "$s" != UNKNOWN ] && break; sleep 10; done; echo "$s"
-```
+Mergeability: read it with `gh pr view <n> --json mergeable,mergeStateStatus`.
+It is still being computed while either field is `UNKNOWN`; read it again,
+one tool call each (no shell loop or `sleep`, so every call matches its
+pre-approval), up to 10 times, which takes about a minute. `mergeable` of
+`CONFLICTING` means the PR conflicts with the base.
 
 `gh pr merge --delete-branch` cannot delete a local branch that a worktree has
 checked out, so remove the worktree before merging.

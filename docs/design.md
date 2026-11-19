@@ -182,7 +182,8 @@ with issues disabled failed at the first create; distributions often ship
 releases older than these. do on a pull request that resolves no issue skips
 the issues check. The gh minimum was first the tested version, 2.103, and was
 lowered to the floor the release notes show (#60). A version that
-cannot be read, such as a development build, warns on the stage's first line and continues,
+cannot be read, such as a development build, warns on the stage's first
+line and continues,
 so those builds still work. The minimums live in `backends/github.md`, and
 every skill pre-approves the two version commands, so the version checks
 themselves never prompt.
@@ -554,10 +555,10 @@ approve their own PR). Steps:
    one-screen summary.
 3. Remove the worktree (everything is pushed by now, and `gh pr merge
    --delete-branch` cannot delete a branch a worktree has checked out).
-4. After pushing its own merge, wait (bounded) until GitHub has computed the
-   PR's mergeability, since a merge right after a push was refused with "Base
-   branch was modified" in a repo with no checks (#61); a refusal while the
-   base did not move is retried once.
+4. Wait (bounded) until GitHub has computed the PR's mergeability, since a
+   merge right after ship's own push was refused with "Base branch was
+   modified" in a repo with no checks (#61). That refusal, while the base
+   did not move, is retried once; other refusals stop the run.
    Merge with `gh pr merge --merge --delete-branch --match-head-commit <sha>`,
    or the method the taskie section names. The sha is the commit that was just
    verified, so GitHub refuses the merge if anything landed after it.

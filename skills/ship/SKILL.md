@@ -30,7 +30,8 @@ second confirmation before merging; do stop at every gate below.
    for the PR's branch. Bring it up to date with the remote branch
    (fast-forward only). Run git commands for the branch there.
 4. Fetch the base branch from `<remote>` (the repo's git remote, as the
-   backend finds it); if the fetch fails, report it and stop. Then refuse,
+   backend finds it), and note the base's sha; if the fetch fails, report it
+   and stop. Then refuse,
    saying why and what to run instead, unless all of these hold:
    - the PR is open and not a draft
    - its latest review marker is current, judged against the worktree's
@@ -87,17 +88,18 @@ second confirmation before merging; do stop at every gate below.
    Everything is pushed, and the
    backend cannot delete a branch a worktree still has checked out. If git
    refuses because the worktree has changes, stop and show them.
-2. If this run pushed a merge of the base, first wait until the backend has
-   finished computing the PR's mergeability, as the backend describes; right
-   after a push (and with no checks to wait on) it is still being computed,
-   and a merge then is refused. If it stays uncomputed past the wait, say so
-   and stop.
+2. Read the PR's mergeability as the backend describes, waiting while it is
+   still being computed (right after a push, with no checks to wait on, it
+   is, and a merge then is refused). If it stays uncomputed past the wait,
+   say so and stop. If it is conflicting, stop and suggest `/taskie:do <pr>`.
 3. Merge the PR as the backend describes, passing the verified head sha, with
    the merge method from the taskie section, or a merge commit by default. If
-   the merge is refused, fetch the base again: if it moved, report that and
-   stop. If it did not move and the refusal says the base was modified, wait
-   for mergeability as in step 2 and retry once. Any other refusal (the head
-   moved, branch protection) is reported, and the run stops.
+   the merge is refused, fetch the base again and compare it with the base
+   sha noted in "Gate and update" step 4. If the base moved, report that and
+   stop. If it did not and the refusal says the base was modified, repeat
+   step 2 and retry the merge once; if that is refused too, report it and
+   stop. Any other refusal (the head moved, branch protection) is reported,
+   and the run stops.
 4. Close what the merge did not:
    - each issue the PR resolves that is still open: close it as done with
      the comment `Fixed by #<pr>.` (the backend closes issues automatically
