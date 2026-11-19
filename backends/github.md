@@ -34,10 +34,11 @@ commands; stages describe actions, and this file maps them.
 | current user | `gh api user --jq .login` |
 | git remote of the repo | `git remote -v` (see below) |
 
-Minimum versions: gh 2.103 (sub-issues, `--duplicate-of` and the
-`subIssuesSummary` field; the version taskie is tested with, older ones may
-lack these) and git 2.38 (`git merge-tree --write-tree`, checked only by do
-and ship). The version is the
+Minimum versions: gh 2.94, the release that added sub-issues and the
+`subIssuesSummary` field (`--duplicate-of` came in 2.88; `gh issue develop
+--worktree` came in 2.99, and below that the worktree fallback under Linked
+branches is used; taskie is tested with 2.103) and git 2.38 (`git
+merge-tree --write-tree`, checked only by do and ship). The version is the
 first `<major>.<minor>` or `<major>.<minor>.<patch>` in the command's first
 line, so `gh version 2.103.3 (2026-10-26)` is 2.103.3 and `git version
 2.39.3 (Apple Git-146)` is 2.39.3; compare it number by number, so 2.103 is
