@@ -235,19 +235,20 @@ Find each one in this order:
    its own branch already saves it
 3. detect it from the repo. For `verify`: a `verify`, `check` or `test`
    recipe in a `justfile` or `Makefile`, a `test` script in `package.json`,
-   `cargo test` for a Cargo project, and so on. For `setup`, the first that
-   applies:
+   `cargo test` for a Cargo project, and so on. For `setup`, only these
+   clear cases; anything else is asked, since a wrong guess fails verify and
+   looks like a pre-existing failure:
    - a `setup` recipe in a `justfile` or `Makefile`
-   - a lockfile: `package-lock.json` → `npm ci`; `pnpm-lock.yaml` →
-     `pnpm install --frozen-lockfile`; `yarn.lock` → `yarn install
-     --frozen-lockfile`; `bun.lock` or `bun.lockb` → `bun install
-     --frozen-lockfile`; `uv.lock` → `uv sync --frozen`; `poetry.lock` →
-     `poetry install`
-   - a `package.json` with dependencies but no lockfile → `npm install`,
-     noting that nothing pins the versions
+   - lockfiles at the repo root, one command per ecosystem joined with
+     `&&`: `package-lock.json` → `npm ci`, `pnpm-lock.yaml` → `pnpm install
+     --frozen-lockfile`, `yarn.lock` → `yarn install --immutable` with a
+     `.yarnrc.yml` (Yarn 2 or later) or `yarn install --frozen-lockfile`
+     without, `bun.lock` or `bun.lockb` → `bun install --frozen-lockfile`,
+     `uv.lock` → `uv sync --frozen`. With several JavaScript lockfiles, use
+     the one `package.json`'s `packageManager` field names, or ask
    - a Cargo or Go project, whose build fetches its own dependencies → `none`
-   - no dependencies at all (for example a `package.json` with none) →
-     `none`
+   - a `package.json` that lists no `dependencies` or `devDependencies`,
+     with nothing else to install → `none`
 4. ask the user
 
 When a command was detected or given by the user, confirm it once. Only
