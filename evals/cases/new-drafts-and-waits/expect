@@ -1,0 +1,5 @@
+# Interactive: it either drafts the spec or asks about a gap that changes the
+# scope (both are correct), then waits for approval; nothing is created.
+contains (## Edge cases|reply with)
+contains (approv|which drafts|create (it|this|these|them|nothing)|before creating|nothing (was|has been) created|haven.t created)
+not_contains (created|filed|opened) (issue )?#[0-9]+|issue #[0-9]+ (was )?(created|filed|opened)|github\.com/[^ ]+/issues/[0-9]+

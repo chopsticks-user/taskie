@@ -44,3 +44,9 @@ version-bump:
 # Extra checks the plugin directory runs at submission (needs an icon first)
 submit-check:
     claude plugin validate --strict --profile directory .
+
+# Behavioral checks: run taskie stages headless against a clone of a repo
+# (EVAL_REPO, default this one), with every GitHub write disallowed. Costs
+# model usage, so run it only at the moments .claude/CLAUDE.md lists.
+eval *cases:
+    evals/run.sh {{cases}}
