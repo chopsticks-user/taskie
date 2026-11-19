@@ -353,12 +353,15 @@ the plugin's.
 `just submit-check` adds `--profile directory`, the checks the plugin
 directory runs at submission. It is kept out of verify because it requires a
 listing icon, and the first icon submitted can become the permanent listing
-icon, so no placeholder is committed. Behavioral checks run with `just eval`, not verify, because they are slow and
+icon, so no placeholder is committed.
+
+Behavioral checks run with `just eval`, not verify, because they are slow and
 cost model usage. Each case in `evals/cases/<name>/` is a `prompt` and an
 `expect` file of `contains` and `not_contains` patterns. `evals/run.sh` runs
 the prompt as `claude -p --plugin-dir <repo>` in a fresh clone of a sandbox
-repo (chopsticks-user/taskie-sandbox, with a fixed set of open issues), collects
-every assistant message, and checks them. Every GitHub write is disallowed,
+repo (chopsticks-user/taskie-sandbox, with a fixed set of open issues), without
+the user's settings, plugins or MCP servers, collects every assistant message,
+and checks them. Every GitHub write is disallowed,
 each run has a cost ceiling, a case passes when most of its runs (3 by default)
 do, and a snapshot of the sandbox's issues, pull requests and labels must be
 the same after the suite as before it. Checks are patterns, not an LLM judge,
