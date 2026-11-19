@@ -512,6 +512,10 @@ same worktree, addresses the PR's feedback, and reviews again. A conflict with
 the base counts as feedback: `do` merges the base and resolves it like any
 other point, because `/taskie:ship` stops on a conflict and sends the user to
 `do`; otherwise `do` would report the PR ready and send them straight back.
+Before posting its review summary, a run that pushed commits rewrites the
+PR's Verification from the final verify on that head and records any merge of
+the base, since the evidence went stale after a base merge in the #48 trial
+and a review had to point it out (#55).
 Failing checks count as feedback for the same reason: ship refuses a PR whose
 checks are red, so `do` reads the failed logs (GitHub Actions; other checks get
 their link passed on) and fixes the cause, or reports a failure the PR did not
