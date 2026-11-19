@@ -169,8 +169,13 @@ issue.
    a clean worktree: if it has uncommitted changes, stop and show them),
    resolve the conflicts and commit the merge; if `verify` then fails because
    of the base itself, undo the merge, report the failure as pre-existing and
-   stop. Push, and update the PR body if Verification or Notes changed. New
-   commits make the review stale, so go on to "Review".
+   stop. Push, and update the PR body if Verification or Notes changed. After
+   any merge of the base, conflicted or not, they always have: rewrite
+   Verification with the result of `verify` on the merged head (the same
+   checks, the new numbers, naming that head), and record the merge in
+   Changes and Notes (what it resolved, or that it was clean). With review
+   fixes still to come, make this one body update after them, covering both.
+   New commits make the review stale, so go on to "Review".
 
 ## Review
 
