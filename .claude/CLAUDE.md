@@ -65,6 +65,14 @@ full Claude session and the cost outweighs what it catches for a markdown
 plugin. This overrides do's default only for this repo: the testing rules
 for users' projects stay as they are.
 
+The one exception is `just eval`, the behavioral checks in `evals/cases/`:
+each case runs a taskie stage headless against a fresh clone of `EVAL_REPO`
+(default this repo), with every GitHub write disallowed, and the run fails if
+the repo changed. One pass cost $1.32 (`EVAL_RUNS`, default 1 per case;
+`EVAL_BUDGET`, default $1.00 per run). Run it only before a release, after
+changing `allowed-tools`, permissions or the "before any stage" check,
+after upgrading Claude Code, and when taskie behaves oddly; never per PR.
+
 Every pull request that changes what the plugin does (skills,
 `shared/conventions.md`, `backends/`, manifests) bumps `version` in
 `.claude-plugin/plugin.json`: patch for fixes, minor for new behavior.

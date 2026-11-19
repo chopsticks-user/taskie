@@ -368,6 +368,15 @@ token usage spiked. It was removed (#68), along with the sandbox repo, and the
 repo's taskie section now says to keep testing of taskie itself shallow. The
 spec-driven testing `do` requires in users' projects is unaffected.
 
+The checks came back without the sandbox (#77): the cases that needed fixture
+issues were dropped, and the rest (drafting with and without questions, a
+find-work request with no scope, the board in any state) run read-only
+against a clone of any repo, this one by default, once per case. They run
+only at chosen moments, listed in the repo's taskie section: before a
+release, after permission or before-any-stage changes, after a Claude Code
+upgrade, and when behavior looks wrong, which is where markdown review cannot
+see a regression.
+
 ## Stages
 
 ### `/taskie` (board)
@@ -633,4 +642,5 @@ is updated with the result.
 
 Backports and maintained release branches, the incident fast lane, CI failure
 intake, area labels, cross-repo boards, parallel review loops, non-GitHub
-backends, and a behavioral eval suite (tried in #50, removed in #68).
+backends, and behavioral checks of stages that write to GitHub (`just eval`
+covers read-only ones).
