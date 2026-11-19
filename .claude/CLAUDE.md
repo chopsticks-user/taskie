@@ -11,6 +11,7 @@ skills, shared conventions and a backend mapping. The design is in
 |---|---|---|
 | `README.md` | users | what taskie does, install, commands, the `taskie` CLAUDE.md section, labels |
 | `docs/design.md` | contributors | the current design and the reasons behind it, build plan, assumptions to verify |
+| `docs/milestones.md` | contributors, maintainer | each completed milestone: goal, what shipped, decisions, what was left |
 | `.claude/CLAUDE.md` | contributors, Claude and taskie | how to work in this repo, and its taskie section: verify command and version-bump rule (not at the root: a root CLAUDE.md fails `validate --strict`) |
 | `shared/conventions.md` | the skills | default rules every stage follows |
 | `backends/github.md` | the skills | the only file that maps actions to `gh` commands |
