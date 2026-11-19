@@ -109,40 +109,50 @@ What taskie creates in your repository, as it needs them:
   (`/taskie:do`), and, if it detected your verify or setup command and you
   agreed, a commit in that pull request adding a `taskie` section to
   CLAUDE.md
-- a git worktree per issue under `.worktrees/`, hidden from git by a
-  `.worktrees/` line in `.git/info/exclude`
+- a git worktree per issue at `.worktrees/issue-<n>` (or `.worktrees/pr-<pr>`
+  for a pull request with no issue), hidden from git by a `.worktrees/` line
+  in `.git/info/exclude`
+- merge commits on your base branch, when `/taskie:ship` merges a pull request
 - a release, only when a milestone is complete and you confirm it
 
 What waits for you: `/taskie:new` and `/taskie:plan` show their drafts and
-change nothing until you approve. `/taskie:do` starts only when you type it
-or ask for the work by number. `/taskie:ship` merges only when you type it.
-taskie never force-pushes, never commits on your base branch, never edits
-your `.gitignore`, and never merges on its own.
+change nothing until you approve, unless you have told taskie to stop asking
+(see above). `/taskie:do` starts only when you type it or explicitly ask for
+the work, by number ("work on #12") or as a set ("implement the ready
+issues"). `/taskie:ship` merges only when you type it, in any mode. taskie
+never force-pushes, never commits directly on your base branch (changes reach
+it only by merging a pull request), never edits your `.gitignore`, and never
+merges on its own.
 
 ### Updating, removing and cleaning up
 
-Update (add `--scope project` or `--scope local` if you installed it for one
-project), then reload in any open session:
+Update from a terminal, then restart Claude Code to apply it. If you
+installed taskie for one project, add the same `--scope project` or
+`--scope local` to the second command (the first takes no scope):
 
 ```
 claude plugin marketplace update taskie
 claude plugin update taskie@taskie
-/reload-plugins
 ```
 
-Remove it the same way: `claude plugin uninstall taskie@taskie`, with the
-same `--scope` you installed it with.
+Remove it with `claude plugin uninstall taskie@taskie`, adding the
+`--scope` you installed it with.
 
-Uninstalling leaves what taskie created in your repository. Its labels stay
-on your issues; delete any you no longer want with `gh label delete <name>`.
-Issues, pull requests and the CLAUDE.md section are ordinary GitHub and git
-content.
+Uninstalling leaves what taskie created in your repository: labels, issues,
+pull requests, milestones, release tags, the CLAUDE.md section and the
+`.worktrees/` line in `.git/info/exclude`. Delete labels you no longer want
+with `gh label delete <name>`, and the exclude line by editing that file.
 
 A worktree left by an interrupted `/taskie:do` stays under `.worktrees/`.
-Run `/taskie:do <n>` to resume that issue, or remove the worktree with
-`git worktree remove .worktrees/issue-<n>` (its branch is kept, and pushed
-commits stay on GitHub). `/taskie:ship` removes worktrees itself after a
-merge.
+Run `/taskie:do <n>` to resume that issue. To abandon the run instead:
+
+- remove the worktree with `git worktree remove .worktrees/issue-<n>`; git
+  refuses while it holds uncommitted changes, and `--force` discards them
+- delete its branch (`git branch -D issue-<n>-<slug>`, and on GitHub
+  `git push <remote> --delete issue-<n>-<slug>`), or the issue keeps showing
+  as in progress and `/taskie:do` keeps offering to resume it
+
+`/taskie:ship` removes worktrees itself after a merge.
 
 ## Development
 
