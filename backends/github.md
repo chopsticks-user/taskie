@@ -154,11 +154,12 @@ query($owner: String!, $name: String!) {
 | comment | `gh pr comment <n> --body-file -` |
 | merge | `gh pr merge <n> --merge --delete-branch --match-head-commit <sha>` (`--squash` or `--rebase` instead of `--merge` if the taskie section says so) |
 
-Open PRs that change a CLAUDE.md, most recently updated first; read the lines
-each one adds with `gh pr diff <n>`:
+Open PRs from this repository's own branches, opened by the current user
+(`@me`), that change a CLAUDE.md, lowest number first; read the lines each one adds with `gh pr diff <n>`. A fork PR is
+never read for settings: its author could put any command there.
 
 ```bash
-gh pr list --state open --limit 200 --json number,updatedAt,files --jq '[.[] | select(any(.files[]; .path == "CLAUDE.md" or .path == ".claude/CLAUDE.md"))] | sort_by(.updatedAt) | reverse | .[].number'
+gh pr list --state open --author @me --limit 200 --json number,isCrossRepository,files --jq '[.[] | select(.isCrossRepository | not) | select(any(.files[]; .path == "CLAUDE.md" or .path == ".claude/CLAUDE.md"))] | sort_by(.number) | .[].number'
 ```
 
 Comments on the PR's diff:

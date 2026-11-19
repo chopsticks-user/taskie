@@ -221,12 +221,18 @@ Two commands come from the target repo:
 
 Find each one in this order:
 
-1. a `verify:` or `setup:` line in the taskie section
-2. a `verify:` or `setup:` line that an open pull request adds to a taskie
-   section (an earlier `/taskie:do` saving it, not merged yet), from the
-   most recently updated such PR. Say which PR it came from; if it differs
-   from what detection would find, use it anyway and say so. Never offer to
-   save a value found this way: that PR already saves it
+1. a `verify:` or `setup:` line in the taskie section. Inside an issue's
+   worktree, the worktree's own copy is the taskie section, so a stage
+   working on a branch uses the value that branch saves
+2. a `verify:` or `setup:` line that another `/taskie:do` is saving and has
+   not merged yet: one that a commit on another `.worktrees/` branch of this
+   checkout adds, or one that an open pull request from a branch of this
+   repository (not a fork), opened by the current user, adds to a taskie
+   section; the earliest such PR (lowest number) if several do. Say where it
+   came from, and if it differs from what detection would find, say so too.
+   Confirm it once like a detected value: it runs as a command, so it is
+   never taken without a look. Never offer to save a value found this way;
+   its own branch already saves it
 3. detect it from the repo: a `verify`, `check` or `test` recipe in a
    `justfile` or `Makefile`, a `test` script in `package.json`, `cargo test`
    for a Cargo project, and so on
