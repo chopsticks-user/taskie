@@ -34,10 +34,12 @@ commands; stages describe actions, and this file maps them.
 | current user | `gh api user --jq .login` |
 | git remote of the repo | `git remote -v` (see below) |
 
-Minimum versions: gh 2.103 (sub-issues, `--duplicate-of` and the
-`subIssuesSummary` field; the version taskie is tested with, older ones may
-lack these) and git 2.38 (`git merge-tree --write-tree`, checked only by do
-and ship). The version is the
+Minimum versions: gh 2.94, the release that added sub-issues to `gh issue`
+(`--parent`, `--add-sub-issue`, and the `parent`, `subIssues` and
+`subIssuesSummary` fields) (`--duplicate-of` came in 2.88; `gh issue develop
+--worktree` came in 2.99, and below that the worktree fallback under Linked
+branches is used; taskie is tested with 2.103) and git 2.38 (`git
+merge-tree --write-tree`, checked only by do and ship). The version is the
 first `<major>.<minor>` or `<major>.<minor>.<patch>` in the command's first
 line, so `gh version 2.103.3 (2026-10-26)` is 2.103.3 and `git version
 2.39.3 (Apple Git-146)` is 2.39.3; compare it number by number, so 2.103 is
@@ -111,20 +113,14 @@ An issue is a tracker when `subIssuesSummary.total` is greater than 0.
 | linked branches of one issue | `gh issue develop --list <n>` |
 | create the linked branch and its worktree | `gh issue develop <n> --name issue-<n>-<slug> --base <base> --checkout --worktree .worktrees/issue-<n>` |
 
-Linked branches of all open issues, for deriving status in bulk: list the
-remote's branches once with `git ls-remote --heads <remote>`, take the issue
-numbers from names that start with `issue-<n>-` (taskie's) or `<n>-`
-(GitHub's own "create a branch" from an issue), and confirm each of those
-open issues with `gh issue develop --list <n>`, one tool call per issue, so
-every call matches its pre-approval. A linked branch with any other name is
-not found this way.
+Create the linked branch and its worktree from the repo's top-level
+directory, so `.worktrees/` lands at the root where the other stages look for
+it. That holds for the fallback below too.
 
-Run both from the repo's top-level directory, so `.worktrees/` lands at the
-root where the other stages look for it.
-
-If that fails (for example with a `gh` that has no `--worktree`), list the
-issue's linked branches. Create the linked branch without `--checkout
---worktree` only if it is not listed (the failed command may already have
+With gh below 2.99 (no `--worktree`, from the version the "before any stage"
+check read), or when the create command fails, use the fallback: list the
+issue's linked branches, create the linked branch without `--checkout
+--worktree` only if it is not listed (a failed attempt may already have
 created it), then add the worktree with git:
 
 ```bash
@@ -132,6 +128,14 @@ gh issue develop <n> --name issue-<n>-<slug> --base <base>   # only if not linke
 git fetch <remote> issue-<n>-<slug>:refs/remotes/<remote>/issue-<n>-<slug>
 git worktree add --track -b issue-<n>-<slug> .worktrees/issue-<n> <remote>/issue-<n>-<slug>
 ```
+
+Linked branches of all open issues, for deriving status in bulk: list the
+remote's branches once with `git ls-remote --heads <remote>`, take the issue
+numbers from names that start with `issue-<n>-` (taskie's) or `<n>-`
+(GitHub's own "create a branch" from an issue), and confirm each of those
+open issues with `gh issue develop --list <n>`, one tool call per issue, so
+every call matches its pre-approval. A linked branch with any other name is
+not found this way.
 
 ## Pull requests
 

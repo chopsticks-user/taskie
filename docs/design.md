@@ -172,16 +172,17 @@ instead, so they need no remote.
 
 Every stage's first check also reads the gh version and whether the repo
 accepts issues, and do and ship read the git version, stopping with what is
-missing. gh must be at least 2.103 (sub-issues, `--duplicate-of`,
-`subIssuesSummary`) and git at least 2.38 (`merge-tree --write-tree`, which
-only do and ship run, so the board, new and plan still work with an older
+missing. gh must be at least 2.94 (sub-issues and their JSON fields, by the
+gh release notes; `--duplicate-of` came in 2.88, and `--worktree`, from 2.99,
+has a fallback below it) and git at least 2.38 (`merge-tree --write-tree`,
+which only do and ship run, so the board, new and plan still work with an older
 git). Without the check, an older gh made the board fail on an unknown JSON
 field, an older git failed only once do or ship reached a merge, and a repo
 with issues disabled failed at the first create; distributions often ship
 releases older than these. do on a pull request that resolves no issue skips
-the issues check. The gh minimum is the version taskie is tested with; the
-release notes put the real floor lower (#60). A version that cannot be read,
-such as a development build, warns on the stage's first line and continues,
+the issues check. The gh minimum was first the tested version, 2.103, and was
+lowered to the floor the release notes show (#60). A version that cannot
+be read, such as a development build, warns on the stage's first line and continues,
 so those builds still work. The minimums live in `backends/github.md`, and
 every skill pre-approves the two version commands, so the version checks
 themselves never prompt.
