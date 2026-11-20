@@ -5,6 +5,10 @@ what was decided along the way, and what was left. Newest first. Release
 notes, built by `/taskie:ship` from the milestone's issues, list the changes;
 this file keeps the reasons.
 
+v0.1 to v0.9 have no entry here: they are closed milestones on GitHub,
+recorded after the fact from the plugin version each issue shipped in, with
+no release or tag. Their descriptions summarize what each version did.
+
 ## v0.10: ready for experimental use in personal projects
 
 Opened 2026-11-18, completed 2026-11-19. Plugin 0.9.0 to 0.10.8.
