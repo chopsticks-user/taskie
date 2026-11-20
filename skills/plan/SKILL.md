@@ -46,9 +46,11 @@ Input is an issue number, with or without `#`.
    instead.
 7. Show the proposal and wait for approval: the new body, and the label
    changes (`ready` if the definition holds; a priority, and removal of
-   `needs-info`, if the issue has no priority yet). If the definition does
-   not hold, say which point fails.
-8. Apply what the user approved: replace the body, then change the labels.
+   `needs-info`, if the issue has no priority yet), and the milestone, as
+   "Milestones" in the conventions describes. If the definition does not
+   hold, say which point fails.
+8. Apply what the user approved: replace the body, change the labels, then
+   set the milestone if one was agreed.
    Suggest `/taskie:do <n>` if the issue is now ready.
 
 ## Split an issue

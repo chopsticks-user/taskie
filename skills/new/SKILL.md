@@ -81,13 +81,14 @@ First run the "before any stage" check from the conventions. Then:
      meets every point of the definition of ready, otherwise `backlog` with
      the point that fails (an item too big for one pull request is filed
      as backlog for `/taskie:plan #<n>` to split)
+   - milestone: proposed as "Milestones" in the conventions describes
 7. Show every draft in one message, numbered, each with its title, labels,
-   outcome and full body. Then ask which drafts to create, as a batch (see
+   milestone, outcome and full body. Then ask which drafts to create, as a batch (see
    "Asking the user" in the conventions). Create nothing until they answer.
    This holds even when another stage or Claude itself started this skill.
 8. For the confirmed drafts: make sure the labels exist, create each issue
    with its type and priority labels (plus `ready` when that is the
-   outcome), post any agreed comments on existing issues, and post the
+   outcome) and in its milestone, if one was agreed, post any agreed comments on existing issues, and post the
    Accept outcome's triage comment (under "Outcomes") on each new issue.
 
 9. Print each result as `#<n> <title> <url>` with its status, and suggest
@@ -104,11 +105,12 @@ For issues that already exist, usually filed by someone outside taskie.
    - Priority: pick `P0` to `P3` as in "File" step 6.
    - Likely files: as in "File" step 4.
    - Outcome: one of the outcomes below.
+   - Milestone: as "Milestones" in the conventions describes.
 2. Show one table with numbered rows, then ask which rows to apply, as a
    batch (see "Asking the user" in the conventions):
 
    ```
-   | # | Issue | Type | Priority | Outcome | Reason | Likely files |
+   | # | Issue | Type | Priority | Outcome | Milestone | Reason | Likely files |
    ```
 
    Change nothing on the backend before they answer, and apply their edits.
@@ -125,7 +127,8 @@ For issues that already exist, usually filed by someone outside taskie.
 ### Outcomes
 
 Accept: the issue is valid and understood. Set the type label (removing a
-wrong one), add the priority label, remove `needs-info`, and comment:
+wrong one), add the priority label, remove `needs-info`, set the row's
+milestone if it proposes one, and comment:
 
 ```
 <!-- taskie:triage -->
