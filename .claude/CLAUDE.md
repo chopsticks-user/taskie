@@ -81,9 +81,22 @@ after upgrading Claude Code, and when taskie behaves oddly; never per PR.
 
 Every pull request that changes what the plugin does (skills,
 `shared/conventions.md`, `backends/`, manifests) bumps `version` in
-`.claude-plugin/plugin.json`: patch for fixes, minor for new behavior.
-Installed copies, including the one this repo loads on itself, update only
-when the version changes. Changes to docs alone do not bump it.
+`.claude-plugin/plugin.json`. The first such PR in a milestone bumps the
+minor version, which starts that milestone's version; every later one in the
+same milestone bumps the patch, fix or feature. Installed copies, including
+the one this repo loads on itself, update only when the version changes, so
+users get each change at merge, not at the release. Changes to docs alone do
+not bump it.
+
+Milestones and releases: each milestone is one minor version, titled
+`v0.<minor>`, with a one-sentence goal as its description. One milestone,
+the next version, stays open; every issue filed or planned either joins it
+or stays in the backlog with no milestone, since an issue outside a
+milestone never brings a release closer. An urgent fix joins the open
+milestone and reaches users through its patch bump. When `/taskie:ship`
+empties the milestone and offers the release, run `just eval` first, then
+accept the `v0.<minor>` tag on `main` and record the milestone in
+`docs/milestones.md`.
 
 ## Rules for skill files
 
