@@ -16,6 +16,11 @@ skills, shared conventions and a backend mapping. The design is in
 | `shared/conventions.md` | the skills | default rules every stage follows |
 | `backends/github.md` | the skills | the only file that maps actions to `gh` commands |
 | `.claude/settings.json` | Claude Code | loads taskie in this repo from its GitHub marketplace |
+| `.github/CONTRIBUTING.md` | outside contributors | how to file issues and open pull requests here; links `.claude/CLAUDE.md` and `docs/design.md` instead of repeating them |
+| `.github/CODE_OF_CONDUCT.md` | everyone taking part | Contributor Covenant 2.1, reports through GitHub private reporting |
+| `.github/SECURITY.md` | reporters | how to report a vulnerability privately, supported versions |
+| `.github/ISSUE_TEMPLATE/` | reporters | bug and feature templates whose headings match taskie's issue templates in `shared/conventions.md`, so triage keeps them |
+| `.github/pull_request_template.md` | contributors | the pull request body from `shared/conventions.md`, for PRs opened by hand |
 
 Keep them in sync with the code. A change to behavior updates `docs/design.md`
 and, if user-visible, `README.md` in the same commit.

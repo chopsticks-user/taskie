@@ -180,8 +180,8 @@ Run `/taskie:do <n>` to resume that issue. To abandon the run instead:
 ## Development
 
 taskie is developed with taskie: issues and pull requests in this repo go
-through its own stages. See [.claude/CLAUDE.md](.claude/CLAUDE.md) for how to
-work on it.
+through its own stages. See [CONTRIBUTING](.github/CONTRIBUTING.md) to take
+part, and [.claude/CLAUDE.md](.claude/CLAUDE.md) for how to work on it.
 
 ## Configuring a repo: a `taskie` section in CLAUDE.md
 
