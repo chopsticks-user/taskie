@@ -72,14 +72,16 @@ tracker and the work moves to sub-issues.
    criteria with one item per child ("<child title> is done") and its Edge
    cases with "Covered by the sub-issues", so they are not kept in two
    places, and add a short plan under Context explaining the order.
-4. Show the parent's new body and all child drafts in one message, saying
-   which children meet the definition of ready. Ask which children to
-   create, as a batch (see "Asking the user" in the conventions), and wait
-   for the answer.
-5. Apply what the user approved: create each child as a sub-issue of the
-   parent, with the parent's milestone and `ready` only if it meets the
-   definition. Then replace the parent's body and remove `ready` from it if
-   present; a tracker is never ready.
+4. Show the parent's new body, its milestone (proposed as "Milestones" in
+   the conventions describes, if it has none) and all child drafts in one
+   message, saying which children meet the definition of ready. Ask which
+   children to create, as a batch (see "Asking the user" in the
+   conventions), and wait for the answer.
+5. Apply what the user approved: set the parent's milestone if one was
+   agreed, then create each child as a sub-issue of the parent, with the
+   parent's milestone and `ready` only if it meets the definition. Then
+   replace the parent's body and remove `ready` from it if present; a
+   tracker is never ready.
 6. Print the children as `#<n> <title>` with their status, and suggest
    `/taskie:do` for the first ready one.
 
@@ -99,8 +101,9 @@ Input is a goal such as `v0.2: offline mode`.
    Assumptions; in autonomous mode, so do these questions' answers (see the
    conventions).
 5. Draft the work:
-   - new issues in `/taskie:new`'s format, each with a type and a priority (the goal
-     was triaged by planning it), final acceptance criteria, Out of scope,
+   - new issues in `/taskie:new`'s format, in this milestone rather than a
+     proposed one, each with a type and a priority (the goal was triaged by
+     planning it), final acceptance criteria, Out of scope,
      Edge cases and Assumptions, and `Depends on #<n>` for any order between
      them
    - an issue that would not fit in one reviewable pull request becomes a

@@ -83,13 +83,15 @@ First run the "before any stage" check from the conventions. Then:
      as backlog for `/taskie:plan #<n>` to split)
    - milestone: proposed as "Milestones" in the conventions describes
 7. Show every draft in one message, numbered, each with its title, labels,
-   milestone, outcome and full body. Then ask which drafts to create, as a batch (see
-   "Asking the user" in the conventions). Create nothing until they answer.
-   This holds even when another stage or Claude itself started this skill.
-8. For the confirmed drafts: make sure the labels exist, create each issue
+   milestone, outcome and full body. Then ask which drafts to create, as a
+   batch (see "Asking the user" in the conventions). Create nothing until
+   they answer. This holds even when another stage or Claude itself started
+   this skill.
+8. For the confirmed drafts: make sure the labels exist; create each issue
    with its type and priority labels (plus `ready` when that is the
-   outcome) and in its milestone, if one was agreed, post any agreed comments on existing issues, and post the
-   Accept outcome's triage comment (under "Outcomes") on each new issue.
+   outcome), in its milestone when one was agreed; post any agreed comments
+   on existing issues; and post the Accept outcome's triage comment (under
+   "Outcomes") on each new issue.
 
 9. Print each result as `#<n> <title> <url>` with its status, and suggest
    `/taskie:do <n>` for a ready issue or `/taskie:plan #<n>` for one in the
