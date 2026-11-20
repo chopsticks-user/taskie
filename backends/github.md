@@ -215,6 +215,7 @@ checked out, so remove the worktree before merging.
 | Action | Command |
 |---|---|
 | list milestones | see below |
+| list open milestones | see below |
 | create a milestone | `gh api repos/{owner}/{repo}/milestones -f title='<title>' -f description='<description>'` |
 | issues in a milestone | `gh issue list --milestone '<title>' --state all --limit 500 --json number,title,state,labels` |
 | close a milestone | `gh api -X PATCH repos/{owner}/{repo}/milestones/<number> -f state=closed` |
@@ -223,6 +224,12 @@ List milestones:
 
 ```bash
 gh api 'repos/{owner}/{repo}/milestones?state=all&per_page=100' --jq '.[] | {number, title, description, state, open_issues, closed_issues}'
+```
+
+List open milestones, the ones a proposal picks from:
+
+```bash
+gh api 'repos/{owner}/{repo}/milestones?state=open&per_page=100' --jq '.[] | {number, title, description}'
 ```
 
 ## Releases

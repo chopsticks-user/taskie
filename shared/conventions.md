@@ -61,6 +61,32 @@ An issue has at most one `type:*` label and at most one priority label. Before
 applying a label, make sure it exists, and create only the missing ones (see
 the backend). Never recolor or rename labels that already exist.
 
+## Milestones
+
+When `/taskie:new` files or triages an issue, and when `/taskie:plan` refines
+or splits one, it proposes a milestone with the rest of its proposal, so no
+issue is left out of a release by accident. `/taskie:plan <goal>` does not
+use this rule: its issues go into the milestone it plans. For each issue:
+
+- an issue in an open milestone keeps it: show it, never change it
+- an issue in a closed milestone is treated as having none, since a closed
+  milestone can no longer bring a release
+- an issue another taskie stage hands over (review findings, unrelated
+  problems found along the way) proposes none: nobody planned it for the
+  release, and an open issue in the milestone would hold the release back
+- a triage row that does not accept the issue (Needs info, Duplicate, Won't
+  fix) proposes none
+- otherwise propose the open milestone whose title and description the issue
+  serves, the best fit if several do; propose none, with the reason in a
+  few words, when no open milestone fits or none is open
+
+List the open milestones (see the backend) once per run, and only when an
+issue in the run needs a proposal; if they cannot be read, say so, propose
+none and carry on. The user approves, changes or drops the proposal like
+any other field, and in autonomous mode it is taken like any other
+recommended option. Only `/taskie:plan <goal>` creates milestones; no other
+stage creates one.
+
 ## Status
 
 Status is derived from backend state, never stored in labels. Evaluate the

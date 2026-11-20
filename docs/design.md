@@ -431,8 +431,9 @@ plan's job). Before drafting, search open and closed issues; if one looks like
 a duplicate, show it and ask. It greps the repo for the likely files and asks
 about anything ambiguous before drafting. Each draft carries its type,
 priority, final acceptance criteria, out-of-scope bounds, edge cases and
-assumptions (see "Issues as specs"), and an outcome: `ready` when it meets the
-definition of ready, otherwise backlog for `/taskie:plan`. Two body templates:
+assumptions (see "Issues as specs"), a proposed milestone, and an outcome:
+`ready` when it meets the definition of ready, otherwise backlog for
+`/taskie:plan`. Two body templates:
 bug, and everything else. The full drafts are shown and nothing is created
 until you confirm; issues are created with their labels and a triage comment.
 
@@ -443,8 +444,8 @@ and a longer table is not reviewable. Answered `needs-info` issues go first,
 so a reporter who replied is not held up by old issues; the rest go oldest
 first. With `#n` it
 triages that one. For each issue it reads the text, greps the repo for the
-likely files, and proposes type, priority, outcome and reason in one table.
-Nothing changes until you approve the table, optionally editing rows. A scope
+likely files, and proposes type, priority, outcome, milestone and reason in
+one table. Nothing changes until you approve the table, optionally editing rows. A scope
 question you answer while approving is written into the issue body.
 
 Triage outcomes: accept (set type and priority, post a comment naming the
@@ -465,7 +466,8 @@ Two input shapes:
 
 `/taskie:plan #n` refines an issue. It asks you about anything ambiguous,
 rewrites the body with an acceptance-criteria checklist, and sets `ready` when
-the issue meets the definition of ready. If the issue would not fit in one
+the issue meets the definition of ready. An issue with no milestone also gets one proposed.
+If the issue would not fit in one
 reviewable pull request, it proposes children, each with its own acceptance
 criteria, and creates them as native GitHub sub-issues. The parent becomes a
 tracker.
@@ -473,6 +475,16 @@ tracker.
 `/taskie:plan <goal>` (for example `v0.2: offline mode`) drafts a milestone and
 its issues in `/taskie:new`'s format, split where needed, and creates them all after
 one approval.
+
+Milestone proposals (new, plan #n and splits) follow one rule in the
+conventions: the open milestone the issue serves, or none. An open milestone
+is never changed, a closed one counts as none, issues another stage hands
+over get none so they cannot hold a release back, and only
+`/taskie:plan <goal>` creates a milestone. Without it an issue filed on its
+own sat outside every milestone, so ship never offered a release for it
+(#84). Rejected: setting a milestone outside the approval step (autonomous
+mode takes it as it takes any recommended option), and creating a milestone
+when none fits.
 
 Size is judged against "one reviewable pull request", not estimated. Rejected:
 size labels, task lists in the parent body, a separate milestone skill.
