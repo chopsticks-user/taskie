@@ -7,7 +7,10 @@ Closes #
 <!-- What changed, by area. -->
 
 ## Verification
-<!-- Each acceptance criterion and edge case of the issue, with the test or check that covers it and its result. -->
+<!-- One line per acceptance criterion and per edge case of the issue, each with the test or check that covers it and its result in the final `just verify` run:
+- [x] <acceptance criterion>: <test or check>, <result>
+- [x] Edge case: <edge case>: <test or check>, <result>
+-->
 
 ## Notes
 <!-- Assumptions, follow-up issues, risks, anything left out and why; or "None". -->

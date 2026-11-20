@@ -9,5 +9,6 @@ taskie and Claude Code versions you used.
 
 ## Supported versions
 
-Only the latest release gets security fixes. Installed copies pick up a fix
+Only the latest plugin version (`version` in `.claude-plugin/plugin.json` on
+`main`) gets security fixes. Installed copies pick up a fix
 when the plugin updates.
