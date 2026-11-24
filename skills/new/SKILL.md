@@ -286,7 +286,8 @@ and say which were only skimmed.
   again
 
 Each finding then becomes a draft as in "Review findings" above, with Source
-`Find-work request: <the request>`, and goes through the same duplicate
+`Find-work request: <the request, refined as for a chat>` (see Source in
+the conventions), and goes through the same duplicate
 search, batch and approval as every other draft. Unfinished new behavior,
 such as a stub left for later, is a `type:feature`. A draft derived from
 goals, rather than a defect found in code or docs, is a guess at what the

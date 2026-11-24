@@ -236,6 +236,12 @@ it never guesses silently. In autonomous mode it asks nothing and records
 every guess. Facts the source lacks, such as a reporter's environment, stay
 "Unknown" in their own section and are not assumptions.
 
+Source says where the issue came from. When that is a chat, it gives the
+request refined into a sentence or two of clear prose that keeps the user's
+intent and specifics, for example `Chat request: show a refined version of
+the prompt as the Source of an issue filed from chat`, never the chat's
+exact words.
+
 ## Repo commands
 
 Two commands come from the target repo:
