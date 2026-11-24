@@ -25,6 +25,10 @@ the way most tech companies move tickets through a team.
 | `/taskie:do [n]` | Implements an issue in its own worktree, opens a pull request, reviews it with `/code-review`, fixes in-scope findings and posts a summary comment. Run it again to address feedback, including a conflict with the base branch, which it merges and resolves, and failing checks. With no argument it takes the current issue, or the most urgent in-progress or ready one, and asks when several qualify. |
 | `/taskie:ship [pr]` | Updates the PR with the base branch, verifies, merges, cleans up, and offers a release when a milestone completes. With no argument it takes the current PR or the one awaiting approval, and asks when several do. |
 
+`plan` runs on Sonnet (its `model` in `skills/plan/SKILL.md`), whatever
+model the session uses, to keep planning cheap; the other commands use the
+session's model.
+
 Claude can run `/taskie`, `new` and `plan` on its own when the conversation
 calls for it (for example "file a bug for this"). `do` pushes and opens pull
 requests, so it runs only when you type it or, once a taskie command has run in
