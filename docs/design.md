@@ -413,7 +413,7 @@ With text, it files. Understood sources in v1:
 
 | Source | Extracts |
 |---|---|
-| chat request | problem, context, acceptance criteria |
+| chat request | problem, context, acceptance criteria; Source restates the request refined, never quoting the chat, so the issue reads as a spec rather than a transcript |
 | bug report or stack trace | repro steps, expected vs actual, failing location, environment; missing parts are marked unknown, never invented |
 | review findings | one issue per finding, linking the source PR and file:line |
 | find-work request | reads a named scope (paths, a commit range, or goals in a document), turns what it finds into review findings, and drafts those |
